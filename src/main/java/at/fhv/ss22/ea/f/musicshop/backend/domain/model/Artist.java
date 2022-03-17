@@ -1,19 +1,27 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Artist {
     private ArtistId id;
-    private String name;
+    // Firstname und Lastname als Value Object FullName?
+    private String firstname;
+    private String lastname;
 
     private List<ProductId> productIds;
+
 
     public ArtistId getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
     }
 
     public List<ProductId> getProductIds() {
@@ -24,14 +32,12 @@ public class Artist {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Artist artist = (Artist) o;
-
-        return id != null ? id.equals(artist.id) : artist.id == null;
+        return Objects.equals(id, artist.id) && Objects.equals(firstname, artist.firstname) && Objects.equals(lastname, artist.lastname) && Objects.equals(productIds, artist.productIds);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hash(id, firstname, lastname, productIds);
     }
 }

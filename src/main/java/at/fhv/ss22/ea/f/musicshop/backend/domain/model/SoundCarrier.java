@@ -2,9 +2,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
 
 import org.javamoney.moneta.Money;
 
-import javax.money.MonetaryAmount;
-import java.util.Currency;
-
 public class SoundCarrier {
     private SoundCarrierId carrierId;
     private SoundCarrierType type;
