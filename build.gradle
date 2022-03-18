@@ -36,10 +36,19 @@ jacocoTestReport {
 }
 
 dependencies {
-    implementation 'org.javamoney:moneta:1.1'
+    implementation 'org.javamoney:moneta:1.4.2'
     implementation 'com.github.TeamF-SS22-SEM4:RMI-Shared-Lib:main-SNAPSHOT'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.hibernate:hibernate-core:5.6.7.Final'
+    implementation 'org.hibernate:hibernate-entitymanager:5.6.7.Final'
+    implementation 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final'
+    implementation 'org.postgresql:postgresql:42.3.3'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+    implementation 'com.sun.xml.bind:jaxb-core:3.0.2'
+    implementation 'com.sun.xml.bind:jaxb-impl:3.0.2'
+    implementation 'javax.activation:activation:1.1.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 test {
