@@ -1,5 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+
 public class Address {
     private String street;
     private String houseNumber;
@@ -35,6 +37,7 @@ public class Address {
         return country;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,6 +52,7 @@ public class Address {
         return country != null ? country.equals(address.country) : address.country == null;
     }
 
+    @Generated
     @Override
     public int hashCode() {
         int result = street != null ? street.hashCode() : 0;

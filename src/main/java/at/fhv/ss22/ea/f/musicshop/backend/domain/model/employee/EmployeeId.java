@@ -1,19 +1,22 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+
 import java.util.Objects;
 import java.util.UUID;
 
 public class EmployeeId {
-    private String id;
+    private UUID id;
 
-    public EmployeeId(String id) {
+    public EmployeeId(UUID id) {
         this.id = id;
     }
 
-    public String getUUID() {
+    public UUID getUUID() {
         return id;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -22,6 +25,7 @@ public class EmployeeId {
         return Objects.equals(id, that.id);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(id);

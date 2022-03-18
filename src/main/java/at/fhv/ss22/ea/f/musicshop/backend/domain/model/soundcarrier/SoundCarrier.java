@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import org.javamoney.moneta.Money;
 
@@ -50,6 +51,7 @@ public class SoundCarrier {
         return productId;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +60,7 @@ public class SoundCarrier {
         return amountInStore == that.amountInStore && Objects.equals(carrierId, that.carrierId) && type == that.type && Objects.equals(price, that.price) && Objects.equals(location, that.location) && Objects.equals(productId, that.productId);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(carrierId, type, price, amountInStore, location, productId);

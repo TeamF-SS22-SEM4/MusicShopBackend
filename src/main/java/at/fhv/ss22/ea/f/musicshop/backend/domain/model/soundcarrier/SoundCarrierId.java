@@ -1,19 +1,22 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+
 import java.util.Objects;
 import java.util.UUID;
 
 public class SoundCarrierId {
-    private String id;
+    private UUID id;
 
-    public SoundCarrierId(String id) {
+    public SoundCarrierId(UUID id) {
         this.id = id;
     }
 
-    public String getUUID() {
+    public UUID getUUID() {
         return id;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -22,6 +25,7 @@ public class SoundCarrierId {
         return Objects.equals(id, that.id);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(id);

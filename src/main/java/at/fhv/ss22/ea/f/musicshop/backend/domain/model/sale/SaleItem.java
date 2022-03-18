@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import org.javamoney.moneta.Money;
 
@@ -38,6 +39,7 @@ public class SaleItem {
         return carrierId;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,6 +48,7 @@ public class SaleItem {
         return isRefunded == saleItem.isRefunded && amountOfCarriers == saleItem.amountOfCarriers && Objects.equals(pricePerCarrier, saleItem.pricePerCarrier) && Objects.equals(carrierId, saleItem.carrierId);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(isRefunded, amountOfCarriers, pricePerCarrier, carrierId);

@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class Artist {
         return productIds;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,6 +55,7 @@ public class Artist {
         return Objects.equals(id, artist.id) && Objects.equals(firstname, artist.firstname) && Objects.equals(lastname, artist.lastname) && Objects.equals(countryOfOrigin, artist.countryOfOrigin) && Objects.equals(productIds, artist.productIds);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(id, firstname, lastname, countryOfOrigin, productIds);

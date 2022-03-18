@@ -1,18 +1,22 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+
 import java.util.Objects;
+import java.util.UUID;
 
 public class ArtistId {
-    private String id;
+    private UUID id;
 
-    public ArtistId(String id) {
+    public ArtistId(UUID id) {
         this.id = id;
     }
 
-    public String getUUID() {
+    public UUID getUUID() {
         return id;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -21,6 +25,7 @@ public class ArtistId {
         return Objects.equals(id, artistId.id);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(id);

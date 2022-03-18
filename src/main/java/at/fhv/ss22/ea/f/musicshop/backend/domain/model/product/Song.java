@@ -1,5 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.product;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+
 import java.util.Objects;
 
 public class Song {
@@ -24,6 +26,7 @@ public class Song {
         return duration;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -32,6 +35,7 @@ public class Song {
         return Objects.equals(title, song.title) && Objects.equals(duration, song.duration);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(title, duration);
