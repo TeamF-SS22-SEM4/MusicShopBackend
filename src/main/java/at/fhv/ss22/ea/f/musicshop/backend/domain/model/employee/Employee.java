@@ -1,6 +1,7 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee;
 
-import java.util.ArrayList;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -12,16 +13,16 @@ public class Employee {
     private String lastname;
     private List<SaleId> sales;
 
-    public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname) {
-        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname);
+    public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
+        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, aSalesList);
     }
 
-    private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname) {
-        this.id = id;
-        this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.sales = new ArrayList<>();
+    private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
+        this.id = aEmployeeId;
+        this.username = aUsername;
+        this.firstname = aFirstname;
+        this.lastname = aLastname;
+        this.sales = aSalesList;
     }
 
     public EmployeeId getId() {

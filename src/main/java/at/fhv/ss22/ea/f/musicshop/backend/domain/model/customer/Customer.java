@@ -1,6 +1,7 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer;
 
-import java.util.ArrayList;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -13,18 +14,18 @@ public class Customer {
     private Address address;
     private List<SaleId> purchases;
 
-    public static Customer create(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress) {
-        return new Customer(aCustomerId, aFirstname, aLastname, aEmail, aPhoneNumber, aAddress);
+    public static Customer create(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
+        return new Customer(aCustomerId, aFirstname, aLastname, aEmail, aPhoneNumber, aAddress, aPurchases);
     }
 
-    private Customer(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress) {
+    private Customer(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
         this.id = aCustomerId;
         this.firstname = aFirstname;
         this.lastname = aLastname;
         this.email = aEmail;
         this.phoneNumber = aPhoneNumber;
         this.address = aAddress;
-        this.purchases = new ArrayList<>();
+        this.purchases = aPurchases;
     }
 
     public CustomerId getId() {

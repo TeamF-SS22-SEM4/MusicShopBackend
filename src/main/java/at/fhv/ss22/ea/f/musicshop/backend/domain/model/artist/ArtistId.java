@@ -1,15 +1,15 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
 
-import java.util.UUID;
+import java.util.Objects;
 
 public class ArtistId {
-    private UUID id;
+    private String id;
 
-    public ArtistId(UUID id) {
+    public ArtistId(String id) {
         this.id = id;
     }
 
-    public UUID getUUID() {
+    public String getUUID() {
         return id;
     }
 
@@ -17,14 +17,12 @@ public class ArtistId {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ArtistId artistId = (ArtistId) o;
-
-        return id != null ? id.equals(artistId.id) : artistId.id == null;
+        return Objects.equals(id, artistId.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hash(id);
     }
 }

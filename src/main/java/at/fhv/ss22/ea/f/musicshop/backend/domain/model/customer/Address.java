@@ -1,4 +1,4 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer;
 
 public class Address {
     private String street;
