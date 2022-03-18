@@ -5,10 +5,11 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import org.javamoney.moneta.Money;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class Sale {
     private SaleId saleId;
@@ -16,21 +17,22 @@ public class Sale {
     private LocalDateTime timeOfSale;
     private Money totalPrice;
     private String paymentMethod; //maybe change to enum
-    private Optional<CustomerId> customerOpt;
+    private CustomerId customerId;
     private List<SaleItem> saleItemList;
     private EmployeeId performingEmployee;
 
-    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, Money aTotalPrice, String aPaymentMethod, Optional<CustomerId> aCustomerOpt, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
-        return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aTotalPrice, aPaymentMethod, aCustomerOpt, aSaleItemList, aPerformingEmployee);
+    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, Money aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+        return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aTotalPrice, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
     }
 
-    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, Money aTotalPrice, String aPaymentMethod, Optional<CustomerId> aCustomerOpt, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    protected Sale() {}
+    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, Money aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         this.saleId = aSaleId;
         this.invoiceNumber = aInvoiceNumber;
         this.timeOfSale = aTimeOfSale;
         this.totalPrice = aTotalPrice;
         this.paymentMethod = aPaymentMethod;
-        this.customerOpt = aCustomerOpt;
+        this.customerId = aCustomerId;
         this.saleItemList = aSaleItemList;
         this.performingEmployee = aPerformingEmployee;
     }
@@ -55,12 +57,12 @@ public class Sale {
         return paymentMethod;
     }
 
-    public Optional<CustomerId> getCustomerOpt() {
-        return customerOpt;
+    public CustomerId getCustomerOpt() {
+        return customerId;
     }
 
     public List<SaleItem> getSaleItemList() {
-        return saleItemList;
+        return Collections.unmodifiableList(saleItemList);
     }
 
     public EmployeeId getPerformingEmployee() {
@@ -73,12 +75,12 @@ public class Sale {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sale sale = (Sale) o;
-        return Objects.equals(saleId, sale.saleId) && Objects.equals(invoiceNumber, sale.invoiceNumber) && Objects.equals(timeOfSale, sale.timeOfSale) && Objects.equals(totalPrice, sale.totalPrice) && Objects.equals(paymentMethod, sale.paymentMethod) && Objects.equals(customerOpt, sale.customerOpt) && Objects.equals(saleItemList, sale.saleItemList) && Objects.equals(performingEmployee, sale.performingEmployee);
+        return Objects.equals(saleId, sale.saleId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(saleId, invoiceNumber, timeOfSale, totalPrice, paymentMethod, customerOpt, saleItemList, performingEmployee);
+        return Objects.hash(saleId);
     }
 }

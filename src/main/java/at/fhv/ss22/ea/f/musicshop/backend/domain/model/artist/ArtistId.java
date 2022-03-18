@@ -1,16 +1,22 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
+package at.fhv  .ss22.ea.f.musicshop.backend.domain.model.artist;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ArtistId {
+@Embeddable
+public class ArtistId implements Serializable {
+    @Column
     private UUID id;
 
     public ArtistId(UUID id) {
         this.id = id;
     }
+
+    protected ArtistId() {}
 
     public UUID getUUID() {
         return id;

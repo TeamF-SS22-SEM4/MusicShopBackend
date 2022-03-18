@@ -3,22 +3,30 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Customer {
+    @EmbeddedId
     private CustomerId id;
     private String firstname;
     private String lastname;
     private String email;
     private String phoneNumber;
     private Address address;
+    @ElementCollection
     private List<SaleId> purchases;
 
     public static Customer create(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
         return new Customer(aCustomerId, aFirstname, aLastname, aEmail, aPhoneNumber, aAddress, aPurchases);
     }
 
+    protected Customer() {}
     private Customer(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
         this.id = aCustomerId;
         this.firstname = aFirstname;
@@ -54,7 +62,7 @@ public class Customer {
     }
 
     public List<SaleId> getPurchases() {
-        return purchases;
+        return Collections.unmodifiableList(purchases);
     }
 
     @Generated
@@ -63,12 +71,12 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) && Objects.equals(firstname, customer.firstname) && Objects.equals(lastname, customer.lastname) && Objects.equals(email, customer.email) && Objects.equals(phoneNumber, customer.phoneNumber) && Objects.equals(address, customer.address) && Objects.equals(purchases, customer.purchases);
+        return Objects.equals(id, customer.id);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, email, phoneNumber, address, purchases);
+        return Objects.hash(id);
     }
 }

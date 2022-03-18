@@ -29,7 +29,7 @@ public class SaleTests {
         LocalDateTime timeOfSaleExpected = LocalDateTime.of(2022, Month.MARCH, 1, 13, 30);
         Money totalPriceExpected = Money.of(new BigDecimal("50"), "EUR");
         String paymentMethodExpected = "Credit Card";
-        Optional<CustomerId> customerIdExpected = Optional.empty();
+        CustomerId customerIdExpected = null;
         List<SaleItem> saleItemsExpected = new ArrayList<>() {
             {
                 add (

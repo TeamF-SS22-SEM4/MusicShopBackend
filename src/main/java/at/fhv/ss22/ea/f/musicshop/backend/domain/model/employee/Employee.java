@@ -3,21 +3,29 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Employee {
+    @EmbeddedId
     private EmployeeId id;
     private String username;
     // password?
     private String firstname;
     private String lastname;
+    @ElementCollection
     private List<SaleId> sales;
 
     public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
         return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, aSalesList);
     }
-
+    protected Employee() {}
     private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
         this.id = aEmployeeId;
         this.username = aUsername;
@@ -43,7 +51,7 @@ public class Employee {
     }
 
     public List<SaleId> getSales() {
-        return sales;
+        return Collections.unmodifiableList(sales);
     }
 
     @Generated
@@ -52,12 +60,12 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id) && Objects.equals(username, employee.username) && Objects.equals(firstname, employee.firstname) && Objects.equals(lastname, employee.lastname) && Objects.equals(sales, employee.sales);
+        return Objects.equals(id, employee.id);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, firstname, lastname, sales);
+        return Objects.hash(id);
     }
 }

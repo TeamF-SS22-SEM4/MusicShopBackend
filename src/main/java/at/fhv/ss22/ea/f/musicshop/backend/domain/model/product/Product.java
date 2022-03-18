@@ -3,18 +3,28 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 
+import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Product {
+
+    @EmbeddedId
     private ProductId id;
     private String name;
     private String releaseYear;
+    @ElementCollection
     private List<String> genre;
     private String label;
     private String duration;
+    @ElementCollection
     private List<ArtistId> artistIds;
+    @ElementCollection
     private List<Song> songs;
+
+    public Product() {}
 
     public static Product create(ProductId aProductId, String aName, String aReleaseYear, List<String> aGenreList, String aLabel, String aDuration, List<ArtistId> aArtistIdList, List<Song> aSongList) {
         return new Product(aProductId, aName, aReleaseYear, aGenreList, aLabel, aDuration, aArtistIdList, aSongList);
@@ -56,11 +66,11 @@ public class Product {
     }
 
     public List<ArtistId> getArtistIds() {
-        return artistIds;
+        return Collections.unmodifiableList(artistIds);
     }
 
     public List<Song> getSongs() {
-        return songs;
+        return Collections.unmodifiableList(songs);
     }
 
     @Generated
@@ -69,12 +79,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(releaseYear, product.releaseYear) && Objects.equals(genre, product.genre) && Objects.equals(label, product.label) && Objects.equals(duration, product.duration) && Objects.equals(artistIds, product.artistIds) && Objects.equals(songs, product.songs);
+        return Objects.equals(id, product.id);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, releaseYear, genre, label, duration, artistIds, songs);
+        return Objects.hash(id);
     }
 }

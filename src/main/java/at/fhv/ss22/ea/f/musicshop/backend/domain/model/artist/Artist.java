@@ -3,39 +3,38 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 
+import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Artist {
+    @EmbeddedId
     private ArtistId id;
-    // Firstname und Lastname als Value Object FullName?
-    private String firstname;
-    private String lastname;
+    private String artistName;
     private String countryOfOrigin;
+    @ElementCollection
     private List<ProductId> productIds;
 
-    public static Artist create(ArtistId anArtistId, String aFirstname, String aLastname, String aCountryOfOrigin, List<ProductId> aProductIds) {
-        return new Artist(anArtistId, aFirstname, aLastname, aCountryOfOrigin, aProductIds);
+    public static Artist create(ArtistId anArtistId, String artistName, String aCountryOfOrigin, List<ProductId> aProductIds) {
+        return new Artist(anArtistId, artistName, aCountryOfOrigin, aProductIds);
     }
 
-    private Artist(ArtistId id, String firstname, String lastname, String countryOfOrigin, List<ProductId> productIds) {
+    private Artist(ArtistId id, String artistName, String countryOfOrigin, List<ProductId> productIds) {
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.artistName = artistName;
         this.countryOfOrigin = countryOfOrigin;
         this.productIds = productIds;
     }
+    protected Artist() {}
 
     public ArtistId getId() {
         return id;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
+    public String getArtistName() {
+        return artistName;
     }
 
     public String getCountryOfOrigin() {
@@ -43,7 +42,7 @@ public class Artist {
     }
 
     public List<ProductId> getProductIds() {
-        return productIds;
+        return Collections.unmodifiableList(productIds);
     }
 
     @Generated
@@ -52,12 +51,12 @@ public class Artist {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Artist artist = (Artist) o;
-        return Objects.equals(id, artist.id) && Objects.equals(firstname, artist.firstname) && Objects.equals(lastname, artist.lastname) && Objects.equals(countryOfOrigin, artist.countryOfOrigin) && Objects.equals(productIds, artist.productIds);
+        return Objects.equals(id, artist.id);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, countryOfOrigin, productIds);
+        return Objects.hash(id);
     }
 }

@@ -2,15 +2,21 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.product;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ProductId {
+@Embeddable
+public class ProductId implements Serializable {
+    @Column
     private UUID id;
 
     public ProductId(UUID id) {
         this.id = id;
     }
+
+    protected ProductId() {}
 
     public UUID getUUID() {
         return id;

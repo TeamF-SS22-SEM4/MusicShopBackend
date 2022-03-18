@@ -2,15 +2,22 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SoundCarrierId {
+@Embeddable
+public class SoundCarrierId implements Serializable {
+    @Basic
     private UUID id;
 
     public SoundCarrierId(UUID id) {
         this.id = id;
     }
+    protected SoundCarrierId() {}
 
     public UUID getUUID() {
         return id;

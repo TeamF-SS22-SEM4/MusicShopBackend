@@ -2,11 +2,14 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
+import org.hibernate.id.IncrementGenerator;
 import org.javamoney.moneta.Money;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 public class SaleItem {
+    private long sale_item_nr;
     private boolean isRefunded;
     private int amountOfCarriers;
     private Money pricePerCarrier;
@@ -15,7 +18,7 @@ public class SaleItem {
     public static SaleItem create(boolean refunded, int anAmountOfCarriers, Money aPricePerCarrier, SoundCarrierId aCarrierId) {
         return new SaleItem(refunded, anAmountOfCarriers, aPricePerCarrier, aCarrierId);
     }
-
+    protected SaleItem() {}
     private SaleItem(boolean refunded, int anAmountOfCarriers, Money aPricePerCarrier, SoundCarrierId aCarrierId) {
         this.isRefunded = refunded;
         this.amountOfCarriers = anAmountOfCarriers;

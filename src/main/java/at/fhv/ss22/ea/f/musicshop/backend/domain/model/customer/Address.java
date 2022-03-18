@@ -2,7 +2,13 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.util.Objects;
+
+@Embeddable
 public class Address {
+    @Column
     private String street;
     private String houseNumber;
     private String city;
@@ -16,6 +22,7 @@ public class Address {
         this.postalCode = postalCode;
         this.country = country;
     }
+    protected Address() {}
 
     public String getStreet() {
         return street;
@@ -45,11 +52,11 @@ public class Address {
 
         Address address = (Address) o;
 
-        if (street != null ? !street.equals(address.street) : address.street != null) return false;
-        if (houseNumber != null ? !houseNumber.equals(address.houseNumber) : address.houseNumber != null) return false;
-        if (city != null ? !city.equals(address.city) : address.city != null) return false;
-        if (postalCode != null ? !postalCode.equals(address.postalCode) : address.postalCode != null) return false;
-        return country != null ? country.equals(address.country) : address.country == null;
+        if (!Objects.equals(street, address.street)) return false;
+        if (!Objects.equals(houseNumber, address.houseNumber)) return false;
+        if (!Objects.equals(city, address.city)) return false;
+        if (!Objects.equals(postalCode, address.postalCode)) return false;
+        return Objects.equals(country, address.country);
     }
 
     @Generated

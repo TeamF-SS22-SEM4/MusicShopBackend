@@ -2,13 +2,18 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.product;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Embeddable
 public class Song {
-    // SongId?
+
+    @Column
     private String title;
+    @Column
     private String duration;
 
+    protected Song() {}
     public static Song create(String aTitle, String aDuration) {
         return new Song(aTitle, aDuration);
     }

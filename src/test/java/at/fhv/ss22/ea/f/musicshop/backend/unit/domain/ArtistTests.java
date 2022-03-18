@@ -18,8 +18,7 @@ public class ArtistTests {
         // given
         UUID artistIdUUID = UUID.randomUUID();
         ArtistId artistIdExpected = new ArtistId(artistIdUUID);
-        String firstnameExpected = "John";
-        String lastnameExpected = "Doe";
+        String nameExpected = "Rammstein";
         String countryOfOriginExpected = "Austria";
         List<ProductId> productIdsExpected = new ArrayList<>(){
             {
@@ -32,8 +31,7 @@ public class ArtistTests {
         // when
         Artist artist = Artist.create(
                 artistIdExpected,
-                firstnameExpected,
-                lastnameExpected,
+                nameExpected,
                 countryOfOriginExpected,
                 productIdsExpected
         );
@@ -41,8 +39,7 @@ public class ArtistTests {
         // then
         assertEquals(artistIdExpected, artist.getId());
         assertEquals(artistIdUUID, artist.getId().getUUID());
-        assertEquals(firstnameExpected, artist.getFirstname());
-        assertEquals(lastnameExpected, artist.getLastname());
+        assertEquals(nameExpected, artist.getArtistName());
         assertEquals(countryOfOriginExpected, artist.getCountryOfOrigin());
         assertEquals(productIdsExpected.size(), artist.getProductIds().size());
 
