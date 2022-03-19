@@ -30,8 +30,6 @@ public class HibernateProductRepository implements ProductRepository {
                 "select p from Product p where p.id = :product_id",
                 Product.class);
         query.setParameter("product_id", productId);
-        //TODO For some reason this doesn't work, when removing where clause and debugging, result list contains
-        // the product with the searched id, cant figure out why it doesn't give the right product. HELP pls
         return query.getResultStream().findFirst();
     }
 
@@ -40,5 +38,4 @@ public class HibernateProductRepository implements ProductRepository {
         //TODO implement
         return List.of();
     }
-
 }

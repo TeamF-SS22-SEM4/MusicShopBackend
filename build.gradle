@@ -39,7 +39,7 @@ dependencies {
     implementation 'org.javamoney:moneta:1.4.2'
     implementation 'org.hibernate:hibernate-core:5.6.5.Final'
     implementation 'org.javamoney:moneta:1.1'
-    implementation 'org.postgresql:postgresql:42.1.4'
+    implementation 'org.postgresql:postgresql:42.3.3'
     implementation 'com.github.TeamF-SS22-SEM4:RMI-Shared-Lib:main-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'com.h2database:h2:2.1.210'

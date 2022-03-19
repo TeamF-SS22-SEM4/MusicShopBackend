@@ -7,10 +7,15 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.Customer</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://10.0.40.16*/postgres"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://10.0.40.*/musicshopdb"/>
             <property name="javax.persistence.jdbc.user" value="*"/>
             <property name="javax.persistence.jdbc.password" value="*" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
