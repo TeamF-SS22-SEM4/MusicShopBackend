@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SaleTests {
+class SaleTests {
     @Test
     void given_saledetails_when_creating_sale_then_details_equals() {
         // given
@@ -27,7 +27,7 @@ public class SaleTests {
         SaleId saleIdExpected = new SaleId(saleIdUUID);
         String invoiceNumberExpected = "20220301001";
         LocalDateTime timeOfSaleExpected = LocalDateTime.of(2022, Month.MARCH, 1, 13, 30);
-        Money totalPriceExpected = Money.of(new BigDecimal("50"), "EUR");
+        float totalPriceExpected = 50;
         String paymentMethodExpected = "Credit Card";
         CustomerId customerIdExpected = null;
         List<SaleItem> saleItemsExpected = new ArrayList<>() {
@@ -36,7 +36,7 @@ public class SaleTests {
                     SaleItem.create(
                             false,
                             1,
-                            Money.of(new BigDecimal("30"), "EUR"),
+                            30,
                             new SoundCarrierId(UUID.randomUUID())
                     )
                 );
@@ -44,7 +44,7 @@ public class SaleTests {
                         SaleItem.create(
                                 false,
                                 1,
-                                Money.of(new BigDecimal("20"), "EUR"),
+                                20,
                                 new SoundCarrierId(UUID.randomUUID())
                         )
                 );

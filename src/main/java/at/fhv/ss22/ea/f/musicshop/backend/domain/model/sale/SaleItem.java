@@ -2,8 +2,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
-import org.hibernate.id.IncrementGenerator;
-import org.javamoney.moneta.Money;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -16,14 +14,14 @@ public class SaleItem {
 
     private boolean isRefunded;
     private int amountOfCarriers;
-    private Money pricePerCarrier;
+    private float pricePerCarrier;
     private SoundCarrierId carrierId;
 
-    public static SaleItem create(boolean refunded, int anAmountOfCarriers, Money aPricePerCarrier, SoundCarrierId aCarrierId) {
+    public static SaleItem create(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         return new SaleItem(refunded, anAmountOfCarriers, aPricePerCarrier, aCarrierId);
     }
     protected SaleItem() {}
-    private SaleItem(boolean refunded, int anAmountOfCarriers, Money aPricePerCarrier, SoundCarrierId aCarrierId) {
+    private SaleItem(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         this.isRefunded = refunded;
         this.amountOfCarriers = anAmountOfCarriers;
         this.pricePerCarrier = aPricePerCarrier;
@@ -38,7 +36,7 @@ public class SaleItem {
         return amountOfCarriers;
     }
 
-    public Money getPricePerCarrier() {
+    public float getPricePerCarrier() {
         return pricePerCarrier;
     }
 

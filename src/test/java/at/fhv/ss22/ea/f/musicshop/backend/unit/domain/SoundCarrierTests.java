@@ -12,14 +12,14 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SoundCarrierTests {
+class SoundCarrierTests {
     @Test
     void given_soundcarrierdetails_when_creating_soundcarrier_then_details_equals() {
         // given
         UUID soundCarrierIdUUID = UUID.randomUUID();
         SoundCarrierId soundCarrierIdExpected = new SoundCarrierId(soundCarrierIdUUID);
         SoundCarrierType soundCarrierTypeExpected = SoundCarrierType.CD;
-        Money priceExpected = Money.of(new BigDecimal("15"), "EUR");
+        float priceExpected = 15;
         int amountInStoreExpected = 30;
         String locationExpected = "R001";
         UUID productIdUUID = UUID.randomUUID();

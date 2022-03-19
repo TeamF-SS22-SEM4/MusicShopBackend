@@ -2,7 +2,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import org.javamoney.moneta.Money;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -10,25 +9,21 @@ import java.util.Objects;
 @Entity
 public class SoundCarrier {
     @EmbeddedId
-    @AttributeOverrides({
-            @AttributeOverride(name="carrierId", column = @Column(name = "carrier_id"))
-    })
+    @AttributeOverride(name="carrierId", column = @Column(name = "carrier_id"))
     private SoundCarrierId carrierId;
     private SoundCarrierType type;
-    private Money price;
+    private float price;
     private int amountInStore;
     private String location; //holds information in which shelve to find the carrier
-    @AttributeOverrides({
-            @AttributeOverride(name="productId", column = @Column(name = "product_id"))
-    })
+    @AttributeOverride(name="productId", column = @Column(name = "product_id"))
     private ProductId productId;
 
-    public static SoundCarrier create(SoundCarrierId aCarrierId, SoundCarrierType aType, Money aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {
+    public static SoundCarrier create(SoundCarrierId aCarrierId, SoundCarrierType aType, float aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {
         return new SoundCarrier(aCarrierId, aType, aPrice, aAmountInStore, aLocation, aProductId);
     }
 
     protected SoundCarrier() {}
-    private SoundCarrier(SoundCarrierId aCarrierId, SoundCarrierType aType, Money aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {
+    private SoundCarrier(SoundCarrierId aCarrierId, SoundCarrierType aType, float aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {
         this.carrierId = aCarrierId;
         this.type = aType;
         this.price = aPrice;
@@ -45,7 +40,7 @@ public class SoundCarrier {
         return type;
     }
 
-    public Money getPrice() {
+    public float getPrice() {
         return price;
     }
 

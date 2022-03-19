@@ -3,7 +3,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
-import org.javamoney.moneta.Money;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,19 +16,19 @@ public class Sale {
     private SaleId saleId;
     private String invoiceNumber;
     private LocalDateTime timeOfSale;
-    private Money totalPrice;
+    private float totalPrice;
     private String paymentMethod; //maybe change to enum
     private CustomerId customerId;
     @OneToMany
     private List<SaleItem> saleItemList;
     private EmployeeId performingEmployee;
 
-    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, Money aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aTotalPrice, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
     }
 
     protected Sale() {}
-    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, Money aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         this.saleId = aSaleId;
         this.invoiceNumber = aInvoiceNumber;
         this.timeOfSale = aTimeOfSale;
@@ -52,7 +51,7 @@ public class Sale {
         return timeOfSale;
     }
 
-    public Money getTotalPrice() {
+    public float getTotalPrice() {
         return totalPrice;
     }
 
