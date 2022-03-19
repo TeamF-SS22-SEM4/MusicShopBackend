@@ -54,8 +54,8 @@ public class ProductTests {
         );
 
         // then
-        assertEquals(productIdExpected, product.getId());
-        assertEquals(productIdUUID, product.getId().getUUID());
+        assertEquals(productIdExpected, product.getProductId());
+        assertEquals(productIdUUID, product.getProductId().getUUID());
         assertEquals(nameExpected, product.getName());
         assertEquals(releaseYearExpected, product.getReleaseYear());
         assertEquals(genresExpected.size(), product.getGenre().size());

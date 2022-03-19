@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ArtistTests {
+class ArtistTests {
 
     @Test
     void given_artistdetails_when_creating_artist_then_details_equals() {
@@ -37,8 +37,8 @@ public class ArtistTests {
         );
 
         // then
-        assertEquals(artistIdExpected, artist.getId());
-        assertEquals(artistIdUUID, artist.getId().getUUID());
+        assertEquals(artistIdExpected, artist.getArtistId());
+        assertEquals(artistIdUUID, artist.getArtistId().getUUID());
         assertEquals(nameExpected, artist.getArtistName());
         assertEquals(countryOfOriginExpected, artist.getCountryOfOrigin());
         assertEquals(productIdsExpected.size(), artist.getProductIds().size());

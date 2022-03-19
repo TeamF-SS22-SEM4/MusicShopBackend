@@ -49,8 +49,8 @@ public class CustomerTests {
         );
 
         // then
-        assertEquals(customerIdExpected, customer.getId());
-        assertEquals(customerIdUUID, customer.getId().getUUID());
+        assertEquals(customerIdExpected, customer.getCustomerId());
+        assertEquals(customerIdUUID, customer.getCustomerId().getUUID());
         assertEquals(firstnameExpected, customer.getFirstname());
         assertEquals(lastnameExpected, customer.getLastname());
         assertEquals(emailExpected, customer.getEmail());

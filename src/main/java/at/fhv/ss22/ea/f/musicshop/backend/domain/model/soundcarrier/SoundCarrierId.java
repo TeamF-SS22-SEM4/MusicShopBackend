@@ -1,8 +1,8 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -11,16 +11,17 @@ import java.util.UUID;
 
 @Embeddable
 public class SoundCarrierId implements Serializable {
-    @Basic
-    private UUID id;
+    @Column
+    @Type(type = "uuid-char")
+    private UUID carrierId;
 
     public SoundCarrierId(UUID id) {
-        this.id = id;
+        this.carrierId = id;
     }
     protected SoundCarrierId() {}
 
     public UUID getUUID() {
-        return id;
+        return carrierId;
     }
 
     @Generated
@@ -29,12 +30,12 @@ public class SoundCarrierId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SoundCarrierId that = (SoundCarrierId) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(carrierId, that.carrierId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(carrierId);
     }
 }

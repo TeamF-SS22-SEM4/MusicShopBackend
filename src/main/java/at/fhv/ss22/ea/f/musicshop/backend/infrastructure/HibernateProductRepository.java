@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public class HibernateProductRepository implements ProductRepository {
 
-    @PersistenceContext
     private EntityManager em;
 
     public HibernateProductRepository() {
@@ -27,7 +26,7 @@ public class HibernateProductRepository implements ProductRepository {
     @Override
     public Optional<Product> productById(ProductId productId) {
         TypedQuery<Product> query = em.createQuery(
-                "select p from Product p where p.id = :product_id",
+                "select p from Product p where p.productId = :product_id",
                 Product.class);
         query.setParameter("product_id", productId);
         return query.getResultStream().findFirst();

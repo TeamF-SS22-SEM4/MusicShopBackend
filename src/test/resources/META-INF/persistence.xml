@@ -3,15 +3,23 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
-    <persistence-unit name="MusicShopBackendTest">
+    <persistence-unit name="MusicShopBackend">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.Customer</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>

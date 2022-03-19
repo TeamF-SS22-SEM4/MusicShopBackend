@@ -6,7 +6,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import javax.persistence.ElementCollection;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +13,7 @@ import java.util.Objects;
 @Entity
 public class Employee {
     @EmbeddedId
-    private EmployeeId id;
+    private EmployeeId employeeId;
     private String username;
     // password?
     private String firstname;
@@ -27,15 +26,15 @@ public class Employee {
     }
     protected Employee() {}
     private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
-        this.id = aEmployeeId;
+        this.employeeId = aEmployeeId;
         this.username = aUsername;
         this.firstname = aFirstname;
         this.lastname = aLastname;
         this.sales = aSalesList;
     }
 
-    public EmployeeId getId() {
-        return id;
+    public EmployeeId getEmployeeId() {
+        return employeeId;
     }
 
     public String getUsername() {
@@ -60,12 +59,12 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id);
+        return Objects.equals(employeeId, employee.employeeId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(employeeId);
     }
 }

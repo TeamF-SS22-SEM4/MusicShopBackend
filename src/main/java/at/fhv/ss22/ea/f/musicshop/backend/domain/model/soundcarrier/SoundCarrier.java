@@ -11,7 +11,7 @@ import java.util.Objects;
 public class SoundCarrier {
     @EmbeddedId
     @AttributeOverrides({
-            @AttributeOverride(name="id", column = @Column(name = "carrier_id"))
+            @AttributeOverride(name="carrierId", column = @Column(name = "carrier_id"))
     })
     private SoundCarrierId carrierId;
     private SoundCarrierType type;
@@ -19,7 +19,7 @@ public class SoundCarrier {
     private int amountInStore;
     private String location; //holds information in which shelve to find the carrier
     @AttributeOverrides({
-            @AttributeOverride(name="id", column = @Column(name = "product_id"))
+            @AttributeOverride(name="productId", column = @Column(name = "product_id"))
     })
     private ProductId productId;
 

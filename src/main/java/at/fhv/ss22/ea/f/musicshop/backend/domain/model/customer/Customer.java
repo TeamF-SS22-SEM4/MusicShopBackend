@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 public class Customer {
     @EmbeddedId
-    private CustomerId id;
+    private CustomerId customerId;
     private String firstname;
     private String lastname;
     private String email;
@@ -28,7 +28,7 @@ public class Customer {
 
     protected Customer() {}
     private Customer(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
-        this.id = aCustomerId;
+        this.customerId = aCustomerId;
         this.firstname = aFirstname;
         this.lastname = aLastname;
         this.email = aEmail;
@@ -37,8 +37,8 @@ public class Customer {
         this.purchases = aPurchases;
     }
 
-    public CustomerId getId() {
-        return id;
+    public CustomerId getCustomerId() {
+        return customerId;
     }
 
     public String getFirstname() {
@@ -71,12 +71,12 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id);
+        return Objects.equals(customerId, customer.customerId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(customerId);
     }
 }

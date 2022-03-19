@@ -8,8 +8,12 @@ import org.javamoney.moneta.Money;
 import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
 public class SaleItem {
-    private long sale_item_nr;
+    @Id
+    @GeneratedValue
+    private long hibernateId;
+
     private boolean isRefunded;
     private int amountOfCarriers;
     private Money pricePerCarrier;

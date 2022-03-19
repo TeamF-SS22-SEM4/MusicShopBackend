@@ -4,10 +4,11 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class Address {
+public class Address implements Serializable {
     @Column
     private String street;
     private String houseNumber;

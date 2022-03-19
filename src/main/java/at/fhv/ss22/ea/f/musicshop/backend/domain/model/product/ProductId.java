@@ -1,6 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.product;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,16 +11,17 @@ import java.util.UUID;
 @Embeddable
 public class ProductId implements Serializable {
     @Column
-    private UUID id;
+    @Type(type = "uuid-char")
+    private UUID productId;
 
     public ProductId(UUID id) {
-        this.id = id;
+        this.productId = id;
     }
 
     protected ProductId() {}
 
     public UUID getUUID() {
-        return id;
+        return productId;
     }
 
     @Generated
@@ -28,12 +30,12 @@ public class ProductId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductId productId = (ProductId) o;
-        return Objects.equals(id, productId.id);
+        return Objects.equals(this.productId, productId.productId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(productId);
     }
 }

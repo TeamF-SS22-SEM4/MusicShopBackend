@@ -11,13 +11,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Sale {
+    @EmbeddedId
     private SaleId saleId;
     private String invoiceNumber;
     private LocalDateTime timeOfSale;
     private Money totalPrice;
     private String paymentMethod; //maybe change to enum
     private CustomerId customerId;
+    @OneToMany
     private List<SaleItem> saleItemList;
     private EmployeeId performingEmployee;
 

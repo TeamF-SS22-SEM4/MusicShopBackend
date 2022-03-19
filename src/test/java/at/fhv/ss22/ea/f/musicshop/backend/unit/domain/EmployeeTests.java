@@ -38,8 +38,8 @@ public class EmployeeTests {
         );
 
         // then
-        assertEquals(employeeIdExpected, employee.getId());
-        assertEquals(employeeIdUUID, employee.getId().getUUID());
+        assertEquals(employeeIdExpected, employee.getEmployeeId());
+        assertEquals(employeeIdUUID, employee.getEmployeeId().getUUID());
         assertEquals(usernameExpected, employee.getUsername());
         assertEquals(firstnameExpected, employee.getFirstname());
         assertEquals(lastNameExpected, employee.getLastname());

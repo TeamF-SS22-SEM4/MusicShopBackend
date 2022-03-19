@@ -10,9 +10,8 @@ import java.util.Objects;
 
 @Entity
 public class Product {
-
     @EmbeddedId
-    private ProductId id;
+    private ProductId productId;
     private String name;
     private String releaseYear;
     @ElementCollection
@@ -31,7 +30,7 @@ public class Product {
     }
 
     private Product(ProductId aProductId, String aName, String aReleaseYear, List<String> aGenreList, String aLabel, String aDuration, List<ArtistId> aArtistIdList, List<Song> aSongList) {
-        this.id = aProductId;
+        this.productId = aProductId;
         this.name = aName;
         this.releaseYear = aReleaseYear;
         this.genre = aGenreList;
@@ -41,8 +40,8 @@ public class Product {
         this.songs = aSongList;
     }
 
-    public ProductId getId() {
-        return id;
+    public ProductId getProductId() {
+        return productId;
     }
 
     public String getName() {
@@ -79,12 +78,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id);
+        return Objects.equals(productId, product.productId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(productId);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Objects;
 @Entity
 public class Artist {
     @EmbeddedId
-    private ArtistId id;
+    private ArtistId artistId;
     private String artistName;
     private String countryOfOrigin;
     @ElementCollection
@@ -22,15 +22,15 @@ public class Artist {
     }
 
     private Artist(ArtistId id, String artistName, String countryOfOrigin, List<ProductId> productIds) {
-        this.id = id;
+        this.artistId = id;
         this.artistName = artistName;
         this.countryOfOrigin = countryOfOrigin;
         this.productIds = productIds;
     }
     protected Artist() {}
 
-    public ArtistId getId() {
-        return id;
+    public ArtistId getArtistId() {
+        return artistId;
     }
 
     public String getArtistName() {
@@ -51,12 +51,12 @@ public class Artist {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Artist artist = (Artist) o;
-        return Objects.equals(id, artist.id);
+        return Objects.equals(artistId, artist.artistId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(artistId);
     }
 }
