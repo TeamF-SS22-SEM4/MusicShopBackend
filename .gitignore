@@ -1,3 +1,6 @@
+# the folder where hibernate-lucene stores the searchable indexes
+data-IGNORE
+
 HELP.md
 .gradle
 build/

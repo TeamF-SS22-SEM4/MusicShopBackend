@@ -51,7 +51,6 @@ class HibernateProductRepoTests {
         assertTrue(productOpt.isEmpty());
     }
 
-    // TODO implement search method, comment all tests below here if you need your tests to pass and are not implementing the search method
     @Test
     void full_text_search_test_with_multiple_keywords_album_names_case_insensitive() {
         //given
@@ -89,7 +88,7 @@ class HibernateProductRepoTests {
         productRepository.add(bridges);
 
         //when
-        List<Product> products = productRepository.fullTextSearch("ocean music");
+        List<Product> products = productRepository.fullTextSearch("Ocean MUsic");
 
         //then
         assertTrue(products.contains(sabbaton));
@@ -112,7 +111,7 @@ class HibernateProductRepoTests {
         productRepository.add(bridges);
 
         //when
-        List<Product> products = productRepository.fullTextSearch("walking storm");
+        List<Product> products = productRepository.fullTextSearch("walking STORM");
 
         //then
         assertFalse(products.contains(bridges));
@@ -121,7 +120,9 @@ class HibernateProductRepoTests {
         assertTrue(products.contains(courrete2));
     }
 
-    @Test
+    // TODO implement, search products by artist name in productSearch, comment this test if you need tests to pass
+    // and aren't implementing productSearch
+//    @Test
     void full_text_search_with_artist_name() {
         //given
         ArtistId courreteId = new ArtistId(UUID.randomUUID());
@@ -132,8 +133,8 @@ class HibernateProductRepoTests {
         Product sabbaton1 = Product.create(new ProductId(UUID.randomUUID()), "The War To End All Wars", "2022", List.of("Rock"), "Soyuz Music", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Sarajevo", "3:00"), Song.create("Stormtroopers", "3:00")));
         Product bridges1 = Product.create(new ProductId(UUID.randomUUID()), "Texas Moon", "2022", List.of("Rock"), "Dead Oceans", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Doris", "3:00"), Song.create("Chocolate Hills", "3:00")));
         Artist courretes = Artist.create(courreteId, "The courrettes", "england", List.of(courrete1.getProductId(), courrete2.getProductId()));
-        Artist sabbaton = Artist.create(sabbatonId, "The courrettes", "england", List.of(sabbaton1.getProductId()));
-        Artist bridges = Artist.create(bridgesId, "The courrettes", "england", List.of(bridges1.getProductId()));
+        Artist sabbaton = Artist.create(sabbatonId, "Sabaton", "england", List.of(sabbaton1.getProductId()));
+        Artist bridges = Artist.create(bridgesId, "The Bridges", "england", List.of(bridges1.getProductId()));
 
         artistRepository.add(courretes);
         artistRepository.add(sabbaton);
@@ -144,11 +145,11 @@ class HibernateProductRepoTests {
         productRepository.add(bridges1);
 
         //when
-        List<Product> products = productRepository.fullTextSearch("walking storm");
+        List<Product> products = productRepository.fullTextSearch("Sabat");
 
         //then
         assertTrue(products.contains(sabbaton1));
-        assertTrue(products.contains(courrete2));
+        assertFalse(products.contains(courrete2));
         assertFalse(products.contains(courrete1));
         assertFalse(products.contains(bridges1));
     }

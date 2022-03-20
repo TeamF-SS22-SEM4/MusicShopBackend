@@ -2,6 +2,9 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ArtistIdBridge;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ProductIdBridge;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -9,12 +12,16 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Indexed
 public class Artist {
     @EmbeddedId
+    @FieldBridge(impl = ArtistIdBridge.class)
     private ArtistId artistId;
+    @Field(termVector = TermVector.YES)
     private String artistName;
     private String countryOfOrigin;
     @ElementCollection
+    @FieldBridge(impl = ProductIdBridge.class)
     private List<ProductId> productIds;
 
     public static Artist create(ArtistId anArtistId, String artistName, String aCountryOfOrigin, List<ProductId> aProductIds) {

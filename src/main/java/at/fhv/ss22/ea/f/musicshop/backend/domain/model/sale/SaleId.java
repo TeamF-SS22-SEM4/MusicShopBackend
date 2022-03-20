@@ -2,6 +2,8 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.bridge.builtin.UUIDBridge;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class SaleId implements Serializable {
     @Column
     @Type(type = "uuid-char")
+    @FieldBridge(impl = UUIDBridge.class)
     private UUID saleId;
 
     public SaleId(UUID id) {

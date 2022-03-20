@@ -1,6 +1,8 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.product;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.TermVector;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -9,6 +11,7 @@ import java.util.Objects;
 public class Song {
 
     @Column
+    @Field(termVector = TermVector.YES)
     private String title;
     @Column
     private String duration;
