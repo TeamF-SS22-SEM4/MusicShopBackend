@@ -1,7 +1,9 @@
 package at.fhv  .ss22.ea.f.musicshop.backend.domain.model.artist;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ArtistIdBridge;
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.FieldBridge;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +14,7 @@ import java.util.UUID;
 public class ArtistId implements Serializable {
     @Column
     @Type(type = "uuid-char")
+    @FieldBridge(impl = ArtistIdBridge.class)
     private UUID artistId;
 
     public ArtistId(UUID id) {

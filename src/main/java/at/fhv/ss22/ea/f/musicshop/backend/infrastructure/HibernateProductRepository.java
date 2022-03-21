@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.infrastructure;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
@@ -11,6 +12,7 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,8 +55,9 @@ public class HibernateProductRepository implements ProductRepository {
                 .collect(Collectors.toList());
         QueryBuilder queryBuilder = this.fullTextEM.getSearchFactory().buildQueryBuilder().forEntity(Product.class).get();
 
+        List<Product> productsByArtistName = new LinkedList<>();
         //this variable and loop are needed to allow for a dynamic number of keywords
-        BooleanJunction buildedQuery =  queryBuilder.bool();
+        BooleanJunction<BooleanJunction> buildedQuery =  queryBuilder.bool();
         for (String keyword : keywords) {
             buildedQuery = buildedQuery.should(
                 queryBuilder.keyword()
@@ -65,16 +68,31 @@ public class HibernateProductRepository implements ProductRepository {
                 .matching("*" + keyword + "*")
                 .createQuery()
             );
+
+            //NOTES on searching by artist name: is working but ugly,
+            // since artist name is searched in separate query, because hibernate-lucene doesn't support joins,
+            // we don't have results ordered by relevancy, currently all products found via artist name are added
+            // at the end of the result list
+            TypedQuery<Artist> artistQuery = em.createQuery("" +
+                    "select a from Artist a where lower(a.artistName) like :keyword_pattern",
+                    Artist.class);
+            artistQuery.setParameter("keyword_pattern", "%"+keyword+"%");
+
+            artistQuery.getResultList().forEach(artist -> {
+                TypedQuery<Product> subProductQuery = em.createQuery(
+                        "select p from Product p left join fetch p.artistIds l where l.artistId = :artist_id",
+                        Product.class
+                );
+                subProductQuery.setParameter("artist_id", artist.getArtistId().getUUID());
+                productsByArtistName.addAll(subProductQuery.getResultList());
+            });
         }
         org.apache.lucene.search.Query query = buildedQuery.createQuery();
         FullTextQuery jpaQuery = fullTextEM.createFullTextQuery(query, Product.class);
 
-        //notes on searching by artistName:
-        // since artist is a separate entity to product and lucene-search doesn't support joins, need to add  results
-        // from artist name in separate query, but also unsure how to search product by artistName since
-        // artist and product entities arent related, "as seen by hibernate"
-        // still unsure how to sort the total resulting list
-
-        return jpaQuery.getResultList();
+        List<Product> allProducts = new LinkedList<>();
+        allProducts.addAll(jpaQuery.getResultList());
+        allProducts.addAll(productsByArtistName);
+        return allProducts;
     }
 }
