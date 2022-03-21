@@ -1,0 +1,60 @@
+package at.fhv.ss22.ea.f.musicshop.backend.communication;
+
+import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
+import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductSearchServiceImpl extends UnicastRemoteObject implements ProductSearchService {
+
+    private ProductApplicationService productApplicationService;
+
+    protected ProductSearchServiceImpl() throws RemoteException {
+        super();
+    }
+
+    public static ProductSearchService newInstance() {
+        ProductSearchServiceImpl instance = null;
+        try {
+            instance = new ProductSearchServiceImpl();
+            instance.productApplicationService = ProductApplicationServiceImpl.instance();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return instance;
+    }
+
+    public static ProductSearchService newTestInstance(ProductApplicationService productApplicationService) {
+        ProductSearchServiceImpl instance = null;
+        try {
+            instance = new ProductSearchServiceImpl();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        instance.productApplicationService = productApplicationService;
+        return instance;
+    }
+
+    @Override
+    public List<ProductOverviewDTO> fullTextSearch(String query) {
+//        return productApplicationService.search(query);
+        // Fake List to test RMI
+        List<ProductOverviewDTO> productOverviewDTOs = new ArrayList<>();
+        for(int i = 1; i <= 20; i++) {
+            productOverviewDTOs.add(
+                    ProductOverviewDTO.builder()
+                            .withName("Product " + i)
+                            .withArtistName("Artist " + i)
+                            .withReleaseYear("1980")
+                            .build()
+            );
+        }
+
+        return productOverviewDTOs;
+    }
+}

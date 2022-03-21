@@ -1,4 +1,4 @@
-package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
+package at.fhv.ss22.ea.f.musicshop.backend.communication;
 
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.communication.api.RMIFactory;
