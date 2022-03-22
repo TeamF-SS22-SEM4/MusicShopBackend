@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateSoundCarrierRepoTests {
 
@@ -39,7 +38,7 @@ class HibernateSoundCarrierRepoTests {
     }
 
     @Test
-    void given_invalid_product_id_when_searched_then_empty_result() {
+    void given_invalid_carrier_id_when_searched_then_empty_result() {
         //given
         SoundCarrierId id = new SoundCarrierId(UUID.randomUUID());
 
@@ -48,5 +47,48 @@ class HibernateSoundCarrierRepoTests {
 
         //then
         assertTrue(soundCarrierOptional.isEmpty());
+    }
+
+    @Test
+    void get_carriers_by_product_id() {
+        //given
+        Product product1 = Product.create(
+                new ProductId(UUID.randomUUID()),
+                "some",
+                "2020",
+                List.of("pop", "rock"),
+                "best label",
+                "40:00",
+                List.of(new ArtistId(UUID.randomUUID())),
+                List.of(Song.create("songA", "3:00"), Song.create("SongB", "3:00"))
+        );
+        Product product2 = Product.create(
+                new ProductId(UUID.randomUUID()),
+                "another one",
+                "1999",
+                List.of("K-Pop"),
+                "not so good label",
+                "12:00",
+                List.of(new ArtistId(UUID.randomUUID())),
+                List.of(Song.create("some song", "5:00"))
+        );
+        List<SoundCarrier> carriers = List.of(
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 15f, 5, "A5", product1.getProductId()),
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.CD, 10f, 6, "A5", product1.getProductId()),
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 15f, 5, "A5", product2.getProductId()),
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.CD, 10f, 6, "A5", product2.getProductId())
+        );
+        for (SoundCarrier s: carriers) {
+            soundCarrierRepository.add(s);
+        }
+
+        //when
+        List<SoundCarrier> carriersActual = soundCarrierRepository.soundCarriersByProductId(product1.getProductId());
+
+        //then
+        assertTrue(carriersActual.contains(carriers.get(0)));
+        assertTrue(carriersActual.contains(carriers.get(1)));
+        assertFalse(carriersActual.contains(carriers.get(2)));
+        assertFalse(carriersActual.contains(carriers.get(3)));
     }
 }
