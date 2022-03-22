@@ -6,20 +6,20 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 public class RMIServer {
+    private static int PORT = 12345;
     private static String PROTOCOL = "rmi://";
-    private static String HOST = "localhost";
+    private static String HOST = "10.0.40.170";
     private static String STUB = "/RMIFactory";
 
     public static void startRMIServer() {
         try {
-            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+            LocateRegistry.createRegistry(PORT);
 
             RMIFactory rmiFactory = new RMIFactoryImpl();
 
-            Naming.rebind(PROTOCOL + HOST + STUB, rmiFactory);
+            Naming.rebind(PROTOCOL + HOST + ":" + PORT + STUB, rmiFactory);
             System.out.println("RMIFactory bound in registry");
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();

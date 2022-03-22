@@ -53,3 +53,14 @@ test {
 }
 
 build.dependsOn jacocoTestReport
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes 'Main-Class': 'at.fhv.ss22.ea.f.musicshop.backend.Application'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
