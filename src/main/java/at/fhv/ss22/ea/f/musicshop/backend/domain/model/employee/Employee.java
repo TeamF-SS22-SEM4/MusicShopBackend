@@ -24,7 +24,10 @@ public class Employee {
     public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
         return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, aSalesList);
     }
+
+    @Generated
     protected Employee() {}
+
     private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
         this.employeeId = aEmployeeId;
         this.username = aUsername;

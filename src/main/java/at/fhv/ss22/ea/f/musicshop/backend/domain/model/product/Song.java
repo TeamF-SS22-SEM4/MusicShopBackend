@@ -16,7 +16,9 @@ public class Song {
     @Column
     private String duration;
 
+    @Generated
     protected Song() {}
+
     public static Song create(String aTitle, String aDuration) {
         return new Song(aTitle, aDuration);
     }

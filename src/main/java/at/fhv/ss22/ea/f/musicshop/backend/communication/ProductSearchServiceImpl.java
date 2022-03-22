@@ -50,19 +50,6 @@ public class ProductSearchServiceImpl extends UnicastRemoteObject implements Pro
 
     @Override
     public List<ProductOverviewDTO> fullTextSearch(String query) {
-//        return productApplicationService.search(query);
-        // Fake List to test RMI
-        List<ProductOverviewDTO> productOverviewDTOs = new ArrayList<>();
-        for(int i = 1; i <= 20; i++) {
-            productOverviewDTOs.add(
-                    ProductOverviewDTO.builder()
-                            .withName("Product " + i)
-                            .withArtistName("Artist " + i)
-                            .withReleaseYear("1980")
-                            .build()
-            );
-        }
-
-        return productOverviewDTOs;
+        return productApplicationService.search(query);
     }
 }

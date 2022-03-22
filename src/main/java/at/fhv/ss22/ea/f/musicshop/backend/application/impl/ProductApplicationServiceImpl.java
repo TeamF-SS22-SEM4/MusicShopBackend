@@ -23,6 +23,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     //implemented this application service as singleton because rmi-remote objects are created for each client
     // if each rmi-instance creates its own "lower" layer-instances, leads to lots of instances of the lower layers
     private static ProductApplicationServiceImpl INSTANCE;
+
     public static ProductApplicationService instance() {
         if (INSTANCE == null) {
             INSTANCE = new ProductApplicationServiceImpl();
@@ -74,7 +75,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                         .map(artistId -> artistRepository.artistById(artistId))
                         .filter(Optional::isPresent)
                         .map(opt -> opt.get().getArtistName())
-                        .collect(Collectors.joining(", ")))
+                        .collect(Collectors.toList()))
                 .build();
     }
 

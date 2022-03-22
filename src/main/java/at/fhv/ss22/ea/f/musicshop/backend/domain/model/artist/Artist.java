@@ -34,6 +34,8 @@ public class Artist {
         this.countryOfOrigin = countryOfOrigin;
         this.productIds = productIds;
     }
+
+    @Generated
     protected Artist() {}
 
     public ArtistId getArtistId() {

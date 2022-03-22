@@ -21,6 +21,7 @@ public class ArtistId implements Serializable {
         this.artistId = id;
     }
 
+    @Generated
     protected ArtistId() {}
 
     public UUID getUUID() {

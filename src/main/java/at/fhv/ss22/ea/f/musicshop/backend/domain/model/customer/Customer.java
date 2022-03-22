@@ -26,7 +26,9 @@ public class Customer {
         return new Customer(aCustomerId, aFirstname, aLastname, aEmail, aPhoneNumber, aAddress, aPurchases);
     }
 
+    @Generated
     protected Customer() {}
+
     private Customer(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
         this.customerId = aCustomerId;
         this.firstname = aFirstname;

@@ -34,7 +34,8 @@ public class Product {
     @IndexedEmbedded
     private List<Song> songs;
 
-    public Product() {}
+    @Generated
+    protected Product() {}
 
     public static Product create(ProductId aProductId, String aName, String aReleaseYear, List<String> aGenreList, String aLabel, String aDuration, List<ArtistId> aArtistIdList, List<Song> aSongList) {
         return new Product(aProductId, aName, aReleaseYear, aGenreList, aLabel, aDuration, aArtistIdList, aSongList);

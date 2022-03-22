@@ -18,6 +18,8 @@ public class EmployeeId implements Serializable {
     public EmployeeId(UUID id) {
         this.employeeId = id;
     }
+
+    @Generated
     protected EmployeeId() {}
 
     public UUID getUUID() {

@@ -89,7 +89,7 @@ class ProductApplicationImplTests {
         assertEquals(1, productDTOs.size());
         ProductOverviewDTO dto = productDTOs.get(0);
 
-        assertEquals(rammstein.getArtistName(), dto.artistName());
+        assertEquals(rosenrot.getArtistIds().size(), dto.artistName().size());
         assertEquals(rosenrot.getName(), dto.name());
     }
 

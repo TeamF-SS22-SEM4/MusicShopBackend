@@ -18,6 +18,8 @@ public class SoundCarrierId implements Serializable {
     public SoundCarrierId(UUID id) {
         this.carrierId = id;
     }
+
+    @Generated
     protected SoundCarrierId() {}
 
     public UUID getUUID() {

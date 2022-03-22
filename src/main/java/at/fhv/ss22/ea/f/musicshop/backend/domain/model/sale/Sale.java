@@ -27,7 +27,9 @@ public class Sale {
         return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aTotalPrice, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
     }
 
+    @Generated
     protected Sale() {}
+
     private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         this.saleId = aSaleId;
         this.invoiceNumber = aInvoiceNumber;
