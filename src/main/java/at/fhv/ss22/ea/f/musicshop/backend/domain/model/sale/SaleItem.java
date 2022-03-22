@@ -20,7 +20,10 @@ public class SaleItem {
     public static SaleItem create(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         return new SaleItem(refunded, anAmountOfCarriers, aPricePerCarrier, aCarrierId);
     }
+
+    @Generated
     protected SaleItem() {}
+
     private SaleItem(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         this.isRefunded = refunded;
         this.amountOfCarriers = anAmountOfCarriers;

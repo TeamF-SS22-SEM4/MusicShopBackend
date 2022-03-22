@@ -21,6 +21,7 @@ public class ProductId implements Serializable {
         this.productId = id;
     }
 
+    @Generated
     protected ProductId() {}
 
     public UUID getUUID() {

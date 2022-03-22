@@ -23,6 +23,8 @@ public class Address implements Serializable {
         this.postalCode = postalCode;
         this.country = country;
     }
+
+    @Generated
     protected Address() {}
 
     public String getStreet() {

@@ -18,6 +18,8 @@ public class CustomerId implements Serializable {
     public CustomerId(UUID id) {
         this.customerId = id;
     }
+
+    @Generated
     protected CustomerId() {}
 
     public UUID getUUID() {

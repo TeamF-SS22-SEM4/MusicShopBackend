@@ -21,6 +21,8 @@ public class SaleId implements Serializable {
     public SaleId(UUID id) {
         this.saleId = id;
     }
+
+    @Generated
     protected SaleId() {}
 
     public UUID getUUID() {

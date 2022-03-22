@@ -22,7 +22,9 @@ public class SoundCarrier {
         return new SoundCarrier(aCarrierId, aType, aPrice, aAmountInStore, aLocation, aProductId);
     }
 
+    @Generated
     protected SoundCarrier() {}
+
     private SoundCarrier(SoundCarrierId aCarrierId, SoundCarrierType aType, float aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {
         this.carrierId = aCarrierId;
         this.type = aType;
