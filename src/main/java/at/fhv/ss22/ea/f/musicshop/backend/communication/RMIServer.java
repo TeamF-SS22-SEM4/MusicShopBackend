@@ -15,6 +15,9 @@ public class RMIServer {
 
     public static void startRMIServer() {
         try {
+            System.setProperty("java.security.policy", "file:./security.policy");
+            System.setProperty("java.rmi.server.hostname", HOST);
+            System.setSecurityManager(new SecurityManager());
             LocateRegistry.createRegistry(PORT);
 
             RMIFactory rmiFactory = new RMIFactoryImpl();
