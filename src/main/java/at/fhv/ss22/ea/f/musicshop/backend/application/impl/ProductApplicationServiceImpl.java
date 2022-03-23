@@ -69,6 +69,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     //TODO maybe extract to DTOassembler
     private ProductOverviewDTO overviewDtoFromProduct(Product product) {
         return ProductOverviewDTO.builder()
+                .withId(product.getProductId().getUUID())
                 .withName(product.getName())
                 .withReleaseYear(product.getReleaseYear())
                 .withArtistName(product.getArtistIds().stream()

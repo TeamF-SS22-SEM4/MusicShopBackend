@@ -134,6 +134,7 @@ class ProductApplicationImplTests {
         //then
         assertTrue(productOpt.isPresent());
         ProductDetailsDTO product = productOpt.get();
+        assertEquals(rosenrot.getProductId().getUUID(), product.getProductId());
         assertEquals(rosenrot.getName(), product.getName());
         assertEquals(rosenrot.getLabel(), product.getLabelName());
         assertEquals(rosenrot.getReleaseYear(), product.getReleaseYear());
