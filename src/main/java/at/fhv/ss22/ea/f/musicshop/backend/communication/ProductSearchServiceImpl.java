@@ -8,9 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationSer
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class ProductSearchServiceImpl extends UnicastRemoteObject implements ProductSearchService {
@@ -44,8 +42,8 @@ public class ProductSearchServiceImpl extends UnicastRemoteObject implements Pro
     }
 
     @Override
-    public Optional<ProductDetailsDTO> productById(UUID productId) {
-        return productApplicationService.productById(productId);
+    public ProductDetailsDTO productById(UUID productId) {
+        return productApplicationService.productById(productId).get();
     }
 
     @Override

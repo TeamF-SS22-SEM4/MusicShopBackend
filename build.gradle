@@ -11,6 +11,9 @@ repositories {
     maven { url 'https://jitpack.io'}
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
 
 jacoco {
     toolVersion = "0.8.7"
