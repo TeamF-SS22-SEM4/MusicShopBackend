@@ -16,7 +16,7 @@ public class RMIServer {
     public static void startRMIServer() {
         try {
             RMIFactory rmiFactory = new RMIFactoryImpl();
-            LocateRegistry.createRegistry(PORT).rebind("STUB", rmiFactory);
+            LocateRegistry.createRegistry(PORT).rebind("RMIFactory", rmiFactory);
 
             System.out.println("RMIFactory bound in registry");
         } catch (RemoteException e) {
