@@ -15,13 +15,11 @@ public class RMIServer {
 
     public static void startRMIServer() {
         try {
-            LocateRegistry.createRegistry(PORT);
-
             RMIFactory rmiFactory = new RMIFactoryImpl();
+            LocateRegistry.createRegistry(PORT).rebind("STUB", rmiFactory);
 
-            Naming.rebind(PROTOCOL + HOST + ":" + PORT + STUB, rmiFactory);
             System.out.println("RMIFactory bound in registry");
-        } catch (RemoteException | MalformedURLException e) {
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
