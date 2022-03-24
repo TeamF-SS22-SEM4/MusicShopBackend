@@ -9,7 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class RMIFactoryImpl extends UnicastRemoteObject implements RMIFactory {
     public RMIFactoryImpl() throws RemoteException {
-        super();
+        super(12345);
     }
 
     @Override

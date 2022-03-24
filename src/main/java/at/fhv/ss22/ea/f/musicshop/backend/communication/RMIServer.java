@@ -10,16 +10,18 @@ import java.rmi.registry.LocateRegistry;
 public class RMIServer {
     private static int PORT = 12345;
     private static String PROTOCOL = "rmi://";
-    private static String HOST = "10.0.40.170";
+    private static String HOST = "localhost";
     private static String STUB = "/RMIFactory";
 
     public static void startRMIServer() {
         try {
             RMIFactory rmiFactory = new RMIFactoryImpl();
-            LocateRegistry.createRegistry(PORT).rebind("RMIFactory", rmiFactory);
+            LocateRegistry.createRegistry(PORT);
+
+            Naming.rebind(PROTOCOL + HOST + ":" + PORT + STUB, rmiFactory);
 
             System.out.println("RMIFactory bound in registry");
-        } catch (RemoteException e) {
+        } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
     }
