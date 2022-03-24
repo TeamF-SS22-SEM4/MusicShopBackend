@@ -1,7 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.infrastructure;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -16,14 +14,18 @@ class EntityManagerSupplier {
             System.setProperty("hibernate.search.default.indexBase", "data-IGNORE/hibernate/index/default");
             //setting index location for hibernate-lucene here, because didn't work when setting the property in persistence.xml
 
-            Dotenv dotenv = Dotenv.load();
             Map<String, Object> configOverrides = new HashMap<>();
+            Map<String, String> envs = System.getenv();
 
-            configOverrides.put("javax.persistence.jdbc.user", dotenv.get("POSTGRES_USER"));
-            configOverrides.put("javax.persistence.jdbc.password", dotenv.get("POSTGRES_PASSWORD"));
+            envs.forEach((k, v) -> {
+                if(k.contains("POSTGRES_USER")) {
+                    configOverrides.put("javax.persistence.jdbc.user", v);
+                }
 
-            System.out.println(dotenv.get("POSTGRES_USER"));
-            System.out.println(dotenv.get("POSTGRES_PASSWORD"));
+                if(k.contains("POSTGRES_PASSWORD")) {
+                    configOverrides.put("javax.persistence.jdbc.password", v);
+                }
+            });
 
             EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("MusicShopBackend", configOverrides);
             ENTITY_MANAGER = emFactory.createEntityManager();
