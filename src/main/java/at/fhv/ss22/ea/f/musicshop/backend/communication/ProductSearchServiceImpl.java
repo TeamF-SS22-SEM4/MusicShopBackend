@@ -4,7 +4,6 @@ import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.communication.dto.ProductDetailsDTO;
 import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -15,35 +14,14 @@ public class ProductSearchServiceImpl extends UnicastRemoteObject implements Pro
 
     private ProductApplicationService productApplicationService;
 
-    protected ProductSearchServiceImpl() throws RemoteException {
+    public ProductSearchServiceImpl(ProductApplicationService productApplicationService) throws RemoteException {
         super();
-    }
-
-    public static ProductSearchService newInstance() {
-        ProductSearchServiceImpl instance = null;
-        try {
-            instance = new ProductSearchServiceImpl();
-            instance.productApplicationService = ProductApplicationServiceImpl.instance();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return instance;
-    }
-
-    public static ProductSearchService newTestInstance(ProductApplicationService productApplicationService) {
-        ProductSearchServiceImpl instance = null;
-        try {
-            instance = new ProductSearchServiceImpl();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        instance.productApplicationService = productApplicationService;
-        return instance;
+        this.productApplicationService = productApplicationService;
     }
 
     @Override
     public ProductDetailsDTO productById(UUID productId) {
-        return productApplicationService.productById(productId).get();
+        return productApplicationService.productById(productId).orElse(null);
     }
 
     @Override

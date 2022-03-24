@@ -4,6 +4,7 @@ import at.fhv.ss22.ea.f.communication.dto.ProductDetailsDTO;
 import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
@@ -35,22 +36,11 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductApplicationImplTests {
 
-    private ProductApplicationService productApplicationService;
+    private ProductApplicationService productApplicationService = InstanceProvider.getTestingProductApplicationService();
 
-    private ProductRepository mockedProductRepository;
-    private SoundCarrierRepository mockedSoundCarrierRepo;
-    private ArtistRepository mockedArtistRepo;
-
-    @BeforeAll
-    void setup() {
-            this.mockedArtistRepo = mock(ArtistRepository.class);
-            this.mockedSoundCarrierRepo = mock(SoundCarrierRepository.class);
-            this.mockedProductRepository = mock(ProductRepository.class);
-            this.productApplicationService = ProductApplicationServiceImpl.newTestInstance(
-                    this.mockedProductRepository,
-                    this.mockedArtistRepo,
-                    this.mockedSoundCarrierRepo);
-    }
+    private ProductRepository mockedProductRepository = InstanceProvider.getMockedProductRepository();
+    private SoundCarrierRepository mockedSoundCarrierRepo = InstanceProvider.getMockedSoundCarrierRepository();
+    private ArtistRepository mockedArtistRepo = InstanceProvider.getMockedArtistRepository();
 
     @Test
     void when_search_product_then_dto_matching_values() {

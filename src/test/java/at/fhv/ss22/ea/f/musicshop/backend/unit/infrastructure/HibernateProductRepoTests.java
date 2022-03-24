@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
+import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
@@ -19,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateProductRepoTests {
 
-    private ArtistRepository artistRepository = new HibernateArtistRepository();
+    private ArtistRepository artistRepository = InstanceProvider.getArtistRepository();
 
-    private ProductRepository productRepository = new HibernateProductRepository();
+    private ProductRepository productRepository = InstanceProvider.getProductRepository();
 
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
