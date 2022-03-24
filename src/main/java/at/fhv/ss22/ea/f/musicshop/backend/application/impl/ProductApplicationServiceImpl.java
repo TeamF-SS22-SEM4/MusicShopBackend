@@ -10,9 +10,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateArtistRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSoundCarrierRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,35 +17,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ProductApplicationServiceImpl implements ProductApplicationService {
-    //implemented this application service as singleton because rmi-remote objects are created for each client
-    // if each rmi-instance creates its own "lower" layer-instances, leads to lots of instances of the lower layers
-    private static ProductApplicationServiceImpl INSTANCE;
 
-    public static ProductApplicationService instance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProductApplicationServiceImpl();
-            INSTANCE.productRepository = new HibernateProductRepository();
-            INSTANCE.artistRepository = new HibernateArtistRepository();
-            INSTANCE.soundCarrierRepository = new HibernateSoundCarrierRepository();
-        }
-        return INSTANCE;
-    }
-    public static ProductApplicationService newTestInstance(
-            ProductRepository productRepository,
-            ArtistRepository artistRepository,
-            SoundCarrierRepository soundCarrierRepository
-    ) {
-        ProductApplicationServiceImpl testInstance = new ProductApplicationServiceImpl();
-        testInstance.productRepository = productRepository;
-        testInstance.artistRepository = artistRepository;
-        testInstance.soundCarrierRepository = soundCarrierRepository;
-        return testInstance;
-    }
-    private ProductApplicationServiceImpl() {}
     private ProductRepository productRepository;
     private ArtistRepository artistRepository;
     private SoundCarrierRepository soundCarrierRepository;
 
+    public ProductApplicationServiceImpl(ProductRepository productRepository, ArtistRepository artistRepository, SoundCarrierRepository soundCarrierRepository) {
+        this.productRepository = productRepository;
+        this.artistRepository = artistRepository;
+        this.soundCarrierRepository = soundCarrierRepository;
+    }
 
     @Override
     public Optional<ProductDetailsDTO> productById(UUID productId) {
@@ -69,6 +47,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     //TODO maybe extract to DTOassembler
     private ProductOverviewDTO overviewDtoFromProduct(Product product) {
         return ProductOverviewDTO.builder()
+                .withId(product.getProductId().getUUID())
                 .withName(product.getName())
                 .withReleaseYear(product.getReleaseYear())
                 .withArtistName(product.getArtistIds().stream()

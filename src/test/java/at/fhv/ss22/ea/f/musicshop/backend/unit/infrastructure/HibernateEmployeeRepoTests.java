@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
+import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HibernateEmployeeRepoTests {
-    private EmployeeRepository employeeRepository = new HibernateEmployeeRepository();
+    private EmployeeRepository employeeRepository = InstanceProvider.getEmployeeRepository();
 
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
