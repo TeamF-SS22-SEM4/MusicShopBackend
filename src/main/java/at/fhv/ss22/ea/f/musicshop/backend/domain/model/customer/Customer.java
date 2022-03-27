@@ -27,7 +27,8 @@ public class Customer {
     }
 
     @Generated
-    protected Customer() {}
+    protected Customer() {
+    }
 
     private Customer(CustomerId aCustomerId, String aFirstname, String aLastname, String aEmail, String aPhoneNumber, Address aAddress, List<SaleId> aPurchases) {
         this.customerId = aCustomerId;

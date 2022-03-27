@@ -1,11 +1,12 @@
-package at.fhv  .ss22.ea.f.musicshop.backend.domain.model.artist;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ArtistIdBridge;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.FieldBridge;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -22,7 +23,8 @@ public class ArtistId implements Serializable {
     }
 
     @Generated
-    protected ArtistId() {}
+    protected ArtistId() {
+    }
 
     public UUID getUUID() {
         return artistId;

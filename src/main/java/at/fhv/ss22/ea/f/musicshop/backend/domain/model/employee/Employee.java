@@ -26,7 +26,8 @@ public class Employee {
     }
 
     @Generated
-    protected Employee() {}
+    protected Employee() {
+    }
 
     private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
         this.employeeId = aEmployeeId;
