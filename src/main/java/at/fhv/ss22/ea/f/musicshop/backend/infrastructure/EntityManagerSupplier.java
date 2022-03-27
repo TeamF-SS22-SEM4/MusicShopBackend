@@ -6,7 +6,7 @@ import javax.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-class EntityManagerSupplier {
+public class EntityManagerSupplier {
     private static EntityManager ENTITY_MANAGER;
 
     public static EntityManager getEntityManager() {

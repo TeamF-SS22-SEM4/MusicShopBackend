@@ -1,6 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 
 import javax.persistence.*;
@@ -19,6 +20,9 @@ public class SaleItem {
 
     public static SaleItem create(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         return new SaleItem(refunded, anAmountOfCarriers, aPricePerCarrier, aCarrierId);
+    }
+    public static SaleItem ofCarrier(int amount, SoundCarrier carrier) {
+        return new SaleItem(false, amount, carrier.getPrice(), carrier.getCarrierId());
     }
 
     @Generated

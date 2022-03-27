@@ -1,7 +1,9 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -20,6 +22,15 @@ public class SoundCarrier {
 
     public static SoundCarrier create(SoundCarrierId aCarrierId, SoundCarrierType aType, float aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {
         return new SoundCarrier(aCarrierId, aType, aPrice, aAmountInStore, aLocation, aProductId);
+    }
+
+    public SaleItem sell(int amount) throws SoundCarrierUnavailableException {
+        if (amount > this.amountInStore) {
+            throw new SoundCarrierUnavailableException();
+        }
+        this.amountInStore -= amount;
+
+        return SaleItem.ofCarrier(amount, this);
     }
 
     @Generated

@@ -2,7 +2,9 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SoundCarrierApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.ProductSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
@@ -20,10 +22,13 @@ public class InstanceProvider {
     private static ProductRepository productRepository;
     private static SaleRepository saleRepository;
     private static SoundCarrierRepository soundCarrierRepository;
+    private static SoundCarrierApplicationService soundCarrierApplicationService;
 
     private static ProductSearchService testingProductSearchService;
     private static ProductApplicationService testingProductApplicationService;
+    private static SoundCarrierApplicationService testingSoundCarrierApplicationService;
 
+    private static SoundCarrierApplicationService mockedSoundCarrierApplicationService;
     private static ProductApplicationService mockedProductApplicationService;
     private static ArtistRepository mockedArtistRepository;
     private static EmployeeRepository mockedEmployeeRepository;
@@ -36,6 +41,27 @@ public class InstanceProvider {
             productApplicationService = new ProductApplicationServiceImpl(getProductRepository(), getArtistRepository(), getSoundCarrierRepository());
         }
         return productApplicationService;
+    }
+
+    public static SoundCarrierApplicationService getSoundCarrierApplicationService() {
+        if (null == soundCarrierApplicationService) {
+            soundCarrierApplicationService = new SoundCarrierApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+        }
+        return soundCarrierApplicationService;
+    }
+
+    public static SoundCarrierApplicationService getTestingSoundCarrierApplicationService() {
+        if (null == testingSoundCarrierApplicationService) {
+            testingSoundCarrierApplicationService = new SoundCarrierApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+        }
+        return testingSoundCarrierApplicationService;
+    }
+
+    public static SoundCarrierApplicationService getMockedSoundCarrierApplicationService() {
+        if (null == mockedSoundCarrierApplicationService) {
+            mockedSoundCarrierApplicationService = mock(SoundCarrierApplicationService.class);
+        }
+        return mockedSoundCarrierApplicationService;
     }
 
     public static ProductSearchService getProductSearchService() {
