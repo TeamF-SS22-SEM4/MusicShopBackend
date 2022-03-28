@@ -15,7 +15,7 @@ public class ProductSearchServiceImpl extends UnicastRemoteObject implements Pro
     private ProductApplicationService productApplicationService;
 
     public ProductSearchServiceImpl(ProductApplicationService productApplicationService) throws RemoteException {
-        super(12345);
+        super(RMIServer.getPort());
         this.productApplicationService = productApplicationService;
     }
 
