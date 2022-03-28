@@ -19,7 +19,7 @@ services:
     container_name: musicshop-backend
     build: .
     ports:
-      - "12345:12345"
+      - "1099:1099"
     links:
       - postgres
     env_file:
