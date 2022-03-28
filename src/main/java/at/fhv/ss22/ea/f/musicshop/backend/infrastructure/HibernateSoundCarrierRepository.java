@@ -19,9 +19,7 @@ public class HibernateSoundCarrierRepository implements SoundCarrierRepository {
 
     @Override
     public void add(SoundCarrier soundCarrier) {
-        this.em.getTransaction().begin();
         this.em.persist(soundCarrier);
-        this.em.getTransaction().commit();
     }
 
     @Override

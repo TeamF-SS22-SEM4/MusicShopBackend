@@ -18,9 +18,7 @@ public class HibernateEmployeeRepository implements EmployeeRepository {
 
     @Override
     public void add(Employee employee) {
-        this.em.getTransaction().begin();
         this.em.persist(employee);
-        this.em.getTransaction().commit();
     }
 
     @Override

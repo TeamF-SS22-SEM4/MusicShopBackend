@@ -9,8 +9,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSoundCarrierRepository;
-import org.javamoney.moneta.Money;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,7 +25,9 @@ class HibernateSoundCarrierRepoTests {
     @Test
     void given_soundcarrier_when_searched_by_equal_but_not_same_id_then_carrier_found() {
         SoundCarrier carrier = SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 10, 5, "A-12", new ProductId(UUID.randomUUID()));
+        EntityManagerUtil.beginTransaction();
         soundCarrierRepository.add(carrier);
+        EntityManagerUtil.commit();
         SoundCarrierId surrogateId = new SoundCarrierId(carrier.getCarrierId().getUUID());
 
         //when
@@ -79,9 +80,11 @@ class HibernateSoundCarrierRepoTests {
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 15f, 5, "A5", product2.getProductId()),
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.CD, 10f, 6, "A5", product2.getProductId())
         );
+        EntityManagerUtil.beginTransaction();
         for (SoundCarrier s: carriers) {
             soundCarrierRepository.add(s);
         }
+        EntityManagerUtil.commit();
 
         //when
         List<SoundCarrier> carriersActual = soundCarrierRepository.soundCarriersByProductId(product1.getProductId());

@@ -17,10 +17,8 @@ public class HibernateSaleRepository implements SaleRepository {
 
     @Override
     public void add(Sale sale) {
-        em.getTransaction().begin();
         sale.getSaleItemList().forEach(item -> em.persist(item));
         em.persist(sale);
-        em.getTransaction().commit();
     }
 
     @Override

@@ -41,9 +41,11 @@ class ApplicationToInfrastructureTests {
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.CD, 10, 5, "A1", new ProductId(UUID.randomUUID()))
         );
 
+        EntityManagerUtil.beginTransaction();
         for (SoundCarrier c: carriers) {
             soundCarrierRepository.add(c);
         }
+        EntityManagerUtil.commit();
 
         //when
         SoundCarrierAmountDTO buyingDTO1 = SoundCarrierAmountDTO.builder()
@@ -56,15 +58,16 @@ class ApplicationToInfrastructureTests {
         //then
         try {
             soundCarrierApplicationService.buy(List.of(buyingDTO1, buyingDTO2), "CASH");
-            assertTrue(false); //statement ensures that test fails if no exception is thrown
+            fail(); // fails if no exception is thrown
         } catch(CarrierNotAvailableException e) {
             //then
             assertTrue(e.getUnavailableCarriers().contains(carriers.get(2).getCarrierId().getUUID()));
             assertFalse(e.getUnavailableCarriers().contains(carriers.get(0).getCarrierId().getUUID()));
 
 
-            SoundCarrier carrierAct1 = soundCarrierRepository.soundCarrierById(carriers.get(0).getCarrierId()).get();
-            SoundCarrier carrierAct2 = soundCarrierRepository.soundCarrierById(carriers.get(2).getCarrierId()).get();
+
+            SoundCarrier carrierAct1 = soundCarrierRepository.soundCarrierById(carriers.get(0).getCarrierId()).orElseThrow();
+            SoundCarrier carrierAct2 = soundCarrierRepository.soundCarrierById(carriers.get(2).getCarrierId()).orElseThrow();
 
             assertEquals(5, carrierAct1.getAmountInStore());
             assertEquals(5, carrierAct2.getAmountInStore());
