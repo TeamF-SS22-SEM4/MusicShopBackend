@@ -11,6 +11,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,9 +29,12 @@ public class SoundCarrierApplicationServiceImpl implements SoundCarrierApplicati
     }
 
     @Override
-    public void buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
+    public UUID buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
+        EntityManagerUtil.beginTransaction();
+
         List<SaleItem> saleItems = new LinkedList<>();
         List<UUID> invalidCarriers = new LinkedList<>();
+
         for (SoundCarrierAmountDTO dto : carrierAmounts) {
             SoundCarrier carrier = soundCarrierRepository.soundCarrierById(new SoundCarrierId(dto.getCarrierId())).orElseThrow(IllegalStateException::new);
 
@@ -42,6 +46,7 @@ public class SoundCarrierApplicationServiceImpl implements SoundCarrierApplicati
         }
 
         if (!invalidCarriers.isEmpty()) {
+            EntityManagerUtil.rollback();
             throw new CarrierNotAvailableException(invalidCarriers);
         }
 
@@ -49,6 +54,8 @@ public class SoundCarrierApplicationServiceImpl implements SoundCarrierApplicati
         Sale sale = Sale.newSale("TODO", saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
         saleRepository.add(sale);
 
+        EntityManagerUtil.commit();
 
+        return sale.getSaleId().getUUID();
     }
 }

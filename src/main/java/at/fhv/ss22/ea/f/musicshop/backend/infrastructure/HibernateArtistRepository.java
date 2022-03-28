@@ -13,7 +13,7 @@ public class HibernateArtistRepository implements ArtistRepository {
     private EntityManager em;
 
     public HibernateArtistRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override

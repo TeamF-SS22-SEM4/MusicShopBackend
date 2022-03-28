@@ -9,4 +9,8 @@ public class CarrierNotAvailableException extends Exception {
     public CarrierNotAvailableException(List<UUID> unavailableCarriers) {
         this.unavailableCarriers = unavailableCarriers;
     }
+
+    public List<UUID> getUnavailableCarriers() {
+        return unavailableCarriers;
+    }
 }

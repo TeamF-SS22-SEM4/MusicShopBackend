@@ -12,7 +12,7 @@ public class HibernateSaleRepository implements SaleRepository {
     private EntityManager em;
 
     public HibernateSaleRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override

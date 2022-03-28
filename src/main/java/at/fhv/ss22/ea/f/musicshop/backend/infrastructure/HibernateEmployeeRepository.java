@@ -13,7 +13,7 @@ public class HibernateEmployeeRepository implements EmployeeRepository {
     private EntityManager em;
 
     public HibernateEmployeeRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override

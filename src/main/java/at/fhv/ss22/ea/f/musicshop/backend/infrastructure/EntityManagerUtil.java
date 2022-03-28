@@ -6,8 +6,18 @@ import javax.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntityManagerSupplier {
+public class EntityManagerUtil {
     private static EntityManager ENTITY_MANAGER;
+
+    public static void beginTransaction() {
+        getEntityManager().getTransaction().begin();
+    }
+    public static void rollback() {
+        getEntityManager().getTransaction().rollback();
+    }
+    public static void commit() {
+        getEntityManager().getTransaction().commit();
+    }
 
     public static EntityManager getEntityManager() {
         if (ENTITY_MANAGER == null) {

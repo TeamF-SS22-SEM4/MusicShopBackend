@@ -14,7 +14,7 @@ public class HibernateSoundCarrierRepository implements SoundCarrierRepository {
     private EntityManager em;
 
     public HibernateSoundCarrierRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override

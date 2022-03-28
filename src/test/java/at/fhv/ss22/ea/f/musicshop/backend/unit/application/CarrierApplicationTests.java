@@ -11,29 +11,25 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CarrierApplicationTests {
 
-    //TODO test for: if sale fails, amount available is unchanged
-
     private SoundCarrierApplicationService soundCarrierApplicationService = InstanceProvider.getTestingSoundCarrierApplicationService();
-
     private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getMockedSoundCarrierRepository();
-
     private SaleRepository saleRepository = InstanceProvider.getMockedSaleRepository();
 
     @Test
-    void sell_carriers() throws CarrierNotAvailableException, SoundCarrierUnavailableException {
+    void sell_carriers() throws CarrierNotAvailableException {
         //given
         List<SoundCarrier> carriers = List.of(
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 20, 5, "A1", new ProductId(UUID.randomUUID())),
@@ -56,4 +52,7 @@ public class CarrierApplicationTests {
         verify(saleRepository).add(any());
     }
 
+    //not testing for unchanged amountsInStore on failure because that mechanism relies on Transactional rollback
+    // and that is not available when repositories are mocked
+    // there is an integration test for that scenario
 }

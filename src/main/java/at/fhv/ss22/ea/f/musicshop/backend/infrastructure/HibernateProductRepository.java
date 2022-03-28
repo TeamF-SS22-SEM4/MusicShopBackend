@@ -23,7 +23,7 @@ public class HibernateProductRepository implements ProductRepository {
     private FullTextEntityManager fullTextEM;
 
     public HibernateProductRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
         this.fullTextEM = Search.getFullTextEntityManager(this.em);
         try {
             this.fullTextEM.createIndexer().startAndWait();
