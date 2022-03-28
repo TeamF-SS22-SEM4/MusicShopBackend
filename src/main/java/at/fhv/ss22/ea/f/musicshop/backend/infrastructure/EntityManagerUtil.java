@@ -28,11 +28,11 @@ public class EntityManagerUtil {
             Map<String, String> envs = System.getenv();
 
             envs.forEach((k, v) -> {
-                if(k.contains("POSTGRES_USER")) {
+                if (k.contains("POSTGRES_USER")) {
                     configOverrides.put("javax.persistence.jdbc.user", v);
                 }
 
-                if(k.contains("POSTGRES_PASSWORD")) {
+                if (k.contains("POSTGRES_PASSWORD")) {
                     configOverrides.put("javax.persistence.jdbc.password", v);
                 }
             });

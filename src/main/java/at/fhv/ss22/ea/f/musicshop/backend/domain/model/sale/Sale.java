@@ -5,7 +5,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.CustomerAlreadyConnectedException;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +45,8 @@ public class Sale {
     }
 
     @Generated
-    protected Sale() {}
+    protected Sale() {
+    }
 
     private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         this.saleId = aSaleId;

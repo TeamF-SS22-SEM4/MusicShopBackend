@@ -20,7 +20,8 @@ public class EmployeeId implements Serializable {
     }
 
     @Generated
-    protected EmployeeId() {}
+    protected EmployeeId() {
+    }
 
     public UUID getUUID() {
         return employeeId;

@@ -14,7 +14,8 @@ import java.rmi.RemoteException;
 import static org.mockito.Mockito.mock;
 
 public class InstanceProvider {
-    private InstanceProvider() {}
+    private InstanceProvider() {
+    }
 
     private static ProductApplicationService productApplicationService;
     private static ArtistRepository artistRepository;
@@ -87,7 +88,7 @@ public class InstanceProvider {
 
     public static ProductApplicationService getMockedProductApplicationService() {
         if (null == mockedProductApplicationService) {
-            mockedProductApplicationService = mock (ProductApplicationService.class);
+            mockedProductApplicationService = mock(ProductApplicationService.class);
         }
         return mockedProductApplicationService;
     }

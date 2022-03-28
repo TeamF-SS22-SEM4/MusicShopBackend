@@ -10,7 +10,8 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,16 +58,16 @@ public class HibernateProductRepository implements ProductRepository {
 
         List<Product> productsByArtistName = new LinkedList<>();
         //this variable and loop are needed to allow for a dynamic number of keywords
-        BooleanJunction<BooleanJunction> buildedQuery =  queryBuilder.bool();
+        BooleanJunction<BooleanJunction> buildedQuery = queryBuilder.bool();
         for (String keyword : keywords) {
             buildedQuery = buildedQuery.should(
-                queryBuilder.keyword()
-                        .wildcard()
-                .onField("name").boostedTo(2)
-                .andField("label")
-                .andField("songs.title").boostedTo(2)
-                .matching("*" + keyword + "*")
-                .createQuery()
+                    queryBuilder.keyword()
+                            .wildcard()
+                            .onField("name").boostedTo(2)
+                            .andField("label")
+                            .andField("songs.title").boostedTo(2)
+                            .matching("*" + keyword + "*")
+                            .createQuery()
             );
 
             //NOTES on searching by artist name: is working but ugly,
@@ -74,9 +75,9 @@ public class HibernateProductRepository implements ProductRepository {
             // we don't have results ordered by relevancy, currently all products found via artist name are added
             // at the end of the result list
             TypedQuery<Artist> artistQuery = em.createQuery("" +
-                    "select a from Artist a where lower(a.artistName) like :keyword_pattern",
+                            "select a from Artist a where lower(a.artistName) like :keyword_pattern",
                     Artist.class);
-            artistQuery.setParameter("keyword_pattern", "%"+keyword+"%");
+            artistQuery.setParameter("keyword_pattern", "%" + keyword + "%");
 
             artistQuery.getResultList().forEach(artist -> {
                 TypedQuery<Product> subProductQuery = em.createQuery(

@@ -4,7 +4,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
@@ -26,7 +28,8 @@ public class SaleItem {
     }
 
     @Generated
-    protected SaleItem() {}
+    protected SaleItem() {
+    }
 
     private SaleItem(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         this.isRefunded = refunded;

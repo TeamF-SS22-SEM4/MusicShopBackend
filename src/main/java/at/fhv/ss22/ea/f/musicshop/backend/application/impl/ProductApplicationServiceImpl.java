@@ -54,7 +54,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                         .map(artistId -> artistRepository.artistById(artistId))
                         .filter(Optional::isPresent)
                         .map(opt -> opt.get().getArtistName())
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.joining(", ")))
                 .build();
     }
 
@@ -64,6 +64,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                 .withName(product.getName())
                 .withReleaseYear(product.getReleaseYear())
                 .withDuration(product.getDuration())
+                .withGenre(String.join(", ", product.getGenre()))
                 .withLabelName(product.getLabel())
                 .withSongs(product.getSongs().stream()
                         .map(song -> SongDTO.builder()

@@ -25,7 +25,8 @@ public class Address implements Serializable {
     }
 
     @Generated
-    protected Address() {}
+    protected Address() {
+    }
 
     public String getStreet() {
         return street;

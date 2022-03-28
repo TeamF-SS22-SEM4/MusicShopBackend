@@ -5,7 +5,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.bridge.builtin.UUIDBridge;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -22,7 +23,8 @@ public class ProductId implements Serializable {
     }
 
     @Generated
-    protected ProductId() {}
+    protected ProductId() {
+    }
 
     public UUID getUUID() {
         return productId;

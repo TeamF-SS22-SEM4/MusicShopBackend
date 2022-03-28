@@ -6,7 +6,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ArtistIdBridge;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ProductIdBridge;
 import org.hibernate.search.annotations.*;
 
-import javax.persistence.*;
+import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +37,8 @@ public class Product {
     private List<Song> songs;
 
     @Generated
-    protected Product() {}
+    protected Product() {
+    }
 
     public static Product create(ProductId aProductId, String aName, String aReleaseYear, List<String> aGenreList, String aLabel, String aDuration, List<ArtistId> aArtistIdList, List<Song> aSongList) {
         return new Product(aProductId, aName, aReleaseYear, aGenreList, aLabel, aDuration, aArtistIdList, aSongList);

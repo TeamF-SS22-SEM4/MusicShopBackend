@@ -4,7 +4,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.TermVector;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
@@ -17,7 +18,8 @@ public class Song {
     private String duration;
 
     @Generated
-    protected Song() {}
+    protected Song() {
+    }
 
     public static Song create(String aTitle, String aDuration) {
         return new Song(aTitle, aDuration);
