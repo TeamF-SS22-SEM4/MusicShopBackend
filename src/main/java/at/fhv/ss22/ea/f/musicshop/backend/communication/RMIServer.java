@@ -9,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.util.Optional;
 
 public class RMIServer {
-    private static int PORT = 12345;
+    private static int PORT = Integer.parseInt(System.getenv("RMI_PORT"));
     private static String PROTOCOL = "rmi://";
     private static String HOST = "localhost";
     private static String STUB = "/RMIFactory";
