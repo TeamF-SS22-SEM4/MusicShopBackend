@@ -4,6 +4,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateArtistRepository;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,9 @@ class HibernateArtistRepoTests {
         //given
         Artist artist = Artist.create(new ArtistId(UUID.randomUUID()), "rammstein", "deutschland", List.of());
         ArtistId surrogateId = new ArtistId(artist.getArtistId().getUUID());
+        EntityManagerUtil.beginTransaction();
         artistRepository.add(artist);
+        EntityManagerUtil.commit();
 
         //when
         Optional<Artist> artistOptional = artistRepository.artistById(surrogateId);

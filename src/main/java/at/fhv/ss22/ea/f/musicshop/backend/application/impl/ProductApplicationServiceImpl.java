@@ -75,6 +75,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                 .withSoundCarriers(
                         soundCarrierRepository.soundCarriersByProductId(product.getProductId()).stream()
                                 .map(carrier -> SoundCarrierDTO.builder()
+                                        .withSoundCarrierId(carrier.getCarrierId().getUUID())
                                         .withSoundCarrierName(carrier.getType().getFriendlyName())
                                         .withAvailableAmount(carrier.getAmountInStore())
                                         .withPricePerCarrier(carrier.getPrice())

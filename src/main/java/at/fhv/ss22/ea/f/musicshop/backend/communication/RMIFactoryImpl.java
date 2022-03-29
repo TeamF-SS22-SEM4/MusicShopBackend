@@ -8,8 +8,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class RMIFactoryImpl extends UnicastRemoteObject implements RMIFactory {
-    public RMIFactoryImpl() throws RemoteException {
-        super(12345);
+    public RMIFactoryImpl(int port) throws RemoteException {
+        super(port);
     }
 
     @Override

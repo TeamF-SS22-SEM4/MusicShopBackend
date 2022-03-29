@@ -11,6 +11,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSaleRepository;
 import net.bytebuddy.utility.dispatcher.JavaDispatcher;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,9 @@ class HibernateSaleRepoTests {
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
         List<SaleItem> saleItems =  List.of(SaleItem.create(false, 1, 10, new SoundCarrierId(UUID.randomUUID())));
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), "1", LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItems, null);
+        EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
+        EntityManagerUtil.commit();
         SaleId surrogateId = new SaleId(sale.getSaleId().getUUID());
 
         //when

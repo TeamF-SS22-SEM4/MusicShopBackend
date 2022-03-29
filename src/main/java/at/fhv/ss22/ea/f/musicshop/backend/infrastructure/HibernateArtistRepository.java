@@ -13,14 +13,12 @@ public class HibernateArtistRepository implements ArtistRepository {
     private EntityManager em;
 
     public HibernateArtistRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override
     public void add(Artist artist) {
-        em.getTransaction().begin(); //TODO automate transaction management or at least move it to application layer
         em.persist(artist);
-        em.getTransaction().commit();
     }
 
     @Override

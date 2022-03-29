@@ -24,7 +24,7 @@ public class HibernateProductRepository implements ProductRepository {
     private FullTextEntityManager fullTextEM;
 
     public HibernateProductRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
         this.fullTextEM = Search.getFullTextEntityManager(this.em);
         try {
             this.fullTextEM.createIndexer().startAndWait();
@@ -35,9 +35,7 @@ public class HibernateProductRepository implements ProductRepository {
 
     @Override
     public void add(Product product) {
-        em.getTransaction().begin(); //TODO automate transaction management or at least move it to application layer
         em.persist(product);
-        em.getTransaction().commit();
     }
 
     @Override

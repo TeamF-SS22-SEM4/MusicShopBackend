@@ -14,14 +14,12 @@ public class HibernateSoundCarrierRepository implements SoundCarrierRepository {
     private EntityManager em;
 
     public HibernateSoundCarrierRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override
     public void add(SoundCarrier soundCarrier) {
-        this.em.getTransaction().begin();
         this.em.persist(soundCarrier);
-        this.em.getTransaction().commit();
     }
 
     @Override
