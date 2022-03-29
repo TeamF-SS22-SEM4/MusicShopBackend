@@ -8,7 +8,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 public class RMIServer {
+<<<<<<< HEAD
     private static int PORT = 12345; //default value, is overriden if env. variable is set
+=======
+    private static int PORT = Integer.parseInt(System.getenv("RMI_PORT"));
+>>>>>>> e85a1e7425debaf1f600e9d054dd252eca746c65
     private static String PROTOCOL = "rmi://";
     private static String HOST = "localhost"; //default value, is overriden if env. variable is set
     private static String REMOTE_OBJECT_NAME = "RMIFactory";
