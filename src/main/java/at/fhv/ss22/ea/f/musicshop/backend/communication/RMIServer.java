@@ -10,7 +10,7 @@ import java.rmi.registry.LocateRegistry;
 public class RMIServer {
     private static int PORT = 12345; //default value, is overriden if env. variable is set
     private static String PROTOCOL = "rmi://";
-    private static String HOST = "localhost"; //TODO maybe get values from .env
+    private static String HOST = "localhost"; //default value, is overriden if env. variable is set
     private static String REMOTE_OBJECT_NAME = "RMIFactory";
 
 
@@ -18,6 +18,11 @@ public class RMIServer {
         String envPort = System.getenv("RMI_PORT");
         if (envPort != null) {
             PORT = Integer.parseInt(envPort);
+        }
+
+        String envHostName = System.getenv("RMI_HOSTNAME");
+        if(envHostName != null) {
+            HOST = envHostName;
         }
     }
     public static int getPort() {return PORT;}
