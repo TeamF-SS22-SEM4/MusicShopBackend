@@ -1,10 +1,12 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
+import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SoundCarrierApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.BuyingApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.BuyingServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.ProductSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
@@ -23,13 +25,14 @@ public class InstanceProvider {
     private static ProductRepository productRepository;
     private static SaleRepository saleRepository;
     private static SoundCarrierRepository soundCarrierRepository;
-    private static SoundCarrierApplicationService soundCarrierApplicationService;
+    private static BuyingApplicationService buyingApplicationService;
 
+    private static BuyingService testingBuyingService;
     private static ProductSearchService testingProductSearchService;
     private static ProductApplicationService testingProductApplicationService;
-    private static SoundCarrierApplicationService testingSoundCarrierApplicationService;
+    private static BuyingApplicationService testingBuyingApplicationService;
 
-    private static SoundCarrierApplicationService mockedSoundCarrierApplicationService;
+    private static BuyingApplicationService mockedBuyingApplicationService;
     private static ProductApplicationService mockedProductApplicationService;
     private static ArtistRepository mockedArtistRepository;
     private static EmployeeRepository mockedEmployeeRepository;
@@ -44,29 +47,29 @@ public class InstanceProvider {
         return productApplicationService;
     }
 
-    public static SoundCarrierApplicationService getSoundCarrierApplicationService() {
-        if (null == soundCarrierApplicationService) {
-            soundCarrierApplicationService = new SoundCarrierApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+    public static BuyingApplicationService getSoundCarrierApplicationService() {
+        if (null == buyingApplicationService) {
+            buyingApplicationService = new BuyingApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
         }
-        return soundCarrierApplicationService;
+        return buyingApplicationService;
     }
 
-    public static SoundCarrierApplicationService getTestingSoundCarrierApplicationService() {
-        if (null == testingSoundCarrierApplicationService) {
-            testingSoundCarrierApplicationService = new SoundCarrierApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+    public static BuyingApplicationService getTestingSoundCarrierApplicationService() {
+        if (null == testingBuyingApplicationService) {
+            testingBuyingApplicationService = new BuyingApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
         }
-        return testingSoundCarrierApplicationService;
+        return testingBuyingApplicationService;
     }
 
-    public static SoundCarrierApplicationService getMockedSoundCarrierApplicationService() {
-        if (null == mockedSoundCarrierApplicationService) {
-            mockedSoundCarrierApplicationService = mock(SoundCarrierApplicationService.class);
+    public static BuyingApplicationService getMockedSoundCarrierApplicationService() {
+        if (null == mockedBuyingApplicationService) {
+            mockedBuyingApplicationService = mock(BuyingApplicationService.class);
         }
-        return mockedSoundCarrierApplicationService;
+        return mockedBuyingApplicationService;
     }
 
+    //rmi instances are only components that currently arent singletons
     public static ProductSearchService getProductSearchService() {
-        //currently only component that isn't a singleton
         try {
             return new ProductSearchServiceImpl(getProductApplicationService());
         } catch (RemoteException e) {
@@ -74,6 +77,36 @@ public class InstanceProvider {
         }
         return null;
     }
+    public static BuyingService getBuyingService() {
+        try {
+            return new BuyingServiceImpl(getBuyingApplicationService());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static BuyingApplicationService getBuyingApplicationService() {
+        if (null == buyingApplicationService) {
+            buyingApplicationService = new BuyingApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+        }
+        return buyingApplicationService;
+    }
+
+    public static BuyingApplicationService getTestingBuyingApplicationService() {
+        if (null == testingBuyingApplicationService) {
+            testingBuyingApplicationService = new BuyingApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+        }
+        return testingBuyingApplicationService;
+    }
+
+    public static BuyingApplicationService getMockedBuyingApplicationService() {
+        if (null == mockedBuyingApplicationService) {
+            mockedBuyingApplicationService = mock(BuyingApplicationService.class);
+        }
+        return mockedBuyingApplicationService;
+    }
+
 
     public static ProductSearchService getTestingProductSearchService() {
         if (null == testingProductSearchService) {

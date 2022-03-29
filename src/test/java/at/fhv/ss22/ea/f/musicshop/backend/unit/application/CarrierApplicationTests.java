@@ -1,17 +1,15 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.CarrierNotAvailableException;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierAmountDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
+import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 public class CarrierApplicationTests {
 
-    private SoundCarrierApplicationService soundCarrierApplicationService = InstanceProvider.getTestingSoundCarrierApplicationService();
+    private BuyingApplicationService buyingApplicationService = InstanceProvider.getTestingSoundCarrierApplicationService();
     private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getMockedSoundCarrierRepository();
     private SaleRepository saleRepository = InstanceProvider.getMockedSaleRepository();
 
@@ -45,7 +43,7 @@ public class CarrierApplicationTests {
         SoundCarrierAmountDTO buyingDTO = SoundCarrierAmountDTO.builder()
                             .withAmount(2)
                             .withCarrierId(carriers.get(0).getCarrierId().getUUID()).build();
-        soundCarrierApplicationService.buy(List.of(buyingDTO), "CASH");
+        buyingApplicationService.buy(List.of(buyingDTO), "CASH");
 
         //then
         assertEquals(3, carriers.get(0).getAmountInStore());

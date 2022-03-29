@@ -61,14 +61,13 @@ public class HibernateProductRepository implements ProductRepository {
             buildedQuery = buildedQuery.should(
                     queryBuilder.keyword()
                             .wildcard()
-                            .onField("name").boostedTo(2)
+                            .onField("name").boostedTo(20)
                             .andField("label")
-                            .andField("songs.title").boostedTo(2)
+                            .andField("songs.title").boostedTo(5)
                             .matching("*" + keyword + "*")
                             .createQuery()
             );
 
-            //NOTES on searching by artist name: is working but ugly,
             // since artist name is searched in separate query, because hibernate-lucene doesn't support joins,
             // we don't have results ordered by relevancy, currently all products found via artist name are added
             // at the end of the result list

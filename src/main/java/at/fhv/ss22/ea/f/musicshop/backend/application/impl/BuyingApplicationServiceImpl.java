@@ -1,8 +1,8 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.CarrierNotAvailableException;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierAmountDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierApplicationService;
+import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
@@ -17,13 +17,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class SoundCarrierApplicationServiceImpl implements SoundCarrierApplicationService {
+public class BuyingApplicationServiceImpl implements BuyingApplicationService {
 
     private SoundCarrierRepository soundCarrierRepository;
 
     private SaleRepository saleRepository;
 
-    public SoundCarrierApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository) {
+    public BuyingApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository) {
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
     }

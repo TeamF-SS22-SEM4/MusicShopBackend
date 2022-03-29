@@ -30,11 +30,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
 
     @Override
     public Optional<ProductDetailsDTO> productById(UUID productId) {
-        Optional<Product> productOpt = productRepository.productById(new ProductId(productId));
-        if (productOpt.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(detailsDtoFromProduct(productOpt.get()));
+        return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct);
     }
 
     @Override

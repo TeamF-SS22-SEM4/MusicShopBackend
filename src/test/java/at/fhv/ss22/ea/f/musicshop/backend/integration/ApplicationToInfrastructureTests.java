@@ -1,9 +1,9 @@
 package at.fhv.ss22.ea.f.musicshop.backend.integration;
 
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.CarrierNotAvailableException;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierAmountDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierApplicationService;
+import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
@@ -13,21 +13,16 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierReposito
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 class ApplicationToInfrastructureTests {
 
     private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getSoundCarrierRepository();
 
-    private SoundCarrierApplicationService soundCarrierApplicationService = InstanceProvider.getSoundCarrierApplicationService();
+    private BuyingApplicationService buyingApplicationService = InstanceProvider.getSoundCarrierApplicationService();
 
     private SaleRepository saleRepository = InstanceProvider.getSaleRepository();
 
@@ -57,7 +52,7 @@ class ApplicationToInfrastructureTests {
 
         //then
         try {
-            soundCarrierApplicationService.buy(List.of(buyingDTO1, buyingDTO2), "CASH");
+            buyingApplicationService.buy(List.of(buyingDTO1, buyingDTO2), "CASH");
             fail(); // fails if no exception is thrown
         } catch(CarrierNotAvailableException e) {
             //then
