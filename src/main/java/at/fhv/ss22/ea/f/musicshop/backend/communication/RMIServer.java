@@ -10,7 +10,7 @@ import java.rmi.registry.LocateRegistry;
 public class RMIServer {
     private static int PORT = Integer.parseInt(System.getenv("RMI_PORT"));
     private static String PROTOCOL = "rmi://";
-    private static String HOST = System.getenv("RMI_HOSTNAME");
+    private static String HOST = "localhost";
     private static String REMOTE_OBJECT_NAME = "RMIFactory";
 
     public static int getPort() {return PORT;}
