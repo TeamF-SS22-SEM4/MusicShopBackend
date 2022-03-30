@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: postgres-server
+    image: postgres:latest
+    restart: always
+    volumes:
+      - postgres_data:/var/postgres_data
+    environment:
+      - PGDATA=/var/postgres_data
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=musicshopdb
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+  backend:
+    container_name: musicshop-backend
+    build: .
+    ports:
+      - ${RMI_PORT}:${RMI_PORT}
+    links:
+      - postgres
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

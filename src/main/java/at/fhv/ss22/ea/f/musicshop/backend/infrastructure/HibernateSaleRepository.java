@@ -12,15 +12,13 @@ public class HibernateSaleRepository implements SaleRepository {
     private EntityManager em;
 
     public HibernateSaleRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override
     public void add(Sale sale) {
-        em.getTransaction().begin();
         sale.getSaleItemList().forEach(item -> em.persist(item));
         em.persist(sale);
-        em.getTransaction().commit();
     }
 
     @Override

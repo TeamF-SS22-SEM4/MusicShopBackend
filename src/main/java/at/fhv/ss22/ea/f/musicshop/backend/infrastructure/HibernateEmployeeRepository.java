@@ -13,14 +13,12 @@ public class HibernateEmployeeRepository implements EmployeeRepository {
     private EntityManager em;
 
     public HibernateEmployeeRepository() {
-        this.em = EntityManagerSupplier.getEntityManager();
+        this.em = EntityManagerUtil.getEntityManager();
     }
 
     @Override
     public void add(Employee employee) {
-        this.em.getTransaction().begin();
         this.em.persist(employee);
-        this.em.getTransaction().commit();
     }
 
     @Override

@@ -8,8 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateArtistRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateProductRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -27,7 +26,9 @@ class HibernateProductRepoTests {
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
         Product product = Product.create(new ProductId(UUID.randomUUID()), "albumA", "2000", List.of("Rock"), "label1", "3:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("songA", "3:00")));
+        EntityManagerUtil.beginTransaction();
         productRepository.add(product);
+        EntityManagerUtil.commit();
         ProductId surrogateId = new ProductId(product.getProductId().getUUID());
 
         //when
@@ -60,10 +61,12 @@ class HibernateProductRepoTests {
         Product sabbaton = Product.create(new ProductId(UUID.randomUUID()), "The War To End All Wars", "2022", List.of("Rock"), "Soyuz Music", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Sarajevo", "3:00"), Song.create("Stormtroopers", "3:00")));
         Product bridges = Product.create(new ProductId(UUID.randomUUID()), "Texas Moon", "2022", List.of("Rock"), "Dead Oceans", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Doris", "3:00"), Song.create("Chocolate Hills", "3:00")));
 
+        EntityManagerUtil.beginTransaction();
         productRepository.add(courrete1);
         productRepository.add(courrete2);
         productRepository.add(sabbaton);
         productRepository.add(bridges);
+        EntityManagerUtil.commit();
 
         //when
         List<Product> productsFound = productRepository.fullTextSearch("coURETTES texas");
@@ -83,10 +86,12 @@ class HibernateProductRepoTests {
         Product sabbaton = Product.create(new ProductId(UUID.randomUUID()), "The War To End All Wars", "2022", List.of("Rock"), "Soyuz Music", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Sarajevo", "3:00"), Song.create("Stormtroopers", "3:00")));
         Product bridges = Product.create(new ProductId(UUID.randomUUID()), "Texas Moon", "2022", List.of("Rock"), "Dead Oceans", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Doris", "3:00"), Song.create("Chocolate Hills", "3:00")));
 
+        EntityManagerUtil.beginTransaction();
         productRepository.add(courrete1);
         productRepository.add(courrete2);
         productRepository.add(sabbaton);
         productRepository.add(bridges);
+        EntityManagerUtil.commit();
 
         //when
         List<Product> products = productRepository.fullTextSearch("Ocean MUsic");
@@ -106,10 +111,12 @@ class HibernateProductRepoTests {
         Product sabbaton = Product.create(new ProductId(UUID.randomUUID()), "The War To End All Wars", "2022", List.of("Rock"), "Soyuz Music", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Sarajevo", "3:00"), Song.create("Stormtroopers", "3:00")));
         Product bridges = Product.create(new ProductId(UUID.randomUUID()), "Texas Moon", "2022", List.of("Rock"), "Dead Oceans", "40:00", List.of(new ArtistId(UUID.randomUUID())), List.of(Song.create("Doris", "3:00"), Song.create("Chocolate Hills", "3:00")));
 
+        EntityManagerUtil.beginTransaction();
         productRepository.add(courrete1);
         productRepository.add(courrete2);
         productRepository.add(sabbaton);
         productRepository.add(bridges);
+        EntityManagerUtil.commit();
 
         //when
         List<Product> products = productRepository.fullTextSearch("walking STORM");
@@ -135,6 +142,7 @@ class HibernateProductRepoTests {
         Artist sabbaton = Artist.create(sabbatonId, "Sabaton", "england", List.of(sabbaton1.getProductId()));
         Artist bridges = Artist.create(bridgesId, "The Bridges", "england", List.of(bridges1.getProductId()));
 
+        EntityManagerUtil.beginTransaction();
         artistRepository.add(courretes);
         artistRepository.add(sabbaton);
         artistRepository.add(bridges);
@@ -142,6 +150,7 @@ class HibernateProductRepoTests {
         productRepository.add(courrete2);
         productRepository.add(sabbaton1);
         productRepository.add(bridges1);
+        EntityManagerUtil.commit();
 
         //when
         List<Product> products = productRepository.fullTextSearch("Sabat");

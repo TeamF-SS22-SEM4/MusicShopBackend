@@ -4,9 +4,14 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ArtistIdBridge;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.ProductIdBridge;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.TermVector;
 
-import javax.persistence.*;
+import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +41,8 @@ public class Artist {
     }
 
     @Generated
-    protected Artist() {}
+    protected Artist() {
+    }
 
     public ArtistId getArtistId() {
         return artistId;

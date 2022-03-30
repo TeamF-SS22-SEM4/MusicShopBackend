@@ -9,6 +9,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateEmployeeRepository;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,9 @@ class HibernateEmployeeRepoTests {
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
         Employee employee = Employee.create(new EmployeeId(UUID.randomUUID()), "userA", "max", "mustermann", List.of());
+        EntityManagerUtil.beginTransaction();
         employeeRepository.add(employee);
+        EntityManagerUtil.commit();
         EmployeeId surrogateId = new EmployeeId(employee.getEmployeeId().getUUID());
 
         //when

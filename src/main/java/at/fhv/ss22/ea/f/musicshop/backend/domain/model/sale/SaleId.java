@@ -23,7 +23,8 @@ public class SaleId implements Serializable {
     }
 
     @Generated
-    protected SaleId() {}
+    protected SaleId() {
+    }
 
     public UUID getUUID() {
         return saleId;

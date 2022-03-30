@@ -8,18 +8,25 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 public class RMIServer {
-    private static int PORT = 12345;
+    private static int PORT = Integer.parseInt(System.getenv("RMI_PORT"));
     private static String PROTOCOL = "rmi://";
-    private static String HOST = "10.0.40.170";
-    private static String STUB = "/RMIFactory";
+    private static String HOST = System.getenv("RMI_HOSTNAME");
+    private static String REMOTE_OBJECT_NAME = "RMIFactory";
+
+    public static int getPort() {return PORT;}
 
     public static void startRMIServer() {
         try {
-            RMIFactory rmiFactory = new RMIFactoryImpl();
-            LocateRegistry.createRegistry(PORT).rebind("RMIFactory", rmiFactory);
+            System.setProperty("java.rmi.server.hostname", HOST);
 
-            System.out.println("RMIFactory bound in registry");
-        } catch (RemoteException e) {
+            RMIFactory rmiFactory = new RMIFactoryImpl(PORT);
+
+            LocateRegistry.createRegistry(PORT);
+
+            Naming.rebind(PROTOCOL + HOST + ":" + PORT + "/" + REMOTE_OBJECT_NAME, rmiFactory);
+
+            System.out.println("RMIFactory bound in registry on port " + PORT);
+        } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
     }

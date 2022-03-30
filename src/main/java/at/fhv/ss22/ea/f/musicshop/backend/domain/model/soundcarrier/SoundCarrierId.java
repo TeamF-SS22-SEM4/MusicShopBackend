@@ -20,7 +20,8 @@ public class SoundCarrierId implements Serializable {
     }
 
     @Generated
-    protected SoundCarrierId() {}
+    protected SoundCarrierId() {
+    }
 
     public UUID getUUID() {
         return carrierId;

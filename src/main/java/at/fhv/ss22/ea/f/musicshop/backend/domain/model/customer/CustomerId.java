@@ -20,7 +20,8 @@ public class CustomerId implements Serializable {
     }
 
     @Generated
-    protected CustomerId() {}
+    protected CustomerId() {
+    }
 
     public UUID getUUID() {
         return customerId;
