@@ -1,6 +1,7 @@
-package at.fhv.ss22.ea.f.musicshop.backend.communication;
+package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi;
 
 import at.fhv.ss22.ea.f.communication.api.RMIFactory;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.RMIFactoryImpl;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;

@@ -1,9 +1,10 @@
-package at.fhv.ss22.ea.f.musicshop.backend.communication;
+package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant;
 
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.communication.dto.ProductDetailsDTO;
 import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public class ProductSearchServiceImpl extends UnicastRemoteObject implements ProductSearchService {
 
-    private ProductApplicationService productApplicationService;
+    private final ProductApplicationService productApplicationService;
 
     public ProductSearchServiceImpl(ProductApplicationService productApplicationService) throws RemoteException {
         super(RMIServer.getPort());

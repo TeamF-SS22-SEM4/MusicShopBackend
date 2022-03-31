@@ -6,8 +6,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationServ
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.BuyingApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.BuyingServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.ProductSearchServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
 
