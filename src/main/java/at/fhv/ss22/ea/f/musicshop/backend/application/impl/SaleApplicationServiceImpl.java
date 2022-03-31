@@ -1,8 +1,10 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
+import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
+import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
@@ -15,15 +17,16 @@ import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public class BuyingApplicationServiceImpl implements BuyingApplicationService {
+public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     private SoundCarrierRepository soundCarrierRepository;
 
     private SaleRepository saleRepository;
 
-    public BuyingApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository) {
+    public SaleApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository) {
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
     }
@@ -57,5 +60,15 @@ public class BuyingApplicationServiceImpl implements BuyingApplicationService {
         EntityManagerUtil.commit();
 
         return sale.getSaleId().getUUID();
+    }
+
+    @Override
+    public Optional<SaleDTO> saleByInvoiceNumber(String invoiceNumber) {
+        return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
+    }
+
+    private SaleDTO saleDtoFromSale(Sale sale) {
+        // TODO: Implement
+        return null;
     }
 }

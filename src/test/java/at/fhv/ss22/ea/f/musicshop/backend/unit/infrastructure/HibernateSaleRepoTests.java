@@ -44,6 +44,29 @@ class HibernateSaleRepoTests {
     }
 
     @Test
+    void given_invoiceNumber_when_search_byInvoiceNumber_then_return_matchingSale() {
+        // given
+        String invoiceNumberExpected = "42";
+        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(false, 1, 10, new SoundCarrierId(UUID.randomUUID())));
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
+        EntityManagerUtil.beginTransaction();
+        saleRepository.add(sale);
+        EntityManagerUtil.commit();
+
+        // when
+        Optional<Sale> saleOptActual = saleRepository.saleByInvoiceNumber(invoiceNumberExpected);
+
+        // then
+        assertTrue(saleOptActual.isPresent());
+        Sale saleActual = saleOptActual.get();
+        assertEquals(sale.getSaleId(), saleActual.getSaleId());
+        assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
+        assertEquals(sale.getPaymentMethod(), saleActual.getPaymentMethod());
+        assertEquals(sale.getTimeOfSale(), saleActual.getTimeOfSale());
+        assertEquals(sale.getPerformingEmployee(), saleActual.getPerformingEmployee());
+    }
+
+    @Test
     void given_invalid_product_id_when_searched_then_empty_result() {
         //given
         SaleId id = new SaleId(UUID.randomUUID());
@@ -52,6 +75,18 @@ class HibernateSaleRepoTests {
         Optional<Sale> saleOpt = saleRepository.saleById(id);
 
         //then
+        assertTrue(saleOpt.isEmpty());
+    }
+
+    @Test
+    void given_invalid_invoiceNumber_when_searchByInvoiceNumber_then_empty_result() {
+        // given
+        String invoiceNumber = "42";
+
+        //when
+        Optional<Sale> saleOpt = saleRepository.saleByInvoiceNumber(invoiceNumber);
+
+        // then
         assertTrue(saleOpt.isEmpty());
     }
 

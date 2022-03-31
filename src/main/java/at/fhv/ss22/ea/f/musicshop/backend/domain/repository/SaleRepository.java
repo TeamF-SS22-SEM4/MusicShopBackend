@@ -11,5 +11,7 @@ public interface SaleRepository {
 
     Optional<Sale> saleById(SaleId saleId);
 
+    Optional<Sale> saleByInvoiceNumber(String invoiceNumber);
+
     String nextSaleNumber();
 }

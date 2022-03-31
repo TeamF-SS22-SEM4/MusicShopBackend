@@ -3,9 +3,9 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.BuyingApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.BuyingServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.ProductSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
@@ -25,14 +25,14 @@ public class InstanceProvider {
     private static ProductRepository productRepository;
     private static SaleRepository saleRepository;
     private static SoundCarrierRepository soundCarrierRepository;
-    private static BuyingApplicationService buyingApplicationService;
+    private static SaleApplicationService buyingApplicationService;
 
     private static BuyingService testingBuyingService;
     private static ProductSearchService testingProductSearchService;
     private static ProductApplicationService testingProductApplicationService;
-    private static BuyingApplicationService testingBuyingApplicationService;
+    private static SaleApplicationService testingBuyingApplicationService;
 
-    private static BuyingApplicationService mockedBuyingApplicationService;
+    private static SaleApplicationService mockedBuyingApplicationService;
     private static ProductApplicationService mockedProductApplicationService;
     private static ArtistRepository mockedArtistRepository;
     private static EmployeeRepository mockedEmployeeRepository;
@@ -47,23 +47,23 @@ public class InstanceProvider {
         return productApplicationService;
     }
 
-    public static BuyingApplicationService getSoundCarrierApplicationService() {
+    public static SaleApplicationService getSoundCarrierApplicationService() {
         if (null == buyingApplicationService) {
-            buyingApplicationService = new BuyingApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
         }
         return buyingApplicationService;
     }
 
-    public static BuyingApplicationService getTestingSoundCarrierApplicationService() {
+    public static SaleApplicationService getTestingSoundCarrierApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new BuyingApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
         }
         return testingBuyingApplicationService;
     }
 
-    public static BuyingApplicationService getMockedSoundCarrierApplicationService() {
+    public static SaleApplicationService getMockedSoundCarrierApplicationService() {
         if (null == mockedBuyingApplicationService) {
-            mockedBuyingApplicationService = mock(BuyingApplicationService.class);
+            mockedBuyingApplicationService = mock(SaleApplicationService.class);
         }
         return mockedBuyingApplicationService;
     }
@@ -86,23 +86,23 @@ public class InstanceProvider {
         return null;
     }
 
-    public static BuyingApplicationService getBuyingApplicationService() {
+    public static SaleApplicationService getBuyingApplicationService() {
         if (null == buyingApplicationService) {
-            buyingApplicationService = new BuyingApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
         }
         return buyingApplicationService;
     }
 
-    public static BuyingApplicationService getTestingBuyingApplicationService() {
+    public static SaleApplicationService getTestingBuyingApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new BuyingApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
         }
         return testingBuyingApplicationService;
     }
 
-    public static BuyingApplicationService getMockedBuyingApplicationService() {
+    public static SaleApplicationService getMockedBuyingApplicationService() {
         if (null == mockedBuyingApplicationService) {
-            mockedBuyingApplicationService = mock(BuyingApplicationService.class);
+            mockedBuyingApplicationService = mock(SaleApplicationService.class);
         }
         return mockedBuyingApplicationService;
     }

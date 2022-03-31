@@ -35,6 +35,18 @@ public class HibernateSaleRepository implements SaleRepository {
         query.setParameter("sale_id", saleId);
         return query.getResultStream().findFirst();
     }
+
+    @Override
+    public Optional<Sale> saleByInvoiceNumber(String invoiceNumber) {
+        TypedQuery<Sale> query = em.createQuery(
+                "select s from Sale s where s.invoiceNumber = :invoiceNumber",
+                Sale.class
+        );
+
+        query.setParameter("invoiceNumber", invoiceNumber);
+        return query.getResultStream().findFirst();
+    }
+
     @Override
     public String nextSaleNumber() {
         TypedQuery<String> query = em.createQuery(

@@ -3,7 +3,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.integration;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
@@ -22,7 +22,7 @@ class ApplicationToInfrastructureTests {
 
     private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getSoundCarrierRepository();
 
-    private BuyingApplicationService buyingApplicationService = InstanceProvider.getSoundCarrierApplicationService();
+    private SaleApplicationService buyingApplicationService = InstanceProvider.getSoundCarrierApplicationService();
 
     private SaleRepository saleRepository = InstanceProvider.getSaleRepository();
 
