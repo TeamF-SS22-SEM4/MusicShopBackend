@@ -42,10 +42,10 @@ public class HibernateSaleRepository implements SaleRepository {
                 String.class
         );
 
-        UnaryOperator<String> increasedSaleNumber = old -> {
+        UnaryOperator<String> increasingSaleNumber = old -> {
             int oldNumber = Integer.parseInt(old.substring(1)); //remove the R-character in sale number
             return "R" + String.format("%06d", oldNumber+1);
         };
-        return query.getResultStream().map(increasedSaleNumber).findFirst().orElse(INITIAL_SALE_NUMBER);
+        return query.getResultStream().findFirst().map(increasingSaleNumber).orElse(INITIAL_SALE_NUMBER);
     }
 }
