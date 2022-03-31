@@ -13,7 +13,7 @@ import java.util.Objects;
 public class SaleItem {
     @Id
     @GeneratedValue
-    private long hibernateId;
+    private long saleitem_id;
 
     private boolean isRefunded;
     private int amountOfCarriers;

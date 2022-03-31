@@ -7,8 +7,12 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class HibernateSaleRepository implements SaleRepository {
+    private static final String INITIAL_SALE_NUMBER = "R000001";
+
     private EntityManager em;
 
     public HibernateSaleRepository() {
@@ -27,7 +31,21 @@ public class HibernateSaleRepository implements SaleRepository {
                 "select s from Sale s where s.saleId = :sale_id",
                 Sale.class
         );
+
         query.setParameter("sale_id", saleId);
         return query.getResultStream().findFirst();
+    }
+    @Override
+    public String nextSaleNumber() {
+        TypedQuery<String> query = em.createQuery(
+                "select s.invoiceNumber from Sale s order by s.invoiceNumber desc ",
+                String.class
+        );
+
+        UnaryOperator<String> increasedSaleNumber = old -> {
+            int oldNumber = Integer.parseInt(old.substring(1)); //remove the R-character in sale number
+            return "R" + String.format("%06d", oldNumber+1);
+        };
+        return query.getResultStream().map(increasedSaleNumber).findFirst().orElse(INITIAL_SALE_NUMBER);
     }
 }

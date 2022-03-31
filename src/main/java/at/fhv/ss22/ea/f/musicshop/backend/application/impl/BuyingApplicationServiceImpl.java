@@ -51,7 +51,7 @@ public class BuyingApplicationServiceImpl implements BuyingApplicationService {
         }
 
         //TODO add employee
-        Sale sale = Sale.newSale("TODO", saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
+        Sale sale = Sale.newSale(saleRepository.nextSaleNumber(), saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
         saleRepository.add(sale);
 
         EntityManagerUtil.commit();

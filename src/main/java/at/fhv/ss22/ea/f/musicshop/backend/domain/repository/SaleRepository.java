@@ -10,4 +10,6 @@ public interface SaleRepository {
     void add(Sale sale);
 
     Optional<Sale> saleById(SaleId saleId);
+
+    String nextSaleNumber();
 }
