@@ -2,10 +2,10 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 
 import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.BuyingApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.BuyingApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;

@@ -13,6 +13,8 @@ services:
       - POSTGRES_DB=musicshopdb
     ports:
       - "5432:5432"
+    networks:
+      - musicshop_backend
     env_file:
       - .env
   backend:
@@ -20,10 +22,19 @@ services:
     build: .
     ports:
       - ${RMI_PORT}:${RMI_PORT}
+    networks:
+      - musicshop_backend
+      - rmi_connection
     links:
       - postgres
     env_file:
       - .env
+
+networks:
+  musicshop_backend:
+    driver: bridge
+  rmi_connection:
+    external: true
 
 volumes:
   postgres_data:
