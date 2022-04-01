@@ -7,18 +7,19 @@ import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SaleApplicationServiceImpl implements SaleApplicationService {
 
@@ -26,9 +27,16 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     private SaleRepository saleRepository;
 
-    public SaleApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository) {
+    private ProductRepository productRepository;
+
+    private ArtistRepository artistRepository;
+
+    public SaleApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
+                                      ProductRepository productRepository, ArtistRepository artistRepository) {
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
+        this.productRepository = productRepository;
+        this.artistRepository = artistRepository;
     }
 
     @Override
@@ -68,7 +76,33 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     private SaleDTO saleDtoFromSale(Sale sale) {
-        // TODO: Implement
-        return null;
+        // TODO: Get carrier and product infos with stream, map and check if isPresent
+        List<SaleItemDTO> saleItemDTOs = new ArrayList<>();
+
+        for (SaleItem saleItem : sale.getSaleItemList()) {
+            SoundCarrier soundCarrier = soundCarrierRepository.soundCarrierById(saleItem.getCarrierId()).get();
+
+            Product product = productRepository.productById(soundCarrier.getProductId()).get();
+
+            SaleItemDTO dto = SaleItemDTO.builder()
+                    .withProductName(productRepository.productById(soundCarrier.getProductId()).get().getName())
+                    .withArtistName(product.getArtistIds().stream()
+                            .map(artistId -> artistRepository.artistById(artistId))
+                            .filter(Optional::isPresent)
+                            .map(opt -> opt.get().getArtistName())
+                            .collect(Collectors.joining(", ")))
+                    .withSoundCarrierName(soundCarrier.getType().getFriendlyName())
+                    .withAmountOfCarriers(soundCarrier.getAmountInStore())
+                    .withPricePerCarrier(soundCarrier.getPrice())
+                    .build();
+
+            saleItemDTOs.add(dto);
+        }
+
+        return SaleDTO.builder()
+                .withInvoiceNumber(sale.getInvoiceNumber())
+                .withSaleItems(saleItemDTOs)
+                .withTotalPrice(sale.getTotalPrice())
+                .build();
     }
 }

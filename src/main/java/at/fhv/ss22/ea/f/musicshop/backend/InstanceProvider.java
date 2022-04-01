@@ -49,14 +49,14 @@ public class InstanceProvider {
 
     public static SaleApplicationService getSoundCarrierApplicationService() {
         if (null == buyingApplicationService) {
-            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
         return buyingApplicationService;
     }
 
     public static SaleApplicationService getTestingSoundCarrierApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
         }
         return testingBuyingApplicationService;
     }
@@ -88,14 +88,14 @@ public class InstanceProvider {
 
     public static SaleApplicationService getBuyingApplicationService() {
         if (null == buyingApplicationService) {
-            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository());
+            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
         return buyingApplicationService;
     }
 
     public static SaleApplicationService getTestingBuyingApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
         }
         return testingBuyingApplicationService;
     }
