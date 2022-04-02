@@ -38,6 +38,11 @@ public class SaleItem {
         this.carrierId = aCarrierId;
     }
 
+    public void refund(int amount) {
+        this.isRefunded = true;
+        this.amountOfCarriers -= amount;
+    }
+
     public boolean isRefunded() {
         return isRefunded;
     }

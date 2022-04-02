@@ -27,15 +27,6 @@ public class SoundCarrier {
         return new SoundCarrier(aCarrierId, aType, aPrice, aAmountInStore, aLocation, aProductId);
     }
 
-    public SaleItem sell(int amount) throws SoundCarrierUnavailableException {
-        if (amount > this.amountInStore) {
-            throw new SoundCarrierUnavailableException();
-        }
-        this.amountInStore -= amount;
-
-        return SaleItem.ofCarrier(amount, this);
-    }
-
     @Generated
     protected SoundCarrier() {
     }
@@ -47,6 +38,19 @@ public class SoundCarrier {
         this.amountInStore = aAmountInStore;
         this.location = aLocation;
         this.productId = aProductId;
+    }
+
+    public SaleItem sell(int amount) throws SoundCarrierUnavailableException {
+        if (amount > this.amountInStore) {
+            throw new SoundCarrierUnavailableException();
+        }
+        this.amountInStore -= amount;
+
+        return SaleItem.ofCarrier(amount, this);
+    }
+
+    public void refund(int amount) {
+        this.amountInStore += amount;
     }
 
     public SoundCarrierId getCarrierId() {

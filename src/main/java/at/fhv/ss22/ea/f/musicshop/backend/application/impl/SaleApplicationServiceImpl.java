@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
+import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
@@ -76,6 +77,24 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
     }
 
+    @Override
+    public void refund(String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) {
+        //TODO replace with domain specific exceptions
+        Sale sale = saleRepository.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
+
+        refundedSaleItems.forEach(refundedSaleItem -> {
+            // Set matching saleItem isRefund to true
+            SaleItem saleItem = sale.getSaleItemList().stream().filter(si ->
+                    si.getCarrierId().getUUID().equals(refundedSaleItem.getSoundCarrierId())
+            ).findFirst().orElseThrow(NoSuchElementException::new);
+
+            saleItem.refund(refundedSaleItem.getAmountToRefund());
+
+            SoundCarrier soundCarrier = soundCarrierRepository.soundCarrierById(saleItem.getCarrierId()).orElseThrow(NoSuchElementException::new);
+            soundCarrier.refund(refundedSaleItem.getAmountToRefund());
+        });
+    }
+
     private SaleDTO saleDtoFromSale(Sale sale) {
         // TODO: Get carrier and product infos with stream, map and check if isPresent
         List<SaleItemDTO> saleItemDTOs = new ArrayList<>();
@@ -92,9 +111,11 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                             .filter(Optional::isPresent)
                             .map(opt -> opt.get().getArtistName())
                             .collect(Collectors.joining(", ")))
+                    .withSoundCarrierId(soundCarrier.getCarrierId().getUUID())
                     .withSoundCarrierName(soundCarrier.getType().getFriendlyName())
-                    .withAmountOfCarriers(soundCarrier.getAmountInStore())
-                    .withPricePerCarrier(soundCarrier.getPrice())
+                    .withAmountOfCarriers(saleItem.getAmountOfCarriers())
+                    .withPricePerCarrier(saleItem.getPricePerCarrier())
+                    .withIsRefunded(saleItem.isRefunded())
                     .build();
 
             saleItemDTOs.add(dto);

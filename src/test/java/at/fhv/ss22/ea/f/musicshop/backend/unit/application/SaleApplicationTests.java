@@ -1,12 +1,15 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
+import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
+import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song;
@@ -31,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class CarrierApplicationTests {
+public class SaleApplicationTests {
 
     private SaleApplicationService buyingApplicationService = InstanceProvider.getTestingSoundCarrierApplicationService();
     private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getMockedSoundCarrierRepository();
@@ -106,5 +109,97 @@ public class CarrierApplicationTests {
         assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
         assertEquals(sale.getSaleItemList().size(), saleActual.getSaleItems().size());
         assertEquals(sale.getTotalPrice(), saleActual.getTotalPrice());
+    }
+
+    @Test
+    void given_invoiceNumber_and_refundedSaleItems_when_refund_then_amountsAsExpected() {
+        // given
+        int carrierAmountAfterRefundExpected1 = 27;
+        UUID soundCarrierIdExpected1 = UUID.randomUUID();
+        SoundCarrier soundCarrier1 = SoundCarrier.create(
+                new SoundCarrierId(soundCarrierIdExpected1),
+                SoundCarrierType.CD,
+                10,
+                25,
+                "R01",
+                new ProductId(UUID.randomUUID())
+        );
+
+        int carrierAmountAfterRefundExpected2 = 5;
+        UUID soundCarrierIdExpected2 = UUID.randomUUID();
+        SoundCarrier soundCarrier2 = SoundCarrier.create(
+                new SoundCarrierId(soundCarrierIdExpected2),
+                SoundCarrierType.VINYL,
+                20,
+                5,
+                "R01",
+                new ProductId(UUID.randomUUID())
+        );
+
+        int carrierAmountAfterRefundExpected3 = 43;
+        UUID soundCarrierIdExpected3 = UUID.randomUUID();
+        SoundCarrier soundCarrier3 = SoundCarrier.create(
+                new SoundCarrierId(soundCarrierIdExpected3),
+                SoundCarrierType.CASSETTE,
+                5,
+                40,
+                "R01",
+                new ProductId(UUID.randomUUID())
+        );
+
+        int saleItemAmountAfterRefundExpected1 = 3;
+        SaleItem saleItem1 = SaleItem.ofCarrier(5, soundCarrier1);
+
+        int saleItemAmountAfterRefundExpected2 = 1;
+        SaleItem saleItem2 = SaleItem.ofCarrier(1, soundCarrier2);
+
+        int saleItemAmountAfterRefundExpected3 = 2;
+        SaleItem saleItem3 = SaleItem.ofCarrier(5, soundCarrier3);
+        List<SaleItem> saleItems = List.of(saleItem1, saleItem2, saleItem3);
+
+        String invoiceNumberExpected = "R00001";
+        Sale sale = Sale.create(
+                new SaleId(UUID.randomUUID()),
+                invoiceNumberExpected,
+                LocalDateTime.now(),
+                80,
+                "Cash",
+                new CustomerId(UUID.randomUUID()),
+                saleItems,
+                new EmployeeId(UUID.randomUUID())
+        );
+
+        List<RefundedSaleItemDTO> refundedSaleItems = new ArrayList<>();
+        refundedSaleItems.add(
+                RefundedSaleItemDTO.builder().
+                        withSoundCarrierId(saleItem1.getCarrierId().getUUID())
+                        .withAmountToRefund(2)
+                        .build()
+        );
+        refundedSaleItems.add(
+                RefundedSaleItemDTO.builder().
+                        withSoundCarrierId(saleItem3.getCarrierId().getUUID())
+                        .withAmountToRefund(3)
+                        .build()
+        );
+
+        when(saleRepository.saleByInvoiceNumber(invoiceNumberExpected)).thenReturn(Optional.of(sale));
+        when(soundCarrierRepository.soundCarrierById(soundCarrier1.getCarrierId())).thenReturn(Optional.of(soundCarrier1));
+        when(soundCarrierRepository.soundCarrierById(soundCarrier2.getCarrierId())).thenReturn(Optional.of(soundCarrier2));
+        when(soundCarrierRepository.soundCarrierById(soundCarrier3.getCarrierId())).thenReturn(Optional.of(soundCarrier3));
+
+        // when
+        buyingApplicationService.refund(invoiceNumberExpected, refundedSaleItems);
+
+        // then
+        assertTrue(saleItem1.isRefunded());
+        assertFalse(saleItem2.isRefunded());
+        assertTrue(saleItem3.isRefunded());
+        assertEquals(carrierAmountAfterRefundExpected1, soundCarrier1.getAmountInStore());
+        assertEquals(carrierAmountAfterRefundExpected2, soundCarrier2.getAmountInStore());
+        assertEquals(carrierAmountAfterRefundExpected3, soundCarrier3.getAmountInStore());
+        assertEquals(saleItemAmountAfterRefundExpected1, saleItem1.getAmountOfCarriers());
+        assertEquals(saleItemAmountAfterRefundExpected2, saleItem2.getAmountOfCarriers());
+        assertEquals(saleItemAmountAfterRefundExpected3, saleItem3.getAmountOfCarriers());
     }
 }
