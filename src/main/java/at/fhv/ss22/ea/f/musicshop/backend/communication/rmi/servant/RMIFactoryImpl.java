@@ -3,6 +3,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant;
 import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.communication.api.RMIFactory;
+import at.fhv.ss22.ea.f.communication.api.SaleSearchService;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 
 import java.rmi.RemoteException;
@@ -21,5 +22,10 @@ public class RMIFactoryImpl extends UnicastRemoteObject implements RMIFactory {
     @Override
     public BuyingService getBuyingService() throws RemoteException {
         return InstanceProvider.getBuyingService();
+    }
+
+    @Override
+    public SaleSearchService getSaleSearchService() throws RemoteException {
+        return InstanceProvider.getSaleSearchService();
     }
 }

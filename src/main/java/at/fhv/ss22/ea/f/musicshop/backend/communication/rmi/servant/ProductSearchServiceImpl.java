@@ -9,6 +9,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class ProductSearchServiceImpl extends UnicastRemoteObject implements ProductSearchService {
@@ -22,7 +23,7 @@ public class ProductSearchServiceImpl extends UnicastRemoteObject implements Pro
 
     @Override
     public ProductDetailsDTO productById(UUID productId) {
-        return productApplicationService.productById(productId).orElse(null);
+        return productApplicationService.productById(productId).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

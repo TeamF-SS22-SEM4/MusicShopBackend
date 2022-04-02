@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingService {
 
-     private SaleApplicationService buyingApplicationService;
+    private SaleApplicationService buyingApplicationService;
 
     public BuyingServiceImpl(SaleApplicationService buyingApplicationService) throws RemoteException {
         super(RMIServer.getPort());

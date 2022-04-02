@@ -2,12 +2,14 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 
 import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
+import at.fhv.ss22.ea.f.communication.api.SaleSearchService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.SaleSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
 
@@ -25,7 +27,7 @@ public class InstanceProvider {
     private static ProductRepository productRepository;
     private static SaleRepository saleRepository;
     private static SoundCarrierRepository soundCarrierRepository;
-    private static SaleApplicationService buyingApplicationService;
+    private static SaleApplicationService saleApplicationService;
 
     private static BuyingService testingBuyingService;
     private static ProductSearchService testingProductSearchService;
@@ -48,10 +50,10 @@ public class InstanceProvider {
     }
 
     public static SaleApplicationService getSoundCarrierApplicationService() {
-        if (null == buyingApplicationService) {
-            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+        if (null == saleApplicationService) {
+            saleApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
-        return buyingApplicationService;
+        return saleApplicationService;
     }
 
     public static SaleApplicationService getTestingSoundCarrierApplicationService() {
@@ -79,18 +81,27 @@ public class InstanceProvider {
     }
     public static BuyingService getBuyingService() {
         try {
-            return new BuyingServiceImpl(getBuyingApplicationService());
+            return new BuyingServiceImpl(getSaleApplicationService());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static SaleApplicationService getBuyingApplicationService() {
-        if (null == buyingApplicationService) {
-            buyingApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+    public static SaleSearchService getSaleSearchService() {
+        try {
+            return new SaleSearchServiceImpl(getSaleApplicationService());
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
-        return buyingApplicationService;
+        return null;
+    }
+
+    public static SaleApplicationService getSaleApplicationService() {
+        if (null == saleApplicationService) {
+            saleApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+        }
+        return saleApplicationService;
     }
 
     public static SaleApplicationService getTestingBuyingApplicationService() {
