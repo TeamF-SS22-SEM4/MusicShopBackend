@@ -12,7 +12,7 @@ import java.util.List;
 public class RefundSaleServiceImpl extends UnicastRemoteObject implements RefundSaleService {
     private SaleApplicationService saleApplicationService;
 
-    protected RefundSaleServiceImpl(SaleApplicationService saleApplicationService) throws RemoteException {
+    public RefundSaleServiceImpl(SaleApplicationService saleApplicationService) throws RemoteException {
         super(RMIServer.getPort());
         this.saleApplicationService = saleApplicationService;
     }

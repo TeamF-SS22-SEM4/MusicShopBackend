@@ -50,7 +50,10 @@ public class SoundCarrier {
     }
 
     public void refund(int amount) {
-        this.amountInStore += amount;
+        if(amount > 0) {
+            this.amountInStore += amount;
+        }
+        // TODO: else throw appropriate exception
     }
 
     public SoundCarrierId getCarrierId() {

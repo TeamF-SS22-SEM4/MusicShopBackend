@@ -39,8 +39,10 @@ public class SaleItem {
     }
 
     public void refund(int amount) {
-        this.isRefunded = true;
-        this.amountOfCarriers -= amount;
+        if(amount > 0) {
+            this.amountOfCarriers -= amount;
+        }
+        // TODO: else throw appropriate exception
     }
 
     public boolean isRefunded() {

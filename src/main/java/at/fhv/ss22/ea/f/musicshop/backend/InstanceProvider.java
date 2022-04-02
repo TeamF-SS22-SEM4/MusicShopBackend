@@ -2,6 +2,7 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 
 import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
+import at.fhv.ss22.ea.f.communication.api.RefundSaleService;
 import at.fhv.ss22.ea.f.communication.api.SaleSearchService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
@@ -9,6 +10,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationSer
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.RefundSaleServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.SaleSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
@@ -91,6 +93,15 @@ public class InstanceProvider {
     public static SaleSearchService getSaleSearchService() {
         try {
             return new SaleSearchServiceImpl(getSaleApplicationService());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static RefundSaleService getRefundSaleService() {
+        try {
+            return new RefundSaleServiceImpl(getSaleApplicationService());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
