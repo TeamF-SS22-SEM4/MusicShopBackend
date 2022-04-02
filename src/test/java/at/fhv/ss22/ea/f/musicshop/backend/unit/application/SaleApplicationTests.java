@@ -192,9 +192,6 @@ public class SaleApplicationTests {
         buyingApplicationService.refund(invoiceNumberExpected, refundedSaleItems);
 
         // then
-        assertTrue(saleItem1.isRefunded());
-        assertFalse(saleItem2.isRefunded());
-        assertTrue(saleItem3.isRefunded());
         assertEquals(carrierAmountAfterRefundExpected1, soundCarrier1.getAmountInStore());
         assertEquals(carrierAmountAfterRefundExpected2, soundCarrier2.getAmountInStore());
         assertEquals(carrierAmountAfterRefundExpected3, soundCarrier3.getAmountInStore());

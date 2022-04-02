@@ -39,7 +39,7 @@ public class SaleItem {
     }
 
     public void refund(int amount) {
-        if(amount > 0) {
+        if((amount > 0) && (this.amountOfCarriers >= amount)) {
             this.amountOfCarriers -= amount;
         }
         // TODO: else throw appropriate exception
