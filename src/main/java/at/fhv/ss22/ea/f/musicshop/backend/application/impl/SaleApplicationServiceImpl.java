@@ -62,7 +62,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         }
 
         //TODO add employee
-        Sale sale = Sale.newSale(saleRepository.nextSaleNumber(), saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
+        long currentAmountOfSales = saleRepository.amountOfSales();
+        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
         saleRepository.add(sale);
 
         EntityManagerUtil.commit();

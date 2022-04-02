@@ -47,6 +47,18 @@ public class HibernateSaleRepository implements SaleRepository {
     }
 
     @Override
+    public long amountOfSales() {
+        TypedQuery<Long> query = em.createQuery(
+                "select count(s) from Sale s",
+                Long.class
+        );
+
+        return query.getSingleResult();
+    }
+
+    // TODO: Remove
+    @Deprecated
+    @Override
     public String nextSaleNumber() {
         TypedQuery<String> query = em.createQuery(
                 "select s.invoiceNumber from Sale s where s.invoiceNumber <> 'TODD' order by s.invoiceNumber desc ",

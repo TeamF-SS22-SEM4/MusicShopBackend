@@ -28,7 +28,6 @@ class HibernateSaleRepoTests {
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), "1", LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItems, null);
         EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
-        EntityManagerUtil.commit();
         SaleId surrogateId = new SaleId(sale.getSaleId().getUUID());
 
         //when
@@ -41,6 +40,8 @@ class HibernateSaleRepoTests {
         assertEquals(sale.getPaymentMethod(), s.getPaymentMethod());
         assertEquals(sale.getTimeOfSale(), s.getTimeOfSale());
         assertEquals(sale.getPerformingEmployee(), s.getPerformingEmployee());
+
+        EntityManagerUtil.rollback();
     }
 
     @Test
@@ -51,7 +52,6 @@ class HibernateSaleRepoTests {
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
         EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
-        EntityManagerUtil.commit();
 
         // when
         Optional<Sale> saleOptActual = saleRepository.saleByInvoiceNumber(invoiceNumberExpected);
@@ -64,6 +64,8 @@ class HibernateSaleRepoTests {
         assertEquals(sale.getPaymentMethod(), saleActual.getPaymentMethod());
         assertEquals(sale.getTimeOfSale(), saleActual.getTimeOfSale());
         assertEquals(sale.getPerformingEmployee(), saleActual.getPerformingEmployee());
+
+        EntityManagerUtil.rollback();
     }
 
     @Test
@@ -97,8 +99,55 @@ class HibernateSaleRepoTests {
         EntityManagerUtil.beginTransaction();
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), firstNumber, LocalDateTime.now(), 50f, "CASH" , null, List.of(), new EmployeeId(UUID.randomUUID()));
         saleRepository.add(sale);
-        EntityManagerUtil.commit();
 
         assertEquals("R000002", saleRepository.nextSaleNumber());
+
+        EntityManagerUtil.rollback();
+    }
+
+    @Test
+    void given_3sales_in_repository_when_getAmountOfSales_3isReturned() {
+        // given
+        long amountOfSalesExpected = 3;
+        List<Sale> sales = List.of(
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000001",
+                        LocalDateTime.now(),
+                        50f,
+                        "CASH" , null,
+                        List.of(),
+                        new EmployeeId(UUID.randomUUID())
+                ),
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000002",
+                        LocalDateTime.now(),
+                        50f,
+                        "CASH" , null,
+                        List.of(),
+                        new EmployeeId(UUID.randomUUID())
+                ),
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000003",
+                        LocalDateTime.now(),
+                        50f,
+                        "CASH" , null,
+                        List.of(),
+                        new EmployeeId(UUID.randomUUID())
+                )
+        );
+
+        EntityManagerUtil.beginTransaction();
+        sales.forEach(sale -> saleRepository.add(sale));
+
+        // when
+        long amountOfSalesActual = saleRepository.amountOfSales();
+
+        // then
+        assertEquals(amountOfSalesExpected, amountOfSalesActual);
+
+        EntityManagerUtil.rollback();
     }
 }
