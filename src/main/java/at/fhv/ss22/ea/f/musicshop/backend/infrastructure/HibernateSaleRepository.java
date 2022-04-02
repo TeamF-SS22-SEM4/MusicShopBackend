@@ -55,7 +55,12 @@ public class HibernateSaleRepository implements SaleRepository {
         );
 
         UnaryOperator<String> increasingSaleNumber = old -> {
-            int oldNumber = Integer.parseInt(old.substring(1)); //remove the R-character in sale number
+            int oldNumber = 1;
+            try {
+                oldNumber = Integer.parseInt(old.substring(1)); //remove the R-character in sale number
+            } catch (NumberFormatException e) {
+                // ignore for now, will sometimes come here because dummy data may contain "TODO" as invoiceNumber
+            }
             return "R" + String.format("%06d", oldNumber+1);
         };
         return query.getResultStream().findFirst().map(increasingSaleNumber).orElse(INITIAL_SALE_NUMBER);
