@@ -61,11 +61,13 @@ public class CarrierApplicationTests {
         assertEquals(3, carriers.get(0).getAmountInStore());
         verify(saleRepository).add(any());
     }
+    //not testing for unchanged amountsInStore on failure because that mechanism relies on Transactional rollback
+    // and that is not available when repositories are mocked
+    // there is an integration test for that scenario
 
     @Test
     void given_invoiceNumber_when_saleByInvoiceNumber_then_return_matchingSale() {
         // given
-        // TODO: Create soundCarrier
         UUID productIdUUID = UUID.randomUUID();
         ProductId productIdExpected = new ProductId(productIdUUID);
         String nameExpected = "SomeProduct";
@@ -91,7 +93,6 @@ public class CarrierApplicationTests {
         String invoiceNumberExpected = "42";
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
 
-        // TODO: mock soundCarrier and Product
         when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
         when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
         when(saleRepository.saleByInvoiceNumber(invoiceNumberExpected)).thenReturn(Optional.of(sale));
@@ -106,8 +107,4 @@ public class CarrierApplicationTests {
         assertEquals(sale.getSaleItemList().size(), saleActual.getSaleItems().size());
         assertEquals(sale.getTotalPrice(), saleActual.getTotalPrice());
     }
-
-    //not testing for unchanged amountsInStore on failure because that mechanism relies on Transactional rollback
-    // and that is not available when repositories are mocked
-    // there is an integration test for that scenario
 }

@@ -80,12 +80,12 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         List<SaleItemDTO> saleItemDTOs = new ArrayList<>();
 
         for (SaleItem saleItem : sale.getSaleItemList()) {
-            SoundCarrier soundCarrier = soundCarrierRepository.soundCarrierById(saleItem.getCarrierId()).get();
-
-            Product product = productRepository.productById(soundCarrier.getProductId()).get();
+            SoundCarrier soundCarrier = soundCarrierRepository.soundCarrierById(saleItem.getCarrierId()).orElseThrow(IllegalStateException::new);
+            //TODO replace with domain specific exceptions
+            Product product = productRepository.productById(soundCarrier.getProductId()).orElseThrow(IllegalStateException::new);
 
             SaleItemDTO dto = SaleItemDTO.builder()
-                    .withProductName(productRepository.productById(soundCarrier.getProductId()).get().getName())
+                    .withProductName(product.getName())
                     .withArtistName(product.getArtistIds().stream()
                             .map(artistId -> artistRepository.artistById(artistId))
                             .filter(Optional::isPresent)
