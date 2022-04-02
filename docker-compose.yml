@@ -24,7 +24,7 @@ services:
       - ${RMI_PORT}:${RMI_PORT}
     networks:
       - musicshop_backend
-      - rmi_connection
+#      - rmi_connection
     links:
       - postgres
     env_file:
@@ -33,8 +33,8 @@ services:
 networks:
   musicshop_backend:
     driver: bridge
-  rmi_connection:
-    external: true
+#  rmi_connection:
+#    external: true
 
 volumes:
   postgres_data:
