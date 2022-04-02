@@ -79,6 +79,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @Override
     public void refund(String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) {
+        EntityManagerUtil.beginTransaction();
+
         //TODO replace with domain specific exceptions
         Sale sale = saleRepository.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
 
@@ -93,6 +95,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             SoundCarrier soundCarrier = soundCarrierRepository.soundCarrierById(saleItem.getCarrierId()).orElseThrow(NoSuchElementException::new);
             soundCarrier.refund(refundedSaleItem.getAmountToRefund());
         });
+
+        EntityManagerUtil.commit();
     }
 
     private SaleDTO saleDtoFromSale(Sale sale) {
