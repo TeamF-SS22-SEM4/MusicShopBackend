@@ -7,7 +7,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public class HibernateSaleRepository implements SaleRepository {
@@ -50,7 +49,7 @@ public class HibernateSaleRepository implements SaleRepository {
     @Override
     public String nextSaleNumber() {
         TypedQuery<String> query = em.createQuery(
-                "select s.invoiceNumber from Sale s order by s.invoiceNumber desc ",
+                "select s.invoiceNumber from Sale s where s.invoiceNumber <> 'TODD' order by s.invoiceNumber desc ",
                 String.class
         );
 
@@ -59,7 +58,7 @@ public class HibernateSaleRepository implements SaleRepository {
             try {
                 oldNumber = Integer.parseInt(old.substring(1)); //remove the R-character in sale number
             } catch (NumberFormatException e) {
-                // ignore for now, will sometimes come here because dummy data may contain "TODO" as invoiceNumber
+                // ignore for now, will sometimes come here because dummy data may contain "T0DO" as invoiceNumber
             }
             return "R" + String.format("%06d", oldNumber+1);
         };
