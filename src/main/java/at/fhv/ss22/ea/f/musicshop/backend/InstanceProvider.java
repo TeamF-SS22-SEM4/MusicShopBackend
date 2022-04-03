@@ -4,10 +4,13 @@ import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.communication.api.RefundSaleService;
 import at.fhv.ss22.ea.f.communication.api.SaleSearchService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.RefundSaleServiceImpl;
@@ -30,12 +33,17 @@ public class InstanceProvider {
     private static SaleRepository saleRepository;
     private static SoundCarrierRepository soundCarrierRepository;
     private static SaleApplicationService saleApplicationService;
+    private static AuthenticationApplicationService authenticationApplicationService;
+    private static SessionRepository sessionRepository;
+    private static LdapClient ldapClient;
 
     private static BuyingService testingBuyingService;
     private static ProductSearchService testingProductSearchService;
     private static ProductApplicationService testingProductApplicationService;
     private static SaleApplicationService testingBuyingApplicationService;
+    private static AuthenticationApplicationService testingAuthenticationApplicationService;
 
+    private static SessionRepository mockedSessionRepository;
     private static SaleApplicationService mockedBuyingApplicationService;
     private static ProductApplicationService mockedProductApplicationService;
     private static ArtistRepository mockedArtistRepository;
@@ -43,6 +51,35 @@ public class InstanceProvider {
     private static ProductRepository mockedProductRepository;
     private static SaleRepository mockedSaleRepository;
     private static SoundCarrierRepository mockedSoundCarrierRepository;
+    private static LdapClient mockedLdapClient;
+
+    public static SessionRepository getSessionRepository() {
+        if (null == sessionRepository) {
+            sessionRepository = new HibernateSessionRepository();
+        }
+        return sessionRepository;
+    }
+
+    public static SessionRepository getMockedSessionRepository() {
+        if (null == mockedSessionRepository) {
+            mockedSessionRepository = mock(SessionRepository.class);
+        }
+        return mockedSessionRepository;
+    }
+
+    public static LdapClient getLdapClient() {
+        if (null == ldapClient) {
+            ldapClient = new LdapClient();
+        }
+        return ldapClient;
+    }
+
+    public static LdapClient getMockedLdapClient() {
+        if (null == mockedLdapClient) {
+            mockedLdapClient = mock(LdapClient.class);
+        }
+        return mockedLdapClient;
+    }
 
     public static ProductApplicationService getProductApplicationService() {
         if (null == productApplicationService) {
@@ -56,6 +93,20 @@ public class InstanceProvider {
             saleApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
         return saleApplicationService;
+    }
+
+    public static AuthenticationApplicationService getAuthenticationApplicationService() {
+        if (null == authenticationApplicationService) {
+            authenticationApplicationService = new AuthenticationApplicationServiceImpl(getLdapClient(), getSessionRepository(), getEmployeeRepository());
+        }
+        return authenticationApplicationService;
+    }
+
+    public static AuthenticationApplicationService getTestingAuthenticationApplicationService() {
+        if (null == testingAuthenticationApplicationService) {
+            testingAuthenticationApplicationService = new AuthenticationApplicationServiceImpl(getMockedLdapClient(), getMockedSessionRepository(), getMockedEmployeeRepository());
+        }
+        return testingAuthenticationApplicationService;
     }
 
     public static SaleApplicationService getTestingSoundCarrierApplicationService() {

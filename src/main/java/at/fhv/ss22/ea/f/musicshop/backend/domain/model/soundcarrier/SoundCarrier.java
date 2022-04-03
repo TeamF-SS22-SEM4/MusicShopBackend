@@ -14,13 +14,13 @@ import java.util.Objects;
 @Entity
 public class SoundCarrier {
     @EmbeddedId
-    @AttributeOverride(name = "carrierId", column = @Column(name = "carrier_id"))
+    @AttributeOverride(name = "carrierId", column = @Column(name = "carrierId"))
     private SoundCarrierId carrierId;
     private SoundCarrierType type;
     private float price;
     private int amountInStore;
     private String location; //holds information in which shelve to find the carrier
-    @AttributeOverride(name = "productId", column = @Column(name = "product_id"))
+    @AttributeOverride(name = "productId", column = @Column(name = "productId"))
     private ProductId productId;
 
     public static SoundCarrier create(SoundCarrierId aCarrierId, SoundCarrierType aType, float aPrice, int aAmountInStore, String aLocation, ProductId aProductId) {

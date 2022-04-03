@@ -93,19 +93,6 @@ class HibernateSaleRepoTests {
     }
 
     @Test
-    void sale_number_tests() {
-        String firstNumber = saleRepository.nextSaleNumber();
-        assertEquals("R000001", firstNumber);
-        EntityManagerUtil.beginTransaction();
-        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), firstNumber, LocalDateTime.now(), 50f, "CASH" , null, List.of(), new EmployeeId(UUID.randomUUID()));
-        saleRepository.add(sale);
-
-        assertEquals("R000002", saleRepository.nextSaleNumber());
-
-        EntityManagerUtil.rollback();
-    }
-
-    @Test
     void given_3sales_in_repository_when_getAmountOfSales_3isReturned() {
         // given
         long amountOfSalesExpected = 3;

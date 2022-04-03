@@ -14,6 +14,4 @@ public interface SaleRepository {
     Optional<Sale> saleByInvoiceNumber(String invoiceNumber);
 
     long amountOfSales();
-
-    String nextSaleNumber();
 }

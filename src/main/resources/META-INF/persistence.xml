@@ -20,6 +20,9 @@
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

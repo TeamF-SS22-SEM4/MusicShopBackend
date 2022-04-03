@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EmployeeTests {
+class EmployeeTests {
     @Test
     void given_employeedetails_when_creating_employee_then_details_equals() {
         // given
@@ -34,6 +35,7 @@ public class EmployeeTests {
                 usernameExpected,
                 firstnameExpected,
                 lastNameExpected,
+                List.of(UserRole.EMPLOYEE),
                 salesExpected
         );
 

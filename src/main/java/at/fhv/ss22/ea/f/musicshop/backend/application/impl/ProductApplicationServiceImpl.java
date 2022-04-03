@@ -40,7 +40,6 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                 .collect(Collectors.toList());
     }
 
-    //TODO maybe extract to DTOassembler
     private ProductOverviewDTO overviewDtoFromProduct(Product product) {
         return ProductOverviewDTO.builder()
                 .withId(product.getProductId().getUUID())
