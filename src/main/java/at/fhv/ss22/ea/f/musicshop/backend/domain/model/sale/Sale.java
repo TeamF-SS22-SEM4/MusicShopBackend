@@ -40,23 +40,23 @@ public class Sale {
         return sale;
     }
 
-    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
-        return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aTotalPrice, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
+    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+        return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
     }
 
     @Generated
     protected Sale() {
     }
 
-    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         this.saleId = aSaleId;
         this.invoiceNumber = aInvoiceNumber;
         this.timeOfSale = aTimeOfSale;
-        this.totalPrice = aTotalPrice;
         this.paymentMethod = aPaymentMethod;
         this.customerId = aCustomerId;
         this.saleItemList = aSaleItemList;
         this.performingEmployee = aPerformingEmployee;
+        this.totalPrice = saleItemList.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
     }
 
     public void addCustomer(CustomerId customerId) throws CustomerAlreadyConnectedException {
@@ -64,6 +64,10 @@ public class Sale {
             throw new CustomerAlreadyConnectedException();
         }
         this.customerId = customerId;
+    }
+
+    public void refund() {
+        this.totalPrice = this.saleItemList.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
     }
 
     public SaleId getSaleId() {

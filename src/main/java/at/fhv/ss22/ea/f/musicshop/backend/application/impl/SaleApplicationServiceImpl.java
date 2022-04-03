@@ -96,6 +96,9 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             soundCarrier.refund(refundedSaleItem.getAmountToRefund());
         });
 
+        // Calculate the new total price after refund
+        sale.refund();
+
         EntityManagerUtil.commit();
     }
 
