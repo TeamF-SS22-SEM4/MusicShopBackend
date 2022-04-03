@@ -29,7 +29,7 @@ class SaleTests {
         LocalDateTime timeOfSaleExpected = LocalDateTime.of(2022, Month.MARCH, 1, 13, 30);
         float totalPriceExpected = 50;
         String paymentMethodExpected = "Credit Card";
-        CustomerId customerIdExpected = null;
+        CustomerId customerIdExpected = new CustomerId(UUID.randomUUID());
         List<SaleItem> saleItemsExpected = new ArrayList<>() {
             {
                 add (
@@ -58,7 +58,6 @@ class SaleTests {
                 saleIdExpected,
                 invoiceNumberExpected,
                 timeOfSaleExpected,
-                totalPriceExpected,
                 paymentMethodExpected,
                 customerIdExpected,
                 saleItemsExpected,

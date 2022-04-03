@@ -94,7 +94,7 @@ public class SaleApplicationTests {
 
         List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(false, 1, 10, soundCarrierIdExpected));
         String invoiceNumberExpected = "42";
-        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
 
         when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
         when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
@@ -158,11 +158,11 @@ public class SaleApplicationTests {
         List<SaleItem> saleItems = List.of(saleItem1, saleItem2, saleItem3);
 
         String invoiceNumberExpected = "R00001";
+        double totalPriceAfterRefundExpected = 60d;
         Sale sale = Sale.create(
                 new SaleId(UUID.randomUUID()),
                 invoiceNumberExpected,
                 LocalDateTime.now(),
-                80,
                 "Cash",
                 new CustomerId(UUID.randomUUID()),
                 saleItems,
@@ -192,6 +192,7 @@ public class SaleApplicationTests {
         buyingApplicationService.refund(invoiceNumberExpected, refundedSaleItems);
 
         // then
+        assertEquals(totalPriceAfterRefundExpected, sale.getTotalPrice());
         assertEquals(carrierAmountAfterRefundExpected1, soundCarrier1.getAmountInStore());
         assertEquals(carrierAmountAfterRefundExpected2, soundCarrier2.getAmountInStore());
         assertEquals(carrierAmountAfterRefundExpected3, soundCarrier3.getAmountInStore());

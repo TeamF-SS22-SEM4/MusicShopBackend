@@ -25,7 +25,7 @@ class HibernateSaleRepoTests {
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
         List<SaleItem> saleItems =  List.of(SaleItem.create(false, 1, 10, new SoundCarrierId(UUID.randomUUID())));
-        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), "1", LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItems, null);
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), "1", LocalDateTime.now(), "cash", new CustomerId(UUID.randomUUID()),saleItems, null);
         EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
         SaleId surrogateId = new SaleId(sale.getSaleId().getUUID());
@@ -49,7 +49,7 @@ class HibernateSaleRepoTests {
         // given
         String invoiceNumberExpected = "42";
         List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(false, 1, 10, new SoundCarrierId(UUID.randomUUID())));
-        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), 100, "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
         EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
 
@@ -97,7 +97,7 @@ class HibernateSaleRepoTests {
         String firstNumber = saleRepository.nextSaleNumber();
         assertEquals("R000001", firstNumber);
         EntityManagerUtil.beginTransaction();
-        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), firstNumber, LocalDateTime.now(), 50f, "CASH" , null, List.of(), new EmployeeId(UUID.randomUUID()));
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), firstNumber, LocalDateTime.now(),  "CASH" , null, List.of(), new EmployeeId(UUID.randomUUID()));
         saleRepository.add(sale);
 
         assertEquals("R000002", saleRepository.nextSaleNumber());
@@ -114,7 +114,6 @@ class HibernateSaleRepoTests {
                         new SaleId(UUID.randomUUID()),
                         "R000001",
                         LocalDateTime.now(),
-                        50f,
                         "CASH" , null,
                         List.of(),
                         new EmployeeId(UUID.randomUUID())
@@ -123,7 +122,6 @@ class HibernateSaleRepoTests {
                         new SaleId(UUID.randomUUID()),
                         "R000002",
                         LocalDateTime.now(),
-                        50f,
                         "CASH" , null,
                         List.of(),
                         new EmployeeId(UUID.randomUUID())
@@ -132,7 +130,6 @@ class HibernateSaleRepoTests {
                         new SaleId(UUID.randomUUID()),
                         "R000003",
                         LocalDateTime.now(),
-                        50f,
                         "CASH" , null,
                         List.of(),
                         new EmployeeId(UUID.randomUUID())
