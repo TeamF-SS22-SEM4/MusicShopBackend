@@ -27,6 +27,10 @@ public class Employee {
         return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, roles,aSalesList);
     }
 
+    public boolean hasRole(UserRole role) {
+        return this.roles.contains(role);
+    }
+
     @Generated
     protected Employee() {
     }

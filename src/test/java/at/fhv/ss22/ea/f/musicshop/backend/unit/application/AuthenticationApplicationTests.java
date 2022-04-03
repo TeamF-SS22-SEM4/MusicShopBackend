@@ -8,14 +8,20 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClien
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,6 +47,43 @@ public class AuthenticationApplicationTests {
 
         //then
         verify(sessionRepository, times(1)).add(any());
+    }
 
+    @Test
+    void roles_of_valid_session() throws SessionExpired {
+        //given
+        Employee employee = Employee.create(
+                new EmployeeId(UUID.randomUUID()),
+                "buttsoup-barnes",
+                "Buut",
+                "Soup",
+                List.of(UserRole.EMPLOYEE),
+                List.of()
+        );
+        Session session = Session.newForEmployee(employee.getEmployeeId());
+        when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
+        when(employeeRepository.employeeById(employee.getEmployeeId())).thenReturn(Optional.of(employee));
+
+        //when
+        boolean resultOperator = authenticationApplicationService.hasRole(session.getSessionId(), UserRole.OPERATOR);
+        boolean resultEmployee = authenticationApplicationService.hasRole(session.getSessionId(), UserRole.EMPLOYEE);
+
+        //then
+        assertTrue(resultEmployee);
+        assertFalse(resultOperator);
+    }
+
+    @Test
+    void roles_of_invalid_session() throws NoSuchFieldException, IllegalAccessException {
+        Session session = Session.newForEmployee(new EmployeeId(UUID.randomUUID()));
+        //make expired
+        Field validUntil = Session.class.getDeclaredField("validUntil");
+        validUntil.setAccessible(true);
+        validUntil.set(session, Instant.now().minus(Duration.ofDays(1)));
+
+        when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
+
+        assertThrows(SessionExpired.class, () -> authenticationApplicationService.hasRole(session.getSessionId(), UserRole.EMPLOYEE));
+        verify(sessionRepository, times(1)).removeExpiredSessions();
     }
 }

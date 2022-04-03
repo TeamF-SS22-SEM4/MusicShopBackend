@@ -6,7 +6,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.exceptions.Authenticat
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
@@ -46,6 +48,14 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
                 .build();
     }
 
-    //TODO method for checking if sessionId is valid
-
+    @Override
+    public boolean hasRole(SessionId sessionId, UserRole userRole) throws SessionExpired {
+        Session session = sessionRepository.sessionById(sessionId).orElseThrow(IllegalStateException::new);
+        if (session.isExpired()) {
+            sessionRepository.removeExpiredSessions();
+            throw new SessionExpired();
+        }
+        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
+        return employee.hasRole(userRole);
+    }
 }
