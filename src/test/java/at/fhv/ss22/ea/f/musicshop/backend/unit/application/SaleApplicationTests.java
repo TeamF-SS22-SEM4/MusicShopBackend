@@ -92,7 +92,7 @@ public class SaleApplicationTests {
         SoundCarrier soundCarrier = SoundCarrier.create(soundCarrierIdExpected, soundCarrierTypeExpected, priceExpected,
                                                         amountInStoreExpected, locationExpected, productIdExpected);
 
-        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(false, 1, 10, soundCarrierIdExpected));
+        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(1, 10, soundCarrierIdExpected));
         String invoiceNumberExpected = "42";
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
 
@@ -147,18 +147,21 @@ public class SaleApplicationTests {
                 new ProductId(UUID.randomUUID())
         );
 
-        int saleItemAmountAfterRefundExpected1 = 3;
+        int saleItemAmountAfterRefundExpected1 = 5;
+        int saleItemRefundedAmountExpected1 = 2;
         SaleItem saleItem1 = SaleItem.ofCarrier(5, soundCarrier1);
 
         int saleItemAmountAfterRefundExpected2 = 1;
+        int saleItemRefundedAmountExpected2 = 0;
         SaleItem saleItem2 = SaleItem.ofCarrier(1, soundCarrier2);
 
-        int saleItemAmountAfterRefundExpected3 = 2;
+        int saleItemAmountAfterRefundExpected3 = 5;
+        int saleItemRefundedAmountExpected3 = 3;
         SaleItem saleItem3 = SaleItem.ofCarrier(5, soundCarrier3);
         List<SaleItem> saleItems = List.of(saleItem1, saleItem2, saleItem3);
 
         String invoiceNumberExpected = "R00001";
-        double totalPriceAfterRefundExpected = 60d;
+        double totalPriceAfterRefundExpected = 95d;
         Sale sale = Sale.create(
                 new SaleId(UUID.randomUUID()),
                 invoiceNumberExpected,
@@ -173,13 +176,13 @@ public class SaleApplicationTests {
         refundedSaleItems.add(
                 RefundedSaleItemDTO.builder().
                         withSoundCarrierId(saleItem1.getCarrierId().getUUID())
-                        .withAmountToRefund(2)
+                        .withAmountToRefund(saleItemRefundedAmountExpected1)
                         .build()
         );
         refundedSaleItems.add(
                 RefundedSaleItemDTO.builder().
                         withSoundCarrierId(saleItem3.getCarrierId().getUUID())
-                        .withAmountToRefund(3)
+                        .withAmountToRefund(saleItemRefundedAmountExpected3)
                         .build()
         );
 
@@ -199,5 +202,8 @@ public class SaleApplicationTests {
         assertEquals(saleItemAmountAfterRefundExpected1, saleItem1.getAmountOfCarriers());
         assertEquals(saleItemAmountAfterRefundExpected2, saleItem2.getAmountOfCarriers());
         assertEquals(saleItemAmountAfterRefundExpected3, saleItem3.getAmountOfCarriers());
+        assertEquals(saleItemRefundedAmountExpected1, saleItem1.getRefundedAmount());
+        assertEquals(saleItemRefundedAmountExpected2, saleItem2.getRefundedAmount());
+        assertEquals(saleItemRefundedAmountExpected3, saleItem3.getRefundedAmount());
     }
 }

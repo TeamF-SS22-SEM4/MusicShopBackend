@@ -12,7 +12,7 @@ public class RMIClient {
     private CustomerService customerService;
     private static int PORT = 1098;
     private static String PROTOCOL = "rmi://";
-    private static String HOST = "172.20.0.2";
+    private static String HOST = "customer-db-service";
     private static String STUB = "/CustomerService";
 
     private RMIClient() {

@@ -66,10 +66,6 @@ public class Sale {
         this.customerId = customerId;
     }
 
-    public void refund() {
-        this.totalPrice = this.saleItemList.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
-    }
-
     public SaleId getSaleId() {
         return saleId;
     }

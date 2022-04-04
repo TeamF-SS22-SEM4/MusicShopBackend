@@ -34,7 +34,6 @@ class SaleTests {
             {
                 add (
                     SaleItem.create(
-                            false,
                             1,
                             30,
                             new SoundCarrierId(UUID.randomUUID())
@@ -42,7 +41,6 @@ class SaleTests {
                 );
                 add (
                         SaleItem.create(
-                                false,
                                 1,
                                 20,
                                 new SoundCarrierId(UUID.randomUUID())
@@ -80,7 +78,6 @@ class SaleTests {
             SaleItem saleItemExpected = saleItemsExpected.get(i);
             SaleItem saleItemActual = sale.getSaleItemList().get(i);
 
-            assertEquals(saleItemExpected.isRefunded(), saleItemActual.isRefunded());
             assertEquals(saleItemExpected.getAmountOfCarriers(), saleItemActual.getAmountOfCarriers());
             assertEquals(saleItemExpected.getPricePerCarrier(), saleItemActual.getPricePerCarrier());
             assertEquals(saleItemExpected.getCarrierId(), saleItemActual.getCarrierId());
