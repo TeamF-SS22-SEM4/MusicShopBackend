@@ -40,6 +40,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         this.artistRepository = artistRepository;
     }
 
+    // TODO: Maybe return invoiceNumber
     @Override
     public UUID buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
@@ -96,9 +97,6 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             soundCarrier.refund(refundedSaleItem.getAmountToRefund());
         });
 
-        // Calculate the new total price after refund
-        sale.refund();
-
         EntityManagerUtil.commit();
     }
 
@@ -122,7 +120,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                     .withSoundCarrierName(soundCarrier.getType().getFriendlyName())
                     .withAmountOfCarriers(saleItem.getAmountOfCarriers())
                     .withPricePerCarrier(saleItem.getPricePerCarrier())
-                    .withIsRefunded(saleItem.isRefunded())
+                    .withRefundedAmount(saleItem.getRefundedAmount())
                     .build();
 
             saleItemDTOs.add(dto);

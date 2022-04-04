@@ -4,10 +4,10 @@ services:
     container_name: postgres-server
     image: postgres:latest
     restart: always
-    volumes:
-      - postgres_data:/var/postgres_data
+#    volumes:
+#      - postgres_data:/var/postgres_data
     environment:
-      - PGDATA=/var/postgres_data
+#      - PGDATA=/var/postgres_data
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=musicshopdb
@@ -36,5 +36,5 @@ networks:
 #  rmi_connection:
 #    external: true
 
-volumes:
-  postgres_data:
+#volumes:
+#  postgres_data:

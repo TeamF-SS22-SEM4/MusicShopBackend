@@ -24,7 +24,7 @@ class HibernateSaleRepoTests {
 
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {
-        List<SaleItem> saleItems =  List.of(SaleItem.create(false, 1, 10, new SoundCarrierId(UUID.randomUUID())));
+        List<SaleItem> saleItems =  List.of(SaleItem.create( 1, 10, new SoundCarrierId(UUID.randomUUID())));
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), "1", LocalDateTime.now(), "cash", new CustomerId(UUID.randomUUID()),saleItems, null);
         EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
@@ -48,7 +48,7 @@ class HibernateSaleRepoTests {
     void given_invoiceNumber_when_search_byInvoiceNumber_then_return_matchingSale() {
         // given
         String invoiceNumberExpected = "42";
-        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(false, 1, 10, new SoundCarrierId(UUID.randomUUID())));
+        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create( 1, 10, new SoundCarrierId(UUID.randomUUID())));
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.randomUUID()),saleItemsExpected, null);
         EntityManagerUtil.beginTransaction();
         saleRepository.add(sale);
