@@ -50,7 +50,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
     @Override
     public boolean hasRole(SessionId sessionId, UserRole userRole) throws SessionExpired {
-        Session session = sessionRepository.sessionById(sessionId).orElseThrow(IllegalStateException::new);
+        Session session = sessionRepository.sessionById(sessionId).orElseThrow(SessionExpired::new);
         if (session.isExpired()) {
             sessionRepository.removeExpiredSessions();
             throw new SessionExpired();

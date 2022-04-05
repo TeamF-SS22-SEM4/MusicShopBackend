@@ -15,6 +15,13 @@ public interface AuthenticationApplicationService {
      */
     LoginResultDTO login(String username, String password) throws AuthenticationFailed;
 
+    /**Do <b>NOT</b> expose to communication!
+     *
+     * @param sessionId
+     * @param userRole
+     * @return
+     * @throws SessionExpired If no valid session has been found.
+     */
     boolean hasRole(SessionId sessionId, UserRole userRole) throws SessionExpired;
     //maybe switch to permission based, where each role has certain permissions
 }

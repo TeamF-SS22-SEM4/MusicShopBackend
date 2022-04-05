@@ -1,26 +1,19 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.authentication;
 
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-
-import javax.naming.Binding;
 import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
 
 public class LdapClient {
     private static final String ORGANIZATION_BASE_DN = "dc=ad,dc=teamF,dc=net";
     private static final String EMPLOYEE_GROUP_DN = "ou=employees";
+    private static final String LDAP_SERVER_HOST = System.getenv("LDAP_HOST");
+    private static final String LDAP_SERVER_PORT = System.getenv("LDAP_PORT");
 
     public LdapClient() {
         System.setProperty("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
-        System.setProperty("java.naming.provider.url", "ldap://10.0.40.171:10389"); //TODO get from .env
+        System.setProperty("java.naming.provider.url", "ldap://" + LDAP_SERVER_HOST +":" + LDAP_SERVER_PORT);
     }
 
     public boolean credentialsValid(String username, String password) {
