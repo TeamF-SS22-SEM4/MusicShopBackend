@@ -11,9 +11,12 @@ public class Application {
         RMIServer.startRMIServer();
 
         try {
-            RMIClient.getRmiClient().getCustomerService().search("").forEach(System.out::println);
+            System.out.println("Try to get RMI Stub from CustomerDataService");
+            RMIClient.getRmiClient().getCustomerService().search("A").forEach(System.out::println);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+
+        System.out.println("Retrieved RMI Stub");
     }
 }
