@@ -8,10 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationServ
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.RefundSaleServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.SaleSearchServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.*;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
 
@@ -102,6 +99,15 @@ public class InstanceProvider {
     public static RefundSaleService getRefundSaleService() {
         try {
             return new RefundSaleServiceImpl(getSaleApplicationService());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static CustomerSearchService getCustomerSearchService() {
+        try {
+            return new CustomerSearchService();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
