@@ -40,9 +40,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         this.artistRepository = artistRepository;
     }
 
-    // TODO: Maybe return invoiceNumber
     @Override
-    public UUID buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
+    public String buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
 
         List<SaleItem> saleItems = new LinkedList<>();
@@ -70,7 +69,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
         EntityManagerUtil.commit();
 
-        return sale.getSaleId().getUUID();
+        return sale.getInvoiceNumber();
     }
 
     @Override

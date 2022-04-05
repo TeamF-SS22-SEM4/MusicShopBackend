@@ -11,7 +11,7 @@ import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 
 public interface SaleApplicationService {
     //TODO add employeeId once client has logged in employee
-    UUID buy(List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException;
+    String buy(List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException;
 
     Optional<SaleDTO> saleByInvoiceNumber(String invoiceNumber);
 
