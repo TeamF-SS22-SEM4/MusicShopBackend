@@ -1,9 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
-import at.fhv.ss22.ea.f.communication.api.BuyingService;
-import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
-import at.fhv.ss22.ea.f.communication.api.RefundSaleService;
-import at.fhv.ss22.ea.f.communication.api.SaleSearchService;
+import at.fhv.ss22.ea.f.communication.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
@@ -11,10 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplica
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.BuyingServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.ProductSearchServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.RefundSaleServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.SaleSearchServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.*;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
 
@@ -36,6 +30,7 @@ public class InstanceProvider {
     private static AuthenticationApplicationService authenticationApplicationService;
     private static SessionRepository sessionRepository;
     private static LdapClient ldapClient;
+    private static AuthenticationService authenticationService;
 
     private static BuyingService testingBuyingService;
     private static ProductSearchService testingProductSearchService;
@@ -52,6 +47,13 @@ public class InstanceProvider {
     private static SaleRepository mockedSaleRepository;
     private static SoundCarrierRepository mockedSoundCarrierRepository;
     private static LdapClient mockedLdapClient;
+
+    public static AuthenticationService getAuthenticationService() {
+        if (null == authenticationService) {
+            authenticationService = new AuthenticationServiceImpl(getAuthenticationApplicationService());
+        }
+        return authenticationService;
+    }
 
     public static SessionRepository getSessionRepository() {
         if (null == sessionRepository) {

@@ -1,9 +1,10 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.api;
 
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.exceptions.AuthenticationFailed;
+import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
+import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 
 public interface AuthenticationApplicationService {
 

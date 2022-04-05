@@ -1,8 +1,8 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.LoginResultDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.exceptions.AuthenticationFailed;
+import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
+import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;

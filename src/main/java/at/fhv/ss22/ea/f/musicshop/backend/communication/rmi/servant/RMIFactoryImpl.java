@@ -30,4 +30,9 @@ public class RMIFactoryImpl extends UnicastRemoteObject implements RMIFactory {
     public RefundSaleService getRefundedSaleService() throws RemoteException {
         return InstanceProvider.getRefundSaleService();
     }
+
+    @Override
+    public AuthenticationService getAuthenticationService() throws RemoteException {
+        return InstanceProvider.getAuthenticationService();
+    }
 }
