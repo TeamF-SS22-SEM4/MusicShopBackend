@@ -10,9 +10,9 @@ import java.rmi.RemoteException;
 public class RMIClient {
     private static RMIClient rmiClient;
     private CustomerService customerService;
-    private static int PORT = 1098;
+    private static int PORT = 1099; // TODO: Add to env file
     private static String PROTOCOL = "rmi://";
-    private static String HOST = "customer-db-service";
+    private static String HOST = "10.0.40.171"; // TODO: add to env file
     private static String STUB = "/CustomerService";
 
     private RMIClient() {
