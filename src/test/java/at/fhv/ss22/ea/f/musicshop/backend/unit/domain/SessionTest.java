@@ -1,7 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import org.junit.jupiter.api.Test;
 

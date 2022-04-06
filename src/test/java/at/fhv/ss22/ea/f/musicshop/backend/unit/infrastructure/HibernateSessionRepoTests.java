@@ -21,6 +21,11 @@ class HibernateSessionRepoTests {
     private SessionRepository sessionRepository = InstanceProvider.getSessionRepository();
 
     @Test
+    void null_safety_when_getting_by_id() {
+        assertTrue(sessionRepository.sessionById(null).isEmpty());
+    }
+
+    @Test
     void get_with_valid_id() {
         EntityManagerUtil.beginTransaction();
         //given

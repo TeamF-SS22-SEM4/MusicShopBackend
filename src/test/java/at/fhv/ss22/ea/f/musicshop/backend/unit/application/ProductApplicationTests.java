@@ -4,7 +4,10 @@ import at.fhv.ss22.ea.f.communication.dto.ProductDetailsDTO;
 import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
@@ -17,6 +20,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -27,8 +31,8 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -39,9 +43,15 @@ class ProductApplicationTests {
     private ProductRepository mockedProductRepository = InstanceProvider.getMockedProductRepository();
     private SoundCarrierRepository mockedSoundCarrierRepo = InstanceProvider.getMockedSoundCarrierRepository();
     private ArtistRepository mockedArtistRepo = InstanceProvider.getMockedArtistRepository();
+    private AuthenticationApplicationService authenticationApplicationService = InstanceProvider.getMockedAuthenticationApplicationService();
+
+    @BeforeAll
+    void setup() throws SessionExpired {
+        when(authenticationApplicationService.hasRole(any(), any())).thenReturn(true);
+    }
 
     @Test
-    void when_search_product_then_dto_matching_values() {
+    void when_search_product_then_dto_matching_values() throws SessionExpired, NoPermissionForOperation {
         //given
         ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
         Product rosenrot = Product.create(
@@ -71,7 +81,8 @@ class ProductApplicationTests {
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
         //when
-        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test");
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("placeholder", "irrelevant to this test");
+
 
         //then
         assertEquals(1, productDTOs.size());
@@ -82,7 +93,7 @@ class ProductApplicationTests {
     }
 
     @Test
-    void given_product_artist_and_carrier_when_get_product_by_id_for_then_dto_values_correspond_to_model_values() {
+    void given_product_artist_and_carrier_when_get_product_by_id_for_then_dto_values_correspond_to_model_values() throws SessionExpired, NoPermissionForOperation {
         //given
         ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
         Product rosenrot = Product.create(
@@ -117,7 +128,8 @@ class ProductApplicationTests {
         when(mockedSoundCarrierRepo.soundCarriersByProductId(rosenrot.getProductId())).thenReturn(soundCarriers);
 
         //when
-        Optional<ProductDetailsDTO> productOpt = productApplicationService.productById(rosenrot.getProductId().getUUID());
+        Optional<ProductDetailsDTO> productOpt = productApplicationService.productById("placeholder", rosenrot.getProductId().getUUID());
+
 
         //then
         assertTrue(productOpt.isPresent());

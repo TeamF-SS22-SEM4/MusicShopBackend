@@ -5,9 +5,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.SessionIdBridge;
 import org.hibernate.search.annotations.FieldBridge;
 

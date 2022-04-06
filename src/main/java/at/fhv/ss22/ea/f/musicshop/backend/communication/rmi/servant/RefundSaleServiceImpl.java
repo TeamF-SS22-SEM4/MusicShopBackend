@@ -2,6 +2,8 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant;
 
 import at.fhv.ss22.ea.f.communication.api.RefundSaleService;
 import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
@@ -18,7 +20,7 @@ public class RefundSaleServiceImpl extends UnicastRemoteObject implements Refund
     }
 
     @Override
-    public void refundSale(String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws RemoteException {
-        saleApplicationService.refund(invoiceNumber, refundedSaleItems);
+    public void refundSale(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws RemoteException, SessionExpired, NoPermissionForOperation {
+        saleApplicationService.refund("placeholder", invoiceNumber, refundedSaleItems);
     }
 }

@@ -32,6 +32,12 @@ public class RMIFactoryImpl extends UnicastRemoteObject implements RMIFactory {
     }
 
     @Override
+    public CustomerService getCustomerSearchService() throws RemoteException {
+        //TODO
+        return null;
+    }
+
+    @Override
     public AuthenticationService getAuthenticationService() throws RemoteException {
         return InstanceProvider.getAuthenticationService();
     }

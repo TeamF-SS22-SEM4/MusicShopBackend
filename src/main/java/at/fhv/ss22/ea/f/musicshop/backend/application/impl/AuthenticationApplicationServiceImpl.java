@@ -1,19 +1,18 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
-import javax.persistence.PersistenceContext;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

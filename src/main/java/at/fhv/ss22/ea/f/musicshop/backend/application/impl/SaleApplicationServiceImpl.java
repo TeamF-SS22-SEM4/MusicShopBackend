@@ -5,18 +5,20 @@ import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
 import java.util.*;
@@ -25,15 +27,16 @@ import java.util.stream.Collectors;
 public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     private SoundCarrierRepository soundCarrierRepository;
-
     private SaleRepository saleRepository;
-
     private ProductRepository productRepository;
-
     private ArtistRepository artistRepository;
+    private AuthenticationApplicationService authenticationApplicationService;
+    private SessionRepository sessionRepository;
 
-    public SaleApplicationServiceImpl(SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
+    public SaleApplicationServiceImpl(SessionRepository sessionRepository, AuthenticationApplicationService authenticationApplicationService, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
                                       ProductRepository productRepository, ArtistRepository artistRepository) {
+        this.sessionRepository = sessionRepository;
+        this.authenticationApplicationService = authenticationApplicationService;
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
@@ -41,12 +44,13 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    public String buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
+    public String buy(String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
+            throw new NoPermissionForOperation();
+        }
         EntityManagerUtil.beginTransaction();
-
         List<SaleItem> saleItems = new LinkedList<>();
         List<UUID> invalidCarriers = new LinkedList<>();
-
         for (SoundCarrierAmountDTO dto : carrierAmounts) {
             SoundCarrier carrier = soundCarrierRepository.soundCarrierById(new SoundCarrierId(dto.getCarrierId())).orElseThrow(IllegalStateException::new);
 
@@ -62,25 +66,29 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             throw new CarrierNotAvailableException(invalidCarriers);
         }
 
-        //TODO add employee
+        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         long currentAmountOfSales = saleRepository.amountOfSales();
-        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
+        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getEmployeeId(), paymentMethod);
         saleRepository.add(sale);
-
         EntityManagerUtil.commit();
 
         return sale.getInvoiceNumber();
     }
 
     @Override
-    public Optional<SaleDTO> saleByInvoiceNumber(String invoiceNumber) {
+    public Optional<SaleDTO> saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation {
+        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
+            throw new NoPermissionForOperation();
+        }
         return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
     }
 
     @Override
-    public void refund(String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) {
+    public void refund(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws SessionExpired, NoPermissionForOperation {
+        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
+            throw new NoPermissionForOperation();
+        }
         EntityManagerUtil.beginTransaction();
-
         //TODO replace with domain specific exceptions
         Sale sale = saleRepository.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
 

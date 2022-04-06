@@ -38,6 +38,7 @@ public class InstanceProvider {
     private static SaleApplicationService testingBuyingApplicationService;
     private static AuthenticationApplicationService testingAuthenticationApplicationService;
 
+    private static AuthenticationApplicationService mockedAuthenticationApplicationService;
     private static SessionRepository mockedSessionRepository;
     private static SaleApplicationService mockedBuyingApplicationService;
     private static ProductApplicationService mockedProductApplicationService;
@@ -47,6 +48,13 @@ public class InstanceProvider {
     private static SaleRepository mockedSaleRepository;
     private static SoundCarrierRepository mockedSoundCarrierRepository;
     private static LdapClient mockedLdapClient;
+
+    public static AuthenticationApplicationService getMockedAuthenticationApplicationService() {
+        if (null == mockedAuthenticationApplicationService) {
+            mockedAuthenticationApplicationService = mock(AuthenticationApplicationService.class);
+        }
+        return mockedAuthenticationApplicationService;
+    }
 
     public static AuthenticationService getAuthenticationService() {
         if (null == authenticationService) {
@@ -85,14 +93,14 @@ public class InstanceProvider {
 
     public static ProductApplicationService getProductApplicationService() {
         if (null == productApplicationService) {
-            productApplicationService = new ProductApplicationServiceImpl(getProductRepository(), getArtistRepository(), getSoundCarrierRepository());
+            productApplicationService = new ProductApplicationServiceImpl(getAuthenticationApplicationService(), getProductRepository(), getArtistRepository(), getSoundCarrierRepository());
         }
         return productApplicationService;
     }
 
     public static SaleApplicationService getSoundCarrierApplicationService() {
         if (null == saleApplicationService) {
-            saleApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+            saleApplicationService = new SaleApplicationServiceImpl(getSessionRepository(), getAuthenticationApplicationService(), getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
         return saleApplicationService;
     }
@@ -113,7 +121,7 @@ public class InstanceProvider {
 
     public static SaleApplicationService getTestingSoundCarrierApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSessionRepository(), getMockedAuthenticationApplicationService(), getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
         }
         return testingBuyingApplicationService;
     }
@@ -163,14 +171,14 @@ public class InstanceProvider {
 
     public static SaleApplicationService getSaleApplicationService() {
         if (null == saleApplicationService) {
-            saleApplicationService = new SaleApplicationServiceImpl(getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+            saleApplicationService = new SaleApplicationServiceImpl(getSessionRepository(), getAuthenticationApplicationService(), getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
         return saleApplicationService;
     }
 
     public static SaleApplicationService getTestingBuyingApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSessionRepository(), getMockedAuthenticationApplicationService(), getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
         }
         return testingBuyingApplicationService;
     }
@@ -239,6 +247,7 @@ public class InstanceProvider {
     public static ProductApplicationService getTestingProductApplicationService() {
         if (null == testingProductApplicationService) {
             testingProductApplicationService = new ProductApplicationServiceImpl(
+                    getMockedAuthenticationApplicationService(),
                     getMockedProductRepository(),
                     getMockedArtistRepository(),
                     getMockedSoundCarrierRepository()

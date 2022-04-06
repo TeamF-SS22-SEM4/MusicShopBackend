@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
@@ -8,7 +9,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClien
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;

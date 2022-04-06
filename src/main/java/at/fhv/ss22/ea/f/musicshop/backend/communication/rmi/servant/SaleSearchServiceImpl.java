@@ -2,6 +2,8 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant;
 
 import at.fhv.ss22.ea.f.communication.api.SaleSearchService;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
@@ -19,7 +21,7 @@ public class SaleSearchServiceImpl extends UnicastRemoteObject implements SaleSe
     }
 
     @Override
-    public SaleDTO saleByInvoiceNumber(String invoiceNumber) throws RemoteException {
-        return saleApplicationService.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
+    public SaleDTO saleByInvoiceNumber(String sessionId, String invoiceNumber) throws RemoteException, SessionExpired, NoPermissionForOperation {
+       return saleApplicationService.saleByInvoiceNumber("placeholder", invoiceNumber).orElseThrow(NoSuchElementException::new);
     }
 }

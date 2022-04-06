@@ -4,6 +4,8 @@ import at.fhv.ss22.ea.f.communication.api.BuyingService;
 import at.fhv.ss22.ea.f.communication.dto.ShoppingCartProductDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
@@ -22,12 +24,12 @@ public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingServ
     }
 
     @Override
-    public String buy(List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException {
-        return buyingApplicationService.buy(soundCarriers, paymentMethod);
+    public String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+        return buyingApplicationService.buy(sessionId, soundCarriers, paymentMethod);
     }
 
     @Override
-    public String buyWithShoppingCart(List<ShoppingCartProductDTO> cartDtos, String paymentMethod) throws CarrierNotAvailableException {
+    public String buyWithShoppingCart(String sessionId, List<ShoppingCartProductDTO> cartDtos, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
         List<SoundCarrierAmountDTO> carrierAmountDTOS = cartDtos.stream().map(cartDTO ->
             SoundCarrierAmountDTO.builder()
                     .withAmount(cartDTO.getSelectedAmount())
@@ -35,6 +37,6 @@ public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingServ
                     .build()
         ).collect(Collectors.toList());
 
-        return buyingApplicationService.buy(carrierAmountDTOS, paymentMethod);
+        return buyingApplicationService.buy(sessionId, carrierAmountDTOS, paymentMethod);
     }
 }
