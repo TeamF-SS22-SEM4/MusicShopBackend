@@ -4,6 +4,7 @@ import at.fhv.ss22.ea.f.communication.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;

@@ -2,6 +2,8 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant;
 
 import at.fhv.ss22.ea.f.communication.api.CustomerService;
 import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
@@ -16,17 +18,17 @@ public class CustomerSearchService extends UnicastRemoteObject implements Custom
     }
 
     @Override
-    public CustomerDTO customerById(UUID uuid) throws RemoteException {
-        return RMIClient.getRmiClient().getCustomerService().customerById(uuid);
+    public CustomerDTO customerById(String sessionId, UUID uuid) throws RemoteException, SessionExpired, NoPermissionForOperation {
+        return RMIClient.getRmiClient().getCustomerService().customerById(sessionId, uuid);
     }
 
     @Override
-    public List<CustomerDTO> customerListByIds(List<UUID> uuidList) throws RemoteException {
-        return RMIClient.getRmiClient().getCustomerService().customerListByIds(uuidList);
+    public List<CustomerDTO> customerListByIds(String sessionId, List<UUID> uuidList) throws RemoteException, SessionExpired, NoPermissionForOperation {
+        return RMIClient.getRmiClient().getCustomerService().customerListByIds(sessionId, uuidList);
     }
 
     @Override
-    public List<CustomerDTO> search(String query) throws RemoteException {
-        return RMIClient.getRmiClient().getCustomerService().search(query);
+    public List<CustomerDTO> search(String sessionId, String query) throws RemoteException, SessionExpired, NoPermissionForOperation {
+        return RMIClient.getRmiClient().getCustomerService().search(sessionId, query);
     }
 }
