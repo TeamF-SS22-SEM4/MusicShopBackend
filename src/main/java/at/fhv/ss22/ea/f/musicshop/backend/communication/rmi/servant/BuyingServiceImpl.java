@@ -10,6 +10,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingService {
@@ -22,12 +23,12 @@ public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingServ
     }
 
     @Override
-    public String buy(List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException {
-        return buyingApplicationService.buy(soundCarriers, paymentMethod);
+    public String buy(List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
+        return buyingApplicationService.buy(soundCarriers, paymentMethod, customerId);
     }
 
     @Override
-    public String buyWithShoppingCart(List<ShoppingCartProductDTO> cartDtos, String paymentMethod) throws CarrierNotAvailableException {
+    public String buyWithShoppingCart(List<ShoppingCartProductDTO> cartDtos, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         List<SoundCarrierAmountDTO> carrierAmountDTOS = cartDtos.stream().map(cartDTO ->
             SoundCarrierAmountDTO.builder()
                     .withAmount(cartDTO.getSelectedAmount())
@@ -35,6 +36,6 @@ public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingServ
                     .build()
         ).collect(Collectors.toList());
 
-        return buyingApplicationService.buy(carrierAmountDTOS, paymentMethod);
+        return buyingApplicationService.buy(carrierAmountDTOS, paymentMethod, customerId);
     }
 }

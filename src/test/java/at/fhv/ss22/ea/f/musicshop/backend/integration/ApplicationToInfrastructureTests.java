@@ -29,6 +29,7 @@ class ApplicationToInfrastructureTests {
     @Test
     void when_buying_too_many_sound_carriers_then_value_unchanged() {
         //given
+        UUID customerIdExpected = UUID.randomUUID();
         List<SoundCarrier> carriers = List.of(
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 20, 5, "A1", new ProductId(UUID.randomUUID())),
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 22, 5, "A1", new ProductId(UUID.randomUUID())),
@@ -52,7 +53,7 @@ class ApplicationToInfrastructureTests {
 
         //then
         try {
-            buyingApplicationService.buy(List.of(buyingDTO1, buyingDTO2), "CASH");
+            buyingApplicationService.buy(List.of(buyingDTO1, buyingDTO2), "CASH", customerIdExpected);
             fail(); // fails if no exception is thrown
         } catch(CarrierNotAvailableException e) {
             //then

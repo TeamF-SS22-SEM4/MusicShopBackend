@@ -27,7 +27,7 @@ public class Sale {
     private List<SaleItem> saleItemList;
     private EmployeeId performingEmployee;
 
-    public static Sale newSale(String invoiceNumber, List<SaleItem> saleItems, EmployeeId employeeId, String paymentMethod) {
+    public static Sale newSale(String invoiceNumber, List<SaleItem> saleItems, EmployeeId employeeId, String paymentMethod, CustomerId customerId) {
         Sale sale = new Sale();
         sale.saleId = new SaleId(UUID.randomUUID());
         sale.invoiceNumber = invoiceNumber;
@@ -36,6 +36,7 @@ public class Sale {
         sale.performingEmployee = employeeId;
         sale.saleItemList = saleItems;
         sale.totalPrice = saleItems.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
+        sale.customerId = customerId;
 
         return sale;
     }

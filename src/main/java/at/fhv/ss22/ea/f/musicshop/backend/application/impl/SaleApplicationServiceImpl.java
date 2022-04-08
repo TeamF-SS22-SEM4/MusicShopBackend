@@ -6,6 +6,7 @@ import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
@@ -41,7 +42,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    public String buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException {
+    public String buy(List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
 
         List<SaleItem> saleItems = new LinkedList<>();
@@ -63,8 +64,9 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         }
 
         //TODO add employee
+        //TODO check if customerId exists
         long currentAmountOfSales = saleRepository.amountOfSales();
-        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod);
+        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, new EmployeeId(UUID.randomUUID()), paymentMethod, new CustomerId(customerId));
         saleRepository.add(sale);
 
         EntityManagerUtil.commit();

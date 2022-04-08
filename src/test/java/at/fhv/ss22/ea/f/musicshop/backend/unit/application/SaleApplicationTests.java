@@ -2,7 +2,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
 import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
-import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
@@ -44,6 +43,7 @@ public class SaleApplicationTests {
     @Test
     void sell_carriers() throws CarrierNotAvailableException {
         //given
+        UUID customerIdExpected = UUID.randomUUID();
         List<SoundCarrier> carriers = List.of(
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 20, 5, "A1", new ProductId(UUID.randomUUID())),
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 22, 5, "A1", new ProductId(UUID.randomUUID())),
@@ -58,7 +58,7 @@ public class SaleApplicationTests {
         SoundCarrierAmountDTO buyingDTO = SoundCarrierAmountDTO.builder()
                             .withAmount(2)
                             .withCarrierId(carriers.get(0).getCarrierId().getUUID()).build();
-        buyingApplicationService.buy(List.of(buyingDTO), "CASH");
+        String invoiceNumber = buyingApplicationService.buy(List.of(buyingDTO), "CASH", customerIdExpected);
 
         //then
         assertEquals(3, carriers.get(0).getAmountInStore());
