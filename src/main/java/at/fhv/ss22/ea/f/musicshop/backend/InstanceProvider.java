@@ -58,7 +58,11 @@ public class InstanceProvider {
 
     public static AuthenticationService getAuthenticationService() {
         if (null == authenticationService) {
-            authenticationService = new AuthenticationServiceImpl(getAuthenticationApplicationService());
+            try {
+                authenticationService = new AuthenticationServiceImpl(getAuthenticationApplicationService());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         return authenticationService;
     }

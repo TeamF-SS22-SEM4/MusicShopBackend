@@ -4,12 +4,17 @@ import at.fhv.ss22.ea.f.communication.api.AuthenticationService;
 import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
-public class AuthenticationServiceImpl implements AuthenticationService {
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class AuthenticationServiceImpl extends UnicastRemoteObject implements AuthenticationService {
 
     private AuthenticationApplicationService authenticationApplicationService;
 
-    public AuthenticationServiceImpl(AuthenticationApplicationService authenticationApplicationService) {
+    public AuthenticationServiceImpl(AuthenticationApplicationService authenticationApplicationService) throws RemoteException {
+        super(RMIServer.getPort());
         this.authenticationApplicationService = authenticationApplicationService;
     }
 
