@@ -3,13 +3,14 @@ package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
-import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
@@ -44,7 +45,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    public String buy(String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+    public String buy(String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
         if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
             throw new NoPermissionForOperation();
         }
@@ -66,9 +67,10 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             throw new CarrierNotAvailableException(invalidCarriers);
         }
 
+        //TODO check if customerId exists
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         long currentAmountOfSales = saleRepository.amountOfSales();
-        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getEmployeeId(), paymentMethod);
+        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getEmployeeId(), paymentMethod, new CustomerId(customerId));
         saleRepository.add(sale);
         EntityManagerUtil.commit();
 

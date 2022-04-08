@@ -4,10 +4,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
-import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,8 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.api;
 
-import java.util.List;
-import java.util.Optional;
-
 import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
@@ -10,9 +7,13 @@ import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 
-public interface SaleApplicationService {
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-    String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation;
+public interface SaleApplicationService {
+    //TODO add employeeId once client has logged in employee
+    String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation;
 
     Optional<SaleDTO> saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation;
 

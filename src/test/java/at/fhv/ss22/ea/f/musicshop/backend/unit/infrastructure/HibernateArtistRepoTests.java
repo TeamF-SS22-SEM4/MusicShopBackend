@@ -5,7 +5,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
-import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateArtistRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

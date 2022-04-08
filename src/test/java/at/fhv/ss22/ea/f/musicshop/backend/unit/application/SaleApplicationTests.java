@@ -2,11 +2,11 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
 import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
-import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
-import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
@@ -36,9 +36,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SaleApplicationTests {
@@ -58,6 +60,7 @@ class SaleApplicationTests {
     @Test
     void sell_carriers() throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
         //given
+        UUID customerIdExpected = UUID.randomUUID();
         List<SoundCarrier> carriers = List.of(
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 20, 5, "A1", new ProductId(UUID.randomUUID())),
                 SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 22, 5, "A1", new ProductId(UUID.randomUUID())),
@@ -74,8 +77,7 @@ class SaleApplicationTests {
                             .withAmount(2)
                             .withCarrierId(carriers.get(0).getCarrierId().getUUID()).build();
 
-        buyingApplicationService.buy("placeholder", List.of(buyingDTO), "CASH");
-
+        buyingApplicationService.buy("placeholder", List.of(buyingDTO), "CASH", customerIdExpected);
 
         //then
         assertEquals(3, carriers.get(0).getAmountInStore());

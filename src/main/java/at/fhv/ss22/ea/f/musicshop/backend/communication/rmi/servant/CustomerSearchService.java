@@ -19,6 +19,7 @@ public class CustomerSearchService extends UnicastRemoteObject implements Custom
 
     @Override
     public CustomerDTO customerById(String sessionId, UUID uuid) throws RemoteException, SessionExpired, NoPermissionForOperation {
+        // Check session here?
         return RMIClient.getRmiClient().getCustomerService().customerById(sessionId, uuid);
     }
 

@@ -12,6 +12,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingService {
@@ -23,20 +24,19 @@ public class BuyingServiceImpl extends UnicastRemoteObject implements BuyingServ
         this.buyingApplicationService = buyingApplicationService;
     }
 
-    @Override
-    public String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
-        return buyingApplicationService.buy(sessionId, soundCarriers, paymentMethod);
+    public String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+        return buyingApplicationService.buy(sessionId, soundCarriers, paymentMethod, customerId);
     }
 
     @Override
-    public String buyWithShoppingCart(String sessionId, List<ShoppingCartProductDTO> cartDtos, String paymentMethod) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+    public String buyWithShoppingCart(String sessionId, List<ShoppingCartProductDTO> cartDtos, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, RemoteException, SessionExpired, NoPermissionForOperation {
         List<SoundCarrierAmountDTO> carrierAmountDTOS = cartDtos.stream().map(cartDTO ->
-            SoundCarrierAmountDTO.builder()
-                    .withAmount(cartDTO.getSelectedAmount())
-                    .withCarrierId(cartDTO.getSoundCarrierId())
-                    .build()
+                SoundCarrierAmountDTO.builder()
+                        .withAmount(cartDTO.getSelectedAmount())
+                        .withCarrierId(cartDTO.getSoundCarrierId())
+                        .build()
         ).collect(Collectors.toList());
 
-        return buyingApplicationService.buy(sessionId, carrierAmountDTOS, paymentMethod);
+        return buyingApplicationService.buy(sessionId, carrierAmountDTOS, paymentMethod, customerId);
     }
 }

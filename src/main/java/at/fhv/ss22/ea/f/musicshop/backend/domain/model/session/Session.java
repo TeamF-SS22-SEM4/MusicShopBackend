@@ -1,10 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.session;
 
-import java.security.SecureRandom;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Objects;
-
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
@@ -15,6 +10,10 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 public class Session {

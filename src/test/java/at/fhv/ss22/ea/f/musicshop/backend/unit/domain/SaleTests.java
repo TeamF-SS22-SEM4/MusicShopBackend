@@ -6,15 +6,12 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
-import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
