@@ -21,6 +21,6 @@ public class RefundSaleServiceImpl extends UnicastRemoteObject implements Refund
 
     @Override
     public void refundSale(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws RemoteException, SessionExpired, NoPermissionForOperation {
-        saleApplicationService.refund("placeholder", invoiceNumber, refundedSaleItems);
+        saleApplicationService.refund(sessionId, invoiceNumber, refundedSaleItems);
     }
 }

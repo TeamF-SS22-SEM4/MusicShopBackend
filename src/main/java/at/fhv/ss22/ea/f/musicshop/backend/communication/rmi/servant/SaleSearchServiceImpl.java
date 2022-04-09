@@ -22,6 +22,6 @@ public class SaleSearchServiceImpl extends UnicastRemoteObject implements SaleSe
 
     @Override
     public SaleDTO saleByInvoiceNumber(String sessionId, String invoiceNumber) throws RemoteException, SessionExpired, NoPermissionForOperation {
-       return saleApplicationService.saleByInvoiceNumber("placeholder", invoiceNumber).orElseThrow(NoSuchElementException::new);
+       return saleApplicationService.saleByInvoiceNumber(sessionId, invoiceNumber).orElseThrow(NoSuchElementException::new);
     }
 }

@@ -25,11 +25,11 @@ public class ProductSearchServiceImpl extends UnicastRemoteObject implements Pro
 
     @Override
     public ProductDetailsDTO productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation {
-        return productApplicationService.productById("placeholder", productId).orElseThrow(NoSuchElementException::new);
+        return productApplicationService.productById(sessionId, productId).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public List<ProductOverviewDTO> fullTextSearch(String sessionId, String query) throws SessionExpired, NoPermissionForOperation {
-        return productApplicationService.search("placeholder", query);
+        return productApplicationService.search(sessionId, query);
     }
 }
