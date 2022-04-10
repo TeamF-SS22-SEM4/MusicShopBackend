@@ -20,16 +20,16 @@ public class CustomerSearchService extends UnicastRemoteObject implements Custom
     @Override
     public CustomerDTO customerById(String sessionId, UUID uuid) throws RemoteException, SessionExpired, NoPermissionForOperation {
         // Check session here?
-        return RMIClient.getRmiClient().getCustomerService().customerById(sessionId, uuid);
+        return RMIClient.getRmiClient().getCustomerInternalService().customerById(uuid);
     }
 
     @Override
     public List<CustomerDTO> customerListByIds(String sessionId, List<UUID> uuidList) throws RemoteException, SessionExpired, NoPermissionForOperation {
-        return RMIClient.getRmiClient().getCustomerService().customerListByIds(sessionId, uuidList);
+        return RMIClient.getRmiClient().getCustomerInternalService().customerListByIds(uuidList);
     }
 
     @Override
     public List<CustomerDTO> search(String sessionId, String query) throws RemoteException, SessionExpired, NoPermissionForOperation {
-        return RMIClient.getRmiClient().getCustomerService().search(sessionId, query);
+        return RMIClient.getRmiClient().getCustomerInternalService().search(query);
     }
 }
