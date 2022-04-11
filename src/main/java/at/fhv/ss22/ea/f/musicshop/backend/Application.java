@@ -3,7 +3,7 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
-import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +13,6 @@ public class Application {
     public static void main(String[] args) {
         System.out.println("Starting Server....");
         RMIServer.startRMIServer();
-
 
         try {
             initialize();
@@ -26,13 +25,12 @@ public class Application {
         System.out.println("Initializing database");
         // (Data 1/2) Prepare data from data.sql
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("data.sql");
-        String[] lines = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).split("\n");
+        String[] insertStatements = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).split(";");
 
         // (Data 2/2) Insert data into database
-        EntityManager entityManager = EntityManagerUtil.getEntityManager();
-        entityManager.getTransaction().begin();
-        Arrays.stream(lines).forEach(entityManager::createNativeQuery);
-        entityManager.getTransaction().commit();
+        EntityManagerUtil.beginTransaction();
+        Arrays.stream(insertStatements).map(EntityManagerUtil.getEntityManager()::createNativeQuery).forEach(Query::executeUpdate);
+        EntityManagerUtil.commit();
         System.out.println("Finished initializing database");
     }
 }
