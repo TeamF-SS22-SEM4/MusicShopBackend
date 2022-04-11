@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SaleApplicationService {
-    //TODO add employeeId once client has logged in employee
+
     String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation;
 
     Optional<SaleDTO> saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation;
