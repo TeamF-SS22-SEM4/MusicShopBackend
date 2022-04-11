@@ -2,12 +2,15 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 
 import at.fhv.ss22.ea.f.communication.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.CustomerApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.*;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
@@ -31,7 +34,9 @@ public class InstanceProvider {
     private static SessionRepository sessionRepository;
     private static LdapClient ldapClient;
     private static AuthenticationService authenticationService;
+    private static CustomerApplicationService customerApplicationService;
 
+    private static CustomerApplicationService testingCustomerApplicationService;
     private static BuyingService testingBuyingService;
     private static ProductSearchService testingProductSearchService;
     private static ProductApplicationService testingProductApplicationService;
@@ -48,6 +53,28 @@ public class InstanceProvider {
     private static SaleRepository mockedSaleRepository;
     private static SoundCarrierRepository mockedSoundCarrierRepository;
     private static LdapClient mockedLdapClient;
+    private static CustomerRMIClient mockedCustomerRmiClient;
+
+    public static CustomerRMIClient getMockedCustomerRmiClient() {
+        if (null == mockedCustomerRmiClient) {
+            mockedCustomerRmiClient = mock(CustomerRMIClient.class);
+        }
+        return mockedCustomerRmiClient;
+    }
+
+    public static CustomerApplicationService getCustomerApplicationService() {
+        if (null == customerApplicationService) {
+            customerApplicationService = new CustomerApplicationServiceImpl(getAuthenticationApplicationService(), CustomerRMIClient.getCustomerRmiClient());
+        }
+        return customerApplicationService;
+    }
+
+    public static CustomerApplicationService getTestingCustomerApplicationService() {
+        if (null == testingCustomerApplicationService) {
+            testingCustomerApplicationService = new CustomerApplicationServiceImpl(getMockedAuthenticationApplicationService(), getMockedCustomerRmiClient());
+        }
+        return testingCustomerApplicationService;
+    }
 
     public static AuthenticationApplicationService getMockedAuthenticationApplicationService() {
         if (null == mockedAuthenticationApplicationService) {
@@ -175,7 +202,7 @@ public class InstanceProvider {
 
     public static CustomerSearchService getCustomerSearchService() {
         try {
-            return new CustomerSearchService();
+            return new CustomerSearchService(getCustomerApplicationService());
         } catch (RemoteException e) {
             e.printStackTrace();
         }

@@ -19,6 +19,9 @@ public class EntityManagerUtil {
         getEntityManager().getTransaction().commit();
     }
 
+    private EntityManagerUtil() {
+    }
+
     public static EntityManager getEntityManager() {
         if (ENTITY_MANAGER == null) {
             System.setProperty("hibernate.search.default.indexBase", "data-IGNORE/hibernate/index/default");
