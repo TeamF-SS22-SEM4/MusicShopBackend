@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 public class HibernateSaleRepository implements SaleRepository {
+
     private EntityManager em;
 
     public HibernateSaleRepository() {
@@ -27,7 +28,29 @@ public class HibernateSaleRepository implements SaleRepository {
                 "select s from Sale s where s.saleId = :sale_id",
                 Sale.class
         );
+
         query.setParameter("sale_id", saleId);
         return query.getResultStream().findFirst();
+    }
+
+    @Override
+    public Optional<Sale> saleByInvoiceNumber(String invoiceNumber) {
+        TypedQuery<Sale> query = em.createQuery(
+                "select s from Sale s where s.invoiceNumber = :invoiceNumber",
+                Sale.class
+        );
+
+        query.setParameter("invoiceNumber", invoiceNumber);
+        return query.getResultStream().findFirst();
+    }
+
+    @Override
+    public long amountOfSales() {
+        TypedQuery<Long> query = em.createQuery(
+                "select count(s) from Sale s",
+                Long.class
+        );
+
+        return query.getSingleResult();
     }
 }

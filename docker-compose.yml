@@ -4,15 +4,14 @@ services:
     container_name: postgres-server
     image: postgres:latest
     restart: always
-    volumes:
-      - postgres_data:/var/postgres_data
     environment:
-      - PGDATA=/var/postgres_data
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=musicshopdb
     ports:
       - "5432:5432"
+    networks:
+      - musicshop_backend
     env_file:
       - .env
   backend:
@@ -20,10 +19,16 @@ services:
     build: .
     ports:
       - ${RMI_PORT}:${RMI_PORT}
+    networks:
+      - musicshop_backend
+#      - rmi_connection
     links:
       - postgres
     env_file:
       - .env
 
-volumes:
-  postgres_data:
+networks:
+  musicshop_backend:
+    driver: bridge
+#  rmi_connection:
+#    external: true

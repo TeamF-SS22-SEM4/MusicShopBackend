@@ -10,4 +10,8 @@ public interface SaleRepository {
     void add(Sale sale);
 
     Optional<Sale> saleById(SaleId saleId);
+
+    Optional<Sale> saleByInvoiceNumber(String invoiceNumber);
+
+    long amountOfSales();
 }

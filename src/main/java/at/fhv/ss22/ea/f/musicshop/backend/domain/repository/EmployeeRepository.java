@@ -10,4 +10,6 @@ public interface EmployeeRepository {
     void add(Employee employee);
 
     Optional<Employee> employeeById(EmployeeId employeeId);
+
+    Optional<Employee> employeeByUserName(String username);
 }

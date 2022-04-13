@@ -4,9 +4,14 @@ import at.fhv.ss22.ea.f.communication.dto.ProductDetailsDTO;
 import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
@@ -21,26 +26,33 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     private ProductRepository productRepository;
     private ArtistRepository artistRepository;
     private SoundCarrierRepository soundCarrierRepository;
+    private AuthenticationApplicationService authenticationApplicationService;
 
-    public ProductApplicationServiceImpl(ProductRepository productRepository, ArtistRepository artistRepository, SoundCarrierRepository soundCarrierRepository) {
+    public ProductApplicationServiceImpl(AuthenticationApplicationService authenticationApplicationService, ProductRepository productRepository, ArtistRepository artistRepository, SoundCarrierRepository soundCarrierRepository) {
+        this.authenticationApplicationService = authenticationApplicationService;
         this.productRepository = productRepository;
         this.artistRepository = artistRepository;
         this.soundCarrierRepository = soundCarrierRepository;
     }
 
     @Override
-    public Optional<ProductDetailsDTO> productById(UUID productId) {
+    public Optional<ProductDetailsDTO> productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation {
+        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
+            throw new NoPermissionForOperation();
+        }
         return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct);
     }
 
     @Override
-    public List<ProductOverviewDTO> search(String queryString) {
+    public List<ProductOverviewDTO> search(String sessionId, String queryString) throws SessionExpired, NoPermissionForOperation {
+        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
+            throw new NoPermissionForOperation();
+        }
         return this.productRepository.fullTextSearch(queryString).stream()
                 .map(this::overviewDtoFromProduct)
                 .collect(Collectors.toList());
     }
 
-    //TODO maybe extract to DTOassembler
     private ProductOverviewDTO overviewDtoFromProduct(Product product) {
         return ProductOverviewDTO.builder()
                 .withId(product.getProductId().getUUID())

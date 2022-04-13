@@ -6,15 +6,12 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
-import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,12 +26,11 @@ class SaleTests {
         LocalDateTime timeOfSaleExpected = LocalDateTime.of(2022, Month.MARCH, 1, 13, 30);
         float totalPriceExpected = 50;
         String paymentMethodExpected = "Credit Card";
-        CustomerId customerIdExpected = null;
+        CustomerId customerIdExpected = new CustomerId(UUID.randomUUID());
         List<SaleItem> saleItemsExpected = new ArrayList<>() {
             {
                 add (
                     SaleItem.create(
-                            false,
                             1,
                             30,
                             new SoundCarrierId(UUID.randomUUID())
@@ -42,7 +38,6 @@ class SaleTests {
                 );
                 add (
                         SaleItem.create(
-                                false,
                                 1,
                                 20,
                                 new SoundCarrierId(UUID.randomUUID())
@@ -58,7 +53,6 @@ class SaleTests {
                 saleIdExpected,
                 invoiceNumberExpected,
                 timeOfSaleExpected,
-                totalPriceExpected,
                 paymentMethodExpected,
                 customerIdExpected,
                 saleItemsExpected,
@@ -81,7 +75,6 @@ class SaleTests {
             SaleItem saleItemExpected = saleItemsExpected.get(i);
             SaleItem saleItemActual = sale.getSaleItemList().get(i);
 
-            assertEquals(saleItemExpected.isRefunded(), saleItemActual.isRefunded());
             assertEquals(saleItemExpected.getAmountOfCarriers(), saleItemActual.getAmountOfCarriers());
             assertEquals(saleItemExpected.getPricePerCarrier(), saleItemActual.getPricePerCarrier());
             assertEquals(saleItemExpected.getCarrierId(), saleItemActual.getCarrierId());

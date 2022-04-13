@@ -1,11 +1,10 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,26 +14,34 @@ public class Employee {
     @EmbeddedId
     private EmployeeId employeeId;
     private String username;
-    // password?
+    // password? no, only stored in ldap
     private String firstname;
     private String lastname;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = UserRole.class)
+    private List<UserRole> roles;
     @ElementCollection
     private List<SaleId> sales;
 
-    public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
-        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, aSalesList);
+    public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<UserRole> roles,List<SaleId> aSalesList) {
+        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, roles,aSalesList);
+    }
+
+    public boolean hasRole(UserRole role) {
+        return this.roles.contains(role);
     }
 
     @Generated
     protected Employee() {
     }
 
-    private Employee(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<SaleId> aSalesList) {
-        this.employeeId = aEmployeeId;
-        this.username = aUsername;
-        this.firstname = aFirstname;
-        this.lastname = aLastname;
-        this.sales = aSalesList;
+    private Employee(EmployeeId employeeId, String username, String firstname, String lastname, List<UserRole> roles, List<SaleId> sales) {
+        this.employeeId = employeeId;
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.roles = roles;
+        this.sales = sales;
     }
 
     public EmployeeId getEmployeeId() {
@@ -51,6 +58,10 @@ public class Employee {
 
     public String getLastname() {
         return lastname;
+    }
+
+    public List<UserRole> getRoles() {
+        return Collections.unmodifiableList(roles);
     }
 
     public List<SaleId> getSales() {

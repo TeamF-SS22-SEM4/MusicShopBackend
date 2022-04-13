@@ -30,4 +30,14 @@ public class HibernateEmployeeRepository implements EmployeeRepository {
         query.setParameter("employee_id", employeeId);
         return query.getResultStream().findFirst();
     }
+
+    @Override
+    public Optional<Employee> employeeByUserName(String username) {
+        TypedQuery<Employee> query = this.em.createQuery(
+                "select e from Employee e where e.username = :username",
+                Employee.class
+        );
+        query.setParameter("username", username);
+        return query.getResultStream().findFirst();
+    }
 }

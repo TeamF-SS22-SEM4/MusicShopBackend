@@ -15,31 +15,36 @@ public class SaleItem {
     @GeneratedValue
     private long hibernateId;
 
-    private boolean isRefunded;
     private int amountOfCarriers;
     private float pricePerCarrier;
+    private int refundedAmount;
     private SoundCarrierId carrierId;
 
-    public static SaleItem create(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
-        return new SaleItem(refunded, anAmountOfCarriers, aPricePerCarrier, aCarrierId);
+    public static SaleItem create(int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
+        return new SaleItem(anAmountOfCarriers, aPricePerCarrier, aCarrierId);
     }
     public static SaleItem ofCarrier(int amount, SoundCarrier carrier) {
-        return new SaleItem(false, amount, carrier.getPrice(), carrier.getCarrierId());
+        return new SaleItem(amount, carrier.getPrice(), carrier.getCarrierId());
     }
 
     @Generated
     protected SaleItem() {
     }
 
-    private SaleItem(boolean refunded, int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
-        this.isRefunded = refunded;
+    private SaleItem(int anAmountOfCarriers, float aPricePerCarrier, SoundCarrierId aCarrierId) {
         this.amountOfCarriers = anAmountOfCarriers;
         this.pricePerCarrier = aPricePerCarrier;
+        this.refundedAmount = 0;
         this.carrierId = aCarrierId;
     }
 
-    public boolean isRefunded() {
-        return isRefunded;
+    public void refund(int amount) {
+       if(refundedAmount <= amountOfCarriers) {
+           refundedAmount += amount;
+       } else {
+           // TODO: Use appropriate exception
+           throw new UnsupportedOperationException("You can't refund more than you bought.");
+       }
     }
 
     public int getAmountOfCarriers() {
@@ -48,6 +53,10 @@ public class SaleItem {
 
     public float getPricePerCarrier() {
         return pricePerCarrier;
+    }
+
+    public int getRefundedAmount() {
+        return refundedAmount;
     }
 
     public SoundCarrierId getCarrierId() {
@@ -60,12 +69,12 @@ public class SaleItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SaleItem saleItem = (SaleItem) o;
-        return isRefunded == saleItem.isRefunded && amountOfCarriers == saleItem.amountOfCarriers && Objects.equals(pricePerCarrier, saleItem.pricePerCarrier) && Objects.equals(carrierId, saleItem.carrierId);
+        return hibernateId == saleItem.hibernateId && amountOfCarriers == saleItem.amountOfCarriers && Float.compare(saleItem.pricePerCarrier, pricePerCarrier) == 0 && refundedAmount == saleItem.refundedAmount && Objects.equals(carrierId, saleItem.carrierId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(isRefunded, amountOfCarriers, pricePerCarrier, carrierId);
+        return Objects.hash(hibernateId, amountOfCarriers, pricePerCarrier, refundedAmount, carrierId);
     }
 }

@@ -27,7 +27,7 @@ public class Sale {
     private List<SaleItem> saleItemList;
     private EmployeeId performingEmployee;
 
-    public static Sale newSale(String invoiceNumber, List<SaleItem> saleItems, EmployeeId employeeId, String paymentMethod) {
+    public static Sale newSale(String invoiceNumber, List<SaleItem> saleItems, EmployeeId employeeId, String paymentMethod, CustomerId customerId) {
         Sale sale = new Sale();
         sale.saleId = new SaleId(UUID.randomUUID());
         sale.invoiceNumber = invoiceNumber;
@@ -36,27 +36,28 @@ public class Sale {
         sale.performingEmployee = employeeId;
         sale.saleItemList = saleItems;
         sale.totalPrice = saleItems.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
+        sale.customerId = customerId;
 
         return sale;
     }
 
-    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
-        return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aTotalPrice, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
+    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+        return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
     }
 
     @Generated
     protected Sale() {
     }
 
-    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, float aTotalPrice, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
         this.saleId = aSaleId;
         this.invoiceNumber = aInvoiceNumber;
         this.timeOfSale = aTimeOfSale;
-        this.totalPrice = aTotalPrice;
         this.paymentMethod = aPaymentMethod;
         this.customerId = aCustomerId;
         this.saleItemList = aSaleItemList;
         this.performingEmployee = aPerformingEmployee;
+        this.totalPrice = saleItemList.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
     }
 
     public void addCustomer(CustomerId customerId) throws CustomerAlreadyConnectedException {
