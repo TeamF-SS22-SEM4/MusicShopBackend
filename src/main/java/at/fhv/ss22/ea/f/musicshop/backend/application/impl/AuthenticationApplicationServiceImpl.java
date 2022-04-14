@@ -55,7 +55,9 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
             sessionRepository.removeExpiredSessions();
             throw new SessionExpired();
         }
+        EntityManagerUtil.beginTransaction();
         session.refreshDuration();
+        EntityManagerUtil.commit();
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
         return employee.hasRole(userRole);
     }

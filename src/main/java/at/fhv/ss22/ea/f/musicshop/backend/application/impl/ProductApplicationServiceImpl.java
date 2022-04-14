@@ -6,6 +6,7 @@ import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
@@ -32,13 +33,13 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
 
     @Override
     @RequiresRole(role = UserRole.EMPLOYEE)
-    public Optional<ProductDetailsDTO> productById(String sessionId, UUID productId) {
+    public Optional<ProductDetailsDTO> productById(@SessionKey String sessionId, UUID productId) {
         return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct);
     }
 
     @Override
     @RequiresRole(role = UserRole.EMPLOYEE)
-    public List<ProductOverviewDTO> search(String sessionId, String queryString) {
+    public List<ProductOverviewDTO> search(@SessionKey String sessionId, String queryString) {
         return this.productRepository.fullTextSearch(queryString).stream()
                 .map(this::overviewDtoFromProduct)
                 .collect(Collectors.toList());

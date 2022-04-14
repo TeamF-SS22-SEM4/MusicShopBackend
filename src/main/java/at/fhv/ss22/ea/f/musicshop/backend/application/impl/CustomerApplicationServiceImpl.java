@@ -3,6 +3,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 
@@ -20,19 +21,19 @@ public class CustomerApplicationServiceImpl implements CustomerApplicationServic
 
     @Override
     @RequiresRole(role = UserRole.EMPLOYEE)
-    public CustomerDTO customerById(String sessionId, UUID uuid) throws RemoteException {
+    public CustomerDTO customerById(@SessionKey String sessionId, UUID uuid) throws RemoteException {
         return client.getCustomerInternalService().customerById(uuid);
     }
 
     @Override
     @RequiresRole(role = UserRole.EMPLOYEE)
-    public List<CustomerDTO> customerListByIds(String sessionId, List<UUID> uuidList) throws RemoteException {
+    public List<CustomerDTO> customerListByIds(@SessionKey String sessionId, List<UUID> uuidList) throws RemoteException {
         return client.getCustomerInternalService().customerListByIds(uuidList);
     }
 
     @Override
     @RequiresRole(role = UserRole.EMPLOYEE)
-    public List<CustomerDTO> search(String sessionId, String query) throws RemoteException {
+    public List<CustomerDTO> search(@SessionKey String sessionId, String query) throws RemoteException {
         return client.getCustomerInternalService().search(query);
     }
 }

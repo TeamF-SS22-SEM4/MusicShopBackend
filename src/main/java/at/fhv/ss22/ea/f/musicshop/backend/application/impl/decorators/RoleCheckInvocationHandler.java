@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicat
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -25,15 +26,28 @@ public class RoleCheckInvocationHandler implements InvocationHandler {
             UserRole role = method.getAnnotation(RequiresRole.class).role();
 
             String sessionId = "invalid";
-            if (args.length > 0 && args[0] instanceof String) {
-                //TODO better way to get sessionId, currently requires sessionId to be the first argument of all servicemethods
-                // maybe create annotation for parameterType
-                sessionId = (String) args[0];
+            int sessionKeyIndex = getSessionKeyIndex(method);
+            if (sessionKeyIndex >= 0) {
+                sessionId = (String) args[sessionKeyIndex];
             }
             if (!authenticationApplicationService.hasRole(new SessionId(sessionId), role)) {
                 throw new NoPermissionForOperation();
             }
         }
         return method.invoke(target, args);
+    }
+
+    private int getSessionKeyIndex(Method method) {
+        Annotation[][] params = method.getParameterAnnotations();
+        for (int i = 0; i < params.length; i+=1) {
+            Annotation[] annotations = params[i];
+            for (Annotation annotation : annotations) {
+                if (annotation.annotationType().equals(RequiresRole.class)) {
+                    return i;
+                }
+            }
+
+        }
+        return -1;
     }
 }
