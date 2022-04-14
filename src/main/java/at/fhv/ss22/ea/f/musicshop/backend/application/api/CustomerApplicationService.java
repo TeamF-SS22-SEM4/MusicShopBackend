@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public interface CustomerApplicationService {
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     CustomerDTO customerById(@SessionKey String sessionId, UUID uuid) throws RemoteException, SessionExpired, NoPermissionForOperation;
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     List<CustomerDTO> customerListByIds(@SessionKey String sessionId, List<UUID> uuidList) throws RemoteException, SessionExpired, NoPermissionForOperation;
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     List<CustomerDTO> search(@SessionKey String sessionId, String query) throws RemoteException, SessionExpired, NoPermissionForOperation;
 }

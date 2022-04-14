@@ -19,6 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -48,5 +50,47 @@ class PermissionDecoratorTests {
         verify(authenticationApplicationService, atLeastOnce()).hasRole(any(), any());
     }
 
-    //TODO more tests
+    @Test
+    void when_calling_method_with_no_permission_then_nothing_happens() {
+        TestingInterfaceNoRoleAnnotations mocked = mock(TestingInterfaceNoRoleAnnotations.class);
+        when(mocked.testing(anyString(), anyInt())).thenReturn(true);
+
+        TestingInterfaceNoRoleAnnotations decoratedInstance = (TestingInterfaceNoRoleAnnotations) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                new Class[] {TestingInterfaceNoRoleAnnotations.class},
+                new RoleCheckInvocationHandler(mocked, authenticationApplicationService));
+
+        assertTrue(decoratedInstance.testing("someId", 2));
+
+        verify(mocked, times(1)).testing(anyString(), anyInt());
+    }
+
+    @Test
+    void when_calling_method_with_no_session_key_then_exception() {
+        TestingInterfaceMissingSessionKey mocked = mock(TestingInterfaceMissingSessionKey.class);
+        when(mocked.testing(anyString(), anyInt())).thenReturn(true);
+
+        TestingInterfaceMissingSessionKey decoratedInstance = (TestingInterfaceMissingSessionKey) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                new Class[] {TestingInterfaceMissingSessionKey.class},
+                new RoleCheckInvocationHandler(mocked, authenticationApplicationService));
+
+        assertThrows(IllegalStateException.class, () -> decoratedInstance.testing("someId", 2));
+
+        verify(mocked, times(0)).testing(anyString(), anyInt());
+    }
+
+    @Test
+    void when_no_role_present_then_exception() throws SessionExpired, NoPermissionForOperation, CarrierNotAvailableException {
+        String sessionId = "someId";
+        List<SoundCarrierAmountDTO> carriers = new LinkedList<>();
+        String payment = "CASH";
+        UUID id = UUID.randomUUID();
+        when(saleApplicationService.buy(sessionId, carriers, payment, id)).thenReturn("R000001");
+        when(authenticationApplicationService.hasRole(any(SessionId.class), any(UserRole.class))).thenReturn(false);
+
+        SaleApplicationService decoratedService = (SaleApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                SaleApplicationServiceImpl.class.getInterfaces(),
+                new RoleCheckInvocationHandler(saleApplicationService, authenticationApplicationService));
+
+        assertThrows(NoPermissionForOperation.class, () -> decoratedService.buy(sessionId, carriers, payment, id));
+    }
 }

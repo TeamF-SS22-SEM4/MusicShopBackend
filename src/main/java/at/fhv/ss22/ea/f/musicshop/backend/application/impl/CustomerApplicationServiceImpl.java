@@ -20,19 +20,19 @@ public class CustomerApplicationServiceImpl implements CustomerApplicationServic
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public CustomerDTO customerById(@SessionKey String sessionId, UUID uuid) throws RemoteException {
         return client.getCustomerInternalService().customerById(uuid);
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public List<CustomerDTO> customerListByIds(@SessionKey String sessionId, List<UUID> uuidList) throws RemoteException {
         return client.getCustomerInternalService().customerListByIds(uuidList);
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public List<CustomerDTO> search(@SessionKey String sessionId, String query) throws RemoteException {
         return client.getCustomerInternalService().search(query);
     }

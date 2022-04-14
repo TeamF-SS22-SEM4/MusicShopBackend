@@ -16,12 +16,12 @@ import java.util.UUID;
 
 public interface SaleApplicationService {
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     String buy(@SessionKey String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation;
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     Optional<SaleDTO> saleByInvoiceNumber(@SessionKey String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation;
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     void refund(@SessionKey String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws SessionExpired, NoPermissionForOperation;
 }

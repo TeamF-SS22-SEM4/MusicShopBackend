@@ -14,10 +14,10 @@ import java.util.UUID;
 
 public interface ProductApplicationService {
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     Optional<ProductDetailsDTO> productById(@SessionKey String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation;
 
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     List<ProductOverviewDTO> search(@SessionKey String sessionId, String queryString) throws SessionExpired, NoPermissionForOperation;
 
 }

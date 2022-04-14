@@ -42,7 +42,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public String buy(@SessionKey String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
         List<SaleItem> saleItems = new LinkedList<>();
@@ -73,13 +73,13 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public Optional<SaleDTO> saleByInvoiceNumber(@SessionKey String sessionId, String invoiceNumber) {
         return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public void refund(@SessionKey String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) {
         EntityManagerUtil.beginTransaction();
         //TODO replace with domain specific exceptions

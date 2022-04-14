@@ -32,13 +32,13 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public Optional<ProductDetailsDTO> productById(@SessionKey String sessionId, UUID productId) {
         return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct);
     }
 
     @Override
-    @RequiresRole(role = UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.EMPLOYEE)
     public List<ProductOverviewDTO> search(@SessionKey String sessionId, String queryString) {
         return this.productRepository.fullTextSearch(queryString).stream()
                 .map(this::overviewDtoFromProduct)
