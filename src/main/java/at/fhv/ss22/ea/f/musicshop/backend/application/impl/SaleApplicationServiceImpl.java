@@ -5,10 +5,8 @@ import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
-import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
-import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -31,13 +29,11 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     private SaleRepository saleRepository;
     private ProductRepository productRepository;
     private ArtistRepository artistRepository;
-    private AuthenticationApplicationService authenticationApplicationService;
     private SessionRepository sessionRepository;
 
-    public SaleApplicationServiceImpl(SessionRepository sessionRepository, AuthenticationApplicationService authenticationApplicationService, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
+    public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
                                       ProductRepository productRepository, ArtistRepository artistRepository) {
         this.sessionRepository = sessionRepository;
-        this.authenticationApplicationService = authenticationApplicationService;
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
@@ -45,10 +41,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    public String buy(String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
-        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
-            throw new NoPermissionForOperation();
-        }
+    @RequiresRole(role = UserRole.EMPLOYEE)
+    public String buy(String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
         List<SaleItem> saleItems = new LinkedList<>();
         List<UUID> invalidCarriers = new LinkedList<>();
@@ -78,18 +72,14 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    public Optional<SaleDTO> saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation {
-        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
-            throw new NoPermissionForOperation();
-        }
+    @RequiresRole(role = UserRole.EMPLOYEE)
+    public Optional<SaleDTO> saleByInvoiceNumber(String sessionId, String invoiceNumber) {
         return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
     }
 
     @Override
-    public void refund(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws SessionExpired, NoPermissionForOperation {
-        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), UserRole.EMPLOYEE)) {
-            throw new NoPermissionForOperation();
-        }
+    @RequiresRole(role = UserRole.EMPLOYEE)
+    public void refund(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) {
         EntityManagerUtil.beginTransaction();
         //TODO replace with domain specific exceptions
         Sale sale = saleRepository.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
