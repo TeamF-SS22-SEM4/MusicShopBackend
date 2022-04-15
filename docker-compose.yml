@@ -21,7 +21,6 @@ services:
       - ${RMI_PORT}:${RMI_PORT}
     networks:
       - musicshop_backend
-      - inter_server_connection
     links:
       - postgres
     env_file:
@@ -30,5 +29,3 @@ services:
 networks:
   musicshop_backend:
     driver: bridge
-  inter_server_connection:
-    external: true
