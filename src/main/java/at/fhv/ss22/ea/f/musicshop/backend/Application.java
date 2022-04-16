@@ -1,8 +1,10 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
+import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.jms.JMSException;
 import javax.persistence.Query;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +18,11 @@ public class Application {
 
         try {
             initialize();
+            JMSClient.getJmsClient().publishMessage("Orders", "Order me some CDs");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
         }
     }
 

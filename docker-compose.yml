@@ -14,6 +14,14 @@ services:
       - musicshop_backend
     env_file:
       - .env
+  jms-provider:
+    container_name: jms-provider
+    image: rmohr/activemq:5.15.9-alpine
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    networks:
+      - musicshop_backend
   backend:
     container_name: musicshop-backend
     build: .
@@ -21,14 +29,12 @@ services:
       - ${RMI_PORT}:${RMI_PORT}
     networks:
       - musicshop_backend
-#      - rmi_connection
     links:
       - postgres
+      - jms-provider
     env_file:
       - .env
 
 networks:
   musicshop_backend:
     driver: bridge
-#  rmi_connection:
-#    external: true
