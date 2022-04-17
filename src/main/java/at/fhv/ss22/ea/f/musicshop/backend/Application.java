@@ -18,7 +18,7 @@ public class Application {
 
         try {
             initialize();
-            JMSClient.getJmsClient().publishMessage("Orders", "Order me some CDs");
+            InstanceProvider.getJmsClient().publishMessage("Orders", "Order me some CDs");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JMSException e) {

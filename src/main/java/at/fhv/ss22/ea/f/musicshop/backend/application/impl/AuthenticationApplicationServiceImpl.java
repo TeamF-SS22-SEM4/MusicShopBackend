@@ -42,6 +42,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
         EntityManagerUtil.commit();
 
+        //TODO add subscribed topics to dto
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
                 .withRoles(employee.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))

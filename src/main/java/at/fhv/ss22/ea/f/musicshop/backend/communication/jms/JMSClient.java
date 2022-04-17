@@ -5,22 +5,13 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
 public class JMSClient {
-    private static JMSClient jmsClient;
-    private final String PROTOCOL = "tcp://";
-    private final String HOST = "jms-provider";
-    private final String PORT = "61616";
+    private static final String PROTOCOL = "tcp://";
+    private static final String HOST = "jms-provider";
+    private static final String PORT = "61616";
     private final ActiveMQConnectionFactory connectionFactory;
 
-    private JMSClient() {
+    public JMSClient() {
         connectionFactory = new ActiveMQConnectionFactory(PROTOCOL + HOST + ":" + PORT);
-    }
-
-    public static JMSClient getJmsClient() {
-        if(jmsClient == null) {
-            jmsClient = new JMSClient();
-        }
-
-        return jmsClient;
     }
 
     public void publishMessage(String topic, String message) throws JMSException {
