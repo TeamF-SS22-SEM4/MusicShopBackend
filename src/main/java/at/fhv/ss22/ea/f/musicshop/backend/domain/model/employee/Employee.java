@@ -14,7 +14,6 @@ public class Employee {
     @EmbeddedId
     private EmployeeId employeeId;
     private String username;
-    // password? no, only stored in ldap
     private String firstname;
     private String lastname;
     @Enumerated(EnumType.STRING)

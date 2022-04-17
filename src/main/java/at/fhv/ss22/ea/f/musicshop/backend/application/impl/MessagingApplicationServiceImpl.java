@@ -7,6 +7,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.MessagingApplicationSe
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 
+import javax.jms.JMSException;
 import java.util.List;
 
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
@@ -22,8 +23,10 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     //TODO implementations and RoleAnnotation
     @Override
-    public boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation {
-        return false;
+    public boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation, JMSException {
+        // Add new line between title and content, so it can be split up
+        jmsClient.publishMessage(message.getTopicName(), message.getTitle() + "\n" + message.getContent());
+        return true;
     }
 
     @Override
