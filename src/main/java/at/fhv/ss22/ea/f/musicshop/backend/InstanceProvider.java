@@ -3,6 +3,15 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 import at.fhv.ss22.ea.f.communication.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.*;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.CustomerApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RoleCheckInvocationHandler;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
@@ -10,6 +19,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.*;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
 
+import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
 
 import static org.mockito.Mockito.mock;
@@ -30,6 +40,7 @@ public class InstanceProvider {
     private static LdapClient ldapClient;
     private static AuthenticationService authenticationService;
     private static CustomerApplicationService customerApplicationService;
+    private static CustomerRMIClient customerRMIClient;
     private static JMSClient jmsClient;
     private static MessagingApplicationService messagingApplicationService;
 
@@ -52,6 +63,13 @@ public class InstanceProvider {
     private static SoundCarrierRepository mockedSoundCarrierRepository;
     private static LdapClient mockedLdapClient;
     private static CustomerRMIClient mockedCustomerRmiClient;
+
+    public static CustomerRMIClient getCustomerRMIClient() {
+        if (null == customerRMIClient) {
+            customerRMIClient = new CustomerRMIClient();
+        }
+        return customerRMIClient;
+    }
 
     public static JMSClient getJmsClient() {
         if (null == jmsClient) {
@@ -90,14 +108,17 @@ public class InstanceProvider {
 
     public static CustomerApplicationService getCustomerApplicationService() {
         if (null == customerApplicationService) {
-            customerApplicationService = new CustomerApplicationServiceImpl(getAuthenticationApplicationService(), CustomerRMIClient.getCustomerRmiClient());
+            CustomerApplicationService service = new CustomerApplicationServiceImpl(getCustomerRMIClient());
+            customerApplicationService = (CustomerApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                    service.getClass().getInterfaces(),
+                    new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
         }
         return customerApplicationService;
     }
 
     public static CustomerApplicationService getTestingCustomerApplicationService() {
         if (null == testingCustomerApplicationService) {
-            testingCustomerApplicationService = new CustomerApplicationServiceImpl(getMockedAuthenticationApplicationService(), getMockedCustomerRmiClient());
+            testingCustomerApplicationService = new CustomerApplicationServiceImpl(getMockedCustomerRmiClient());
         }
         return testingCustomerApplicationService;
     }
@@ -150,14 +171,20 @@ public class InstanceProvider {
 
     public static ProductApplicationService getProductApplicationService() {
         if (null == productApplicationService) {
-            productApplicationService = new ProductApplicationServiceImpl(getAuthenticationApplicationService(), getProductRepository(), getArtistRepository(), getSoundCarrierRepository());
+            ProductApplicationService service = new ProductApplicationServiceImpl(getProductRepository(), getArtistRepository(), getSoundCarrierRepository());
+            productApplicationService = (ProductApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                    service.getClass().getInterfaces(),
+                    new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
         }
         return productApplicationService;
     }
 
     public static SaleApplicationService getSoundCarrierApplicationService() {
         if (null == saleApplicationService) {
-            saleApplicationService = new SaleApplicationServiceImpl(getSessionRepository(), getAuthenticationApplicationService(), getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+            SaleApplicationService service = new SaleApplicationServiceImpl(getSessionRepository(), getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+            saleApplicationService = (SaleApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                    service.getClass().getInterfaces(),
+                    new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
         }
         return saleApplicationService;
     }
@@ -178,7 +205,7 @@ public class InstanceProvider {
 
     public static SaleApplicationService getTestingSoundCarrierApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSessionRepository(), getMockedAuthenticationApplicationService(), getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSessionRepository(), getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
         }
         return testingBuyingApplicationService;
     }
@@ -246,14 +273,14 @@ public class InstanceProvider {
 
     public static SaleApplicationService getSaleApplicationService() {
         if (null == saleApplicationService) {
-            saleApplicationService = new SaleApplicationServiceImpl(getSessionRepository(), getAuthenticationApplicationService(), getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
+            saleApplicationService = new SaleApplicationServiceImpl(getSessionRepository(), getSoundCarrierRepository(), getSaleRepository(), getProductRepository(), getArtistRepository());
         }
         return saleApplicationService;
     }
 
     public static SaleApplicationService getTestingBuyingApplicationService() {
         if (null == testingBuyingApplicationService) {
-            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSessionRepository(), getMockedAuthenticationApplicationService(), getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
+            testingBuyingApplicationService = new SaleApplicationServiceImpl(getMockedSessionRepository(), getMockedSoundCarrierRepository(), getMockedSaleRepository(), getMockedProductRepository(), getMockedArtistRepository());
         }
         return testingBuyingApplicationService;
     }
@@ -322,7 +349,6 @@ public class InstanceProvider {
     public static ProductApplicationService getTestingProductApplicationService() {
         if (null == testingProductApplicationService) {
             testingProductApplicationService = new ProductApplicationServiceImpl(
-                    getMockedAuthenticationApplicationService(),
                     getMockedProductRepository(),
                     getMockedArtistRepository(),
                     getMockedSoundCarrierRepository()

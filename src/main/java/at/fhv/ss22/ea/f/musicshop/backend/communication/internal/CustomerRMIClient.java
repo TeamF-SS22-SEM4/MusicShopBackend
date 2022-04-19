@@ -8,27 +8,22 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class CustomerRMIClient {
-    private static CustomerRMIClient customerRmiClient;
     private CustomerInternalService customerService;
     private static String PORT =  System.getenv("CUSTOMER_SERVICE_RMI_PORT");
     private static String PROTOCOL = "rmi://";
     private static String HOST = System.getenv("CUSTOMER_SERVICE_RMI_HOSTNAME");
     private static String OBJECT_NAME = "CustomerInternalService";
 
-    private CustomerRMIClient() {
+    public CustomerRMIClient() {
+        this.reconnect();
+    }
+
+    public void reconnect() {
         try {
             customerService = (CustomerInternalService) Naming.lookup(PROTOCOL + HOST + ":" + PORT + "/" + OBJECT_NAME);
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-    public static CustomerRMIClient getCustomerRmiClient() {
-        if(customerRmiClient == null) {
-            customerRmiClient = new CustomerRMIClient();
-        }
-
-        return customerRmiClient;
     }
 
     public CustomerInternalService getCustomerInternalService() {
