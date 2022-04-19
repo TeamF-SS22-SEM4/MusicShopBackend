@@ -62,14 +62,14 @@ public class InstanceProvider {
 
     public static MessagingApplicationService getMessagingApplicationService() {
         if (null == messagingApplicationService) {
-            messagingApplicationService = new MessagingApplicationServiceImpl(getJmsClient(), getEmployeeRepository());
+            messagingApplicationService = new MessagingApplicationServiceImpl(getJmsClient(), getEmployeeRepository(), getSessionRepository());
         }
         return messagingApplicationService;
     }
 
     public static MessagingApplicationService getTestingMessagingApplicationService() {
         if (null == testingMessagingApplicationService) {
-            testingMessagingApplicationService = new MessagingApplicationServiceImpl(getMockedJMSClient(), getMockedEmployeeRepository());
+            testingMessagingApplicationService = new MessagingApplicationServiceImpl(getMockedJMSClient(), getMockedEmployeeRepository(), getMockedSessionRepository());
         }
         return testingMessagingApplicationService;
     }

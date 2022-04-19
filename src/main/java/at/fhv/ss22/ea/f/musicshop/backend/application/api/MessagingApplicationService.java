@@ -4,13 +4,12 @@ import at.fhv.ss22.ea.f.communication.dto.MessageDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 
-import javax.jms.JMSException;
 import java.util.List;
 
 public interface MessagingApplicationService {
 
     //TODO role annotations
-    boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation, JMSException;
+    boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation;
 
     List<String> getSubscribedTopics(String sessionId) throws SessionExpired, NoPermissionForOperation;
 
