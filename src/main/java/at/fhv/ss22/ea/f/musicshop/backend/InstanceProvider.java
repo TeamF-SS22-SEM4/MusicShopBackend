@@ -74,7 +74,7 @@ public class InstanceProvider {
 
     public static CustomerApplicationService getCustomerApplicationService() {
         if (null == customerApplicationService) {
-            CustomerApplicationService service = new CustomerApplicationServiceImpl(CustomerRMIClient.getCustomerRmiClient());
+            CustomerApplicationService service = new CustomerApplicationServiceImpl(getCustomerRMIClient());
             customerApplicationService = (CustomerApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
                     service.getClass().getInterfaces(),
                     new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));

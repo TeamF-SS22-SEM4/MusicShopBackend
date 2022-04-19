@@ -1,6 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
 import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
@@ -22,7 +23,7 @@ public class CustomerApplicationServiceImpl implements CustomerApplicationServic
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public CustomerDTO customerById(@SessionKey String sessionId, UUID uuid) throws RemoteException, SessionExpired, NoPermissionForOperation {
+    public CustomerDTO customerById(@SessionKey String sessionId, UUID uuid) throws RemoteException {
         CustomerDTO response;
         try {
             response = client.getCustomerInternalService().customerById(uuid);
@@ -37,7 +38,7 @@ public class CustomerApplicationServiceImpl implements CustomerApplicationServic
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public List<CustomerDTO> customerListByIds(@SessionKey String sessionId, List<UUID> uuidList) throws RemoteException, SessionExpired, NoPermissionForOperation {
+    public List<CustomerDTO> customerListByIds(@SessionKey String sessionId, List<UUID> uuidList) throws RemoteException {
         List<CustomerDTO> response;
         try {
             response = client.getCustomerInternalService().customerListByIds(uuidList);
@@ -52,7 +53,7 @@ public class CustomerApplicationServiceImpl implements CustomerApplicationServic
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public List<CustomerDTO> search(@SessionKey String sessionId, String query) throws RemoteException, SessionExpired, NoPermissionForOperation {
+    public List<CustomerDTO> search(@SessionKey String sessionId, String query) throws RemoteException, SessionExpired {
         List<CustomerDTO> response;
         try {
             response = client.getCustomerInternalService().search(query);
