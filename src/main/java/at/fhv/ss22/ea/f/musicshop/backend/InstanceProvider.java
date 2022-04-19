@@ -37,6 +37,7 @@ public class InstanceProvider {
     private static LdapClient ldapClient;
     private static AuthenticationService authenticationService;
     private static CustomerApplicationService customerApplicationService;
+    private static CustomerRMIClient customerRMIClient;
 
     private static CustomerApplicationService testingCustomerApplicationService;
     private static BuyingService testingBuyingService;
@@ -57,6 +58,13 @@ public class InstanceProvider {
     private static LdapClient mockedLdapClient;
     private static CustomerRMIClient mockedCustomerRmiClient;
 
+    public static CustomerRMIClient getCustomerRMIClient() {
+        if (null == customerRMIClient) {
+            customerRMIClient = new CustomerRMIClient();
+        }
+        return customerRMIClient;
+    }
+
     public static CustomerRMIClient getMockedCustomerRmiClient() {
         if (null == mockedCustomerRmiClient) {
             mockedCustomerRmiClient = mock(CustomerRMIClient.class);
@@ -66,7 +74,7 @@ public class InstanceProvider {
 
     public static CustomerApplicationService getCustomerApplicationService() {
         if (null == customerApplicationService) {
-            CustomerApplicationService service = new CustomerApplicationServiceImpl(CustomerRMIClient.getCustomerRmiClient());
+            CustomerApplicationService service = new CustomerApplicationServiceImpl(getCustomerRMIClient());
             customerApplicationService = (CustomerApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
                     service.getClass().getInterfaces(),
                     new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
