@@ -287,7 +287,7 @@ public class InstanceProvider {
 
     public static SaleApplicationService getMockedBuyingApplicationService() {
         if (null == mockedBuyingApplicationService) {
-            mockedBuyingApplicationService = mock(SaleApplicationService.class);
+            mockedBuyingApplicationService = mock(SaleApplicationServiceImpl.class);
         }
         return mockedBuyingApplicationService;
     }
