@@ -5,9 +5,14 @@ insert into employee (employeeid, firstname, lastname, username) values
 ('501827a6-0e88-4d85-a4ac-cb4d58ba79c5', 'Lukas', 'Kaufmann', 'lka2222'), 
 ('b711d27d-3b7b-4e0d-bf51-c56c260aa565', 'Michael', 'Spiegel', 'msp3991'), 
 ('81d052be-f3ee-4a6b-bd36-9ca8ad2e0224', 'Stefan', 'Mayer', 'sma7959'), 
-('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Thomas', 'Feilhauer', 'tf-test');
+('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Thomas', 'Feilhauer', 'tf-test'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'Basic', 'Employee', 'employee'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Basic', 'Operator', 'operator');
 
-insert into employee_roles (employee_employeeid, roles) values 
+insert into employee_roles (employee_employeeid, roles) values
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'EMPLOYEE'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'OPERATOR'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'EMPLOYEE'),
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'ADMIN'), 
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'OPERATOR'), 
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'EMPLOYEE'), 
