@@ -16,12 +16,18 @@ services:
       - .env
   jms-provider:
     container_name: jms-provider
-    image: rmohr/activemq:5.15.9-alpine
+    image: webcenter/activemq:latest
+    environment:
+      - ACTIVEMQ_ADMIN_LOGIN=${ACTIVEMQ_USER}
+      - ACTIVEMQ_ADMIN_PASSWORD=${ACTIVEMQ_PASSWORD}
+      - ACTIVEMQ_STATIC_TOPICS=Orders;Pop;Metal;Rock;Electronic;Grunge;Hip-Hop;Hard Rock
     ports:
       - "61616:61616"
       - "8161:8161"
     networks:
       - musicshop_backend
+    env_file:
+      - .env
   backend:
     container_name: musicshop-backend
     build: .
