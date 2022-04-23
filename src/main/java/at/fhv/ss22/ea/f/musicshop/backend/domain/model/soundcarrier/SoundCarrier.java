@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
@@ -54,6 +55,13 @@ public class SoundCarrier {
             this.amountInStore += amount;
         }
         // TODO: else throw appropriate exception
+    }
+
+    public void approvedOrder(SoundCarrierOrderDTO orderDTO) {
+        if (orderDTO.getAmount() < 0 ) {
+            throw new IllegalStateException("Amount must not be negative");
+        }
+        this.amountInStore += orderDTO.getAmount();
     }
 
     public SoundCarrierId getCarrierId() {

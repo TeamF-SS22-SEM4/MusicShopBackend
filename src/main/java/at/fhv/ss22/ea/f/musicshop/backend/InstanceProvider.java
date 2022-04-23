@@ -43,7 +43,9 @@ public class InstanceProvider {
     private static CustomerRMIClient customerRMIClient;
     private static JMSClient jmsClient;
     private static MessagingApplicationService messagingApplicationService;
+    private static OrderingApplicationService orderingApplicationService;
 
+    private static OrderingApplicationService testingOrderingApplicationService;
     private static MessagingApplicationService testingMessagingApplicationService;
     private static CustomerApplicationService testingCustomerApplicationService;
     private static ProductSearchService testingProductSearchService;
@@ -63,6 +65,23 @@ public class InstanceProvider {
     private static SoundCarrierRepository mockedSoundCarrierRepository;
     private static LdapClient mockedLdapClient;
     private static CustomerRMIClient mockedCustomerRmiClient;
+
+    public static OrderingApplicationService getOrderingApplicationService() {
+        if (null == orderingApplicationService) {
+            OrderingApplicationService service = new OrderingApplicationServiceImpl(getJmsClient(), getSoundCarrierRepository());
+            orderingApplicationService = (OrderingApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                    service.getClass().getInterfaces(),
+                    new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
+        }
+        return orderingApplicationService;
+    }
+
+    public static OrderingApplicationService getTestingOrderingApplicationService() {
+        if (null == testingOrderingApplicationService) {
+            testingOrderingApplicationService = new OrderingApplicationServiceImpl(getMockedJMSClient(), getMockedSoundCarrierRepository());
+        }
+        return testingOrderingApplicationService;
+    }
 
     public static CustomerRMIClient getCustomerRMIClient() {
         if (null == customerRMIClient) {

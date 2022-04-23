@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.MessagingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
@@ -32,7 +33,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     @Override
     @RequiresRole(UserRole.OPERATOR)
-    public boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation {
+    public boolean publish(@SessionKey String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation {
         // Add new line between title and content, so it can be split up
         try {
             jmsClient.publishMessage(message.getTopicName(), message.getTitle() + "\n" + message.getContent());
@@ -45,7 +46,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public List<String> getSubscribedTopics(String sessionId) throws SessionExpired, NoPermissionForOperation {
+    public List<String> getSubscribedTopics(@SessionKey String sessionId) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
         return employee.getSubscribedTopics();
@@ -53,7 +54,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public boolean subscribeTo(String sessionId, String topicName) throws SessionExpired, NoPermissionForOperation {
+    public boolean subscribeTo(@SessionKey String sessionId, String topicName) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
         employee.subscribeTo(topicName);
@@ -62,7 +63,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public boolean unsubscribeFrom(String sessionId, String topicName) throws SessionExpired, NoPermissionForOperation {
+    public boolean unsubscribeFrom(@SessionKey String sessionId, String topicName) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
         return employee.unsubscribeFrom(topicName);

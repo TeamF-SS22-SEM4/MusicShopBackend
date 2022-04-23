@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierOrderDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -13,7 +14,7 @@ public class Testing {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
 
         TopicConnection connection = connectionFactory.createTopicConnection();
-        connection.setClientID("TODO");
+        connection.setClientID("orderTestingClient");
         connection.start();
 
         // Create a Session
@@ -21,15 +22,19 @@ public class Testing {
 
         Topic topic = session.createTopic("Orders");
 
-        MessageConsumer consumer = session.createDurableSubscriber(topic, "TEST");
+        TopicSubscriber consumer = session.createDurableSubscriber(topic, "TEST");
 
-        consumer.setMessageListener((msg) -> {
+        System.out.println("setting listener");
+        consumer.setMessageListener(msg -> {
             try {
-                System.out.println(((TextMessage) msg).getText());
-                msg.acknowledge();
+                ObjectMessage objectMessage = (ObjectMessage) msg;
+                SoundCarrierOrderDTO orderDTO = (SoundCarrierOrderDTO) objectMessage.getObject();
+
+                System.out.println("received order for " + orderDTO.getAmount() + " of carrier.id " + orderDTO.getSoundCarrierId());
             } catch (JMSException e) {
                 e.printStackTrace();
             }
         });
+        System.out.println("set listener");
     }
 }
