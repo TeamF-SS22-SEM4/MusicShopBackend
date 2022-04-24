@@ -14,6 +14,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 
 import javax.jms.JMSException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
@@ -48,7 +49,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
     public List<String> getSubscribedTopics(String sessionId) throws SessionExpired, NoPermissionForOperation {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.getSubscribedTopics();
+        return new ArrayList<>(employee.getSubscribedTopics());
     }
 
     @Override
