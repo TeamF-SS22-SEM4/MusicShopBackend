@@ -1,6 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.jms;
 
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierOrderDTO;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;

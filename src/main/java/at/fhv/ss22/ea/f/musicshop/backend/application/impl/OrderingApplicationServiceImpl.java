@@ -1,7 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierOrderDTO;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;

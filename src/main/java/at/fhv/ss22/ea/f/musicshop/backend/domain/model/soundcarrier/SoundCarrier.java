@@ -1,6 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier;
 
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SoundCarrierOrderDTO;
+import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;

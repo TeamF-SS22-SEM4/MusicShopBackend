@@ -237,6 +237,15 @@ public class InstanceProvider {
     }
 
     //rmi instances are only components that currently arent singletons
+    public static OrderingService getOrderingService() {
+        try {
+            return new OrderingServiceImpl(getOrderingApplicationService());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static ProductSearchService getProductSearchService() {
         try {
             return new ProductSearchServiceImpl(getProductApplicationService());
