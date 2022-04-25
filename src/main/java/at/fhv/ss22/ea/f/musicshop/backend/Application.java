@@ -8,6 +8,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationSer
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Query;
 import java.io.IOException;
@@ -17,8 +19,9 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class Application {
+    private static final Logger logger = LogManager.getLogger(Application.class);
+
     public static void main(String[] args) {
-        System.out.println("Starting Server....");
         RMIServer.startRMIServer();
 
         try {
@@ -48,7 +51,7 @@ public class Application {
     }
 
     public static void initialize() throws IOException {
-        System.out.println("Initializing database");
+        logger.info("Initializing database");
         // (Data 1/2) Prepare data from data.sql
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("data.sql");
         String[] insertStatements = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8).split(";");
@@ -57,6 +60,6 @@ public class Application {
         EntityManagerUtil.beginTransaction();
         Arrays.stream(insertStatements).map(EntityManagerUtil.getEntityManager()::createNativeQuery).forEach(Query::executeUpdate);
         EntityManagerUtil.commit();
-        System.out.println("Finished initializing database");
+        logger.info("Finished initializing database");
     }
 }

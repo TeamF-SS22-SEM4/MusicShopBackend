@@ -2,10 +2,14 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.jms;
 
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.jms.*;
 
 public class JMSClient {
+    private static final Logger logger = LogManager.getLogger(JMSClient.class);
+
     private static final String ORDER_TOPIC_NAME = "Orders";
     private static final String PROTOCOL = "tcp://";
     private static final String HOST = "jms-provider";
@@ -47,7 +51,7 @@ public class JMSClient {
         producer.setDeliveryMode(DeliveryMode.PERSISTENT);
         TextMessage textMessage = session.createTextMessage(message);
 
-        System.out.println("Sent message: " + message + " to topic " + topic);
+        logger.info("Sent message: {} to topic {}", message, topic);
         producer.send(textMessage);
     }
     public void publishOrder(SoundCarrierOrderDTO orderDTO) throws JMSException {
