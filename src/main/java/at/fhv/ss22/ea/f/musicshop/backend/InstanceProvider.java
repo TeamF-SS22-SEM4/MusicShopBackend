@@ -11,6 +11,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplica
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.CustomerApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RemoteRmiCallDecorator;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RoleCheckInvocationHandler;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
@@ -54,6 +55,7 @@ public class InstanceProvider {
     private static AuthenticationApplicationService testingAuthenticationApplicationService;
 
     private static JMSClient mockedJMSClient;
+    private static CustomerApplicationService mockedCustomerApplicationService;
     private static AuthenticationApplicationService mockedAuthenticationApplicationService;
     private static SessionRepository mockedSessionRepository;
     private static SaleApplicationService mockedBuyingApplicationService;
@@ -81,6 +83,13 @@ public class InstanceProvider {
             testingOrderingApplicationService = new OrderingApplicationServiceImpl(getMockedJMSClient(), getMockedSoundCarrierRepository());
         }
         return testingOrderingApplicationService;
+    }
+
+    public static CustomerApplicationService getMockedCustomerApplicationService() {
+        if (null == mockedCustomerApplicationService) {
+            mockedCustomerApplicationService = mock(CustomerApplicationService.class);
+        }
+        return mockedCustomerApplicationService;
     }
 
     public static CustomerRMIClient getCustomerRMIClient() {
@@ -128,9 +137,12 @@ public class InstanceProvider {
     public static CustomerApplicationService getCustomerApplicationService() {
         if (null == customerApplicationService) {
             CustomerApplicationService service = new CustomerApplicationServiceImpl(getCustomerRMIClient());
+            CustomerApplicationService remoteDecoratedService = (CustomerApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                    service.getClass().getInterfaces(),
+                    new RemoteRmiCallDecorator(service, getCustomerRMIClient()));
             customerApplicationService = (CustomerApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
                     service.getClass().getInterfaces(),
-                    new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
+                    new RoleCheckInvocationHandler(remoteDecoratedService, getAuthenticationApplicationService()));
         }
         return customerApplicationService;
     }
