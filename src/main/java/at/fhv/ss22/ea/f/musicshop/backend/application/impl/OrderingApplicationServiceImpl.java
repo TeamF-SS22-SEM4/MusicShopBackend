@@ -21,6 +21,7 @@ public class OrderingApplicationServiceImpl implements OrderingApplicationServic
 
     public OrderingApplicationServiceImpl(JMSClient jmsClient, SoundCarrierRepository soundCarrierRepository) {
         this.jmsClient = jmsClient;
+        jmsClient.createOrderSubscriber();
         this.soundCarrierRepository = soundCarrierRepository;
     }
 

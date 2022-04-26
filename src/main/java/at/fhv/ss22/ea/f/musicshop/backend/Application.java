@@ -40,6 +40,11 @@ public class Application {
                             .withAmount(2)
                             .build()
                     );
+            service.placeOrder(sessionId, SoundCarrierOrderDTO.builder().withOrderId(UUID.randomUUID())
+                    .withCarrierId(UUID.fromString("1ce152c6-77f3-4293-98ff-a7ad43653bdd"))
+                    .withAmount(5)
+                    .build()
+            );
         } catch (SessionExpired e) {
             e.printStackTrace();
         } catch (NoPermissionForOperation e) {
