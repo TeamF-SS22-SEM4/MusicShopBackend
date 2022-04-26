@@ -11,8 +11,4 @@ public interface MessagingApplicationService {
     boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation;
 
     List<String> getSubscribedTopics(String sessionId) throws SessionExpired, NoPermissionForOperation;
-
-    boolean subscribeTo(String sessionId, String topicName) throws SessionExpired, NoPermissionForOperation;
-
-    boolean unsubscribeFrom(String sessionId, String topicName) throws SessionExpired, NoPermissionForOperation;
 }

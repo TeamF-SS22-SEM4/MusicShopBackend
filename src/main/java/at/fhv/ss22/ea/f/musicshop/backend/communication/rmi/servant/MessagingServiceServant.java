@@ -28,14 +28,4 @@ public class MessagingServiceServant extends UnicastRemoteObject implements Mess
     public List<String> getSubscribedTopics(String sessionId) throws RemoteException, SessionExpired, NoPermissionForOperation {
         return messagingApplicationService.getSubscribedTopics(sessionId);
     }
-
-    @Override
-    public boolean subscribeTo(String sessionId, String topicName) throws RemoteException, SessionExpired, NoPermissionForOperation {
-        return messagingApplicationService.subscribeTo(sessionId, topicName);
-    }
-
-    @Override
-    public boolean unsubscribeFrom(String sessionId, String topicName) throws RemoteException, SessionExpired, NoPermissionForOperation {
-        return messagingApplicationService.unsubscribeFrom(sessionId, topicName);
-    }
 }

@@ -51,21 +51,4 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
         return new ArrayList<>(employee.getSubscribedTopics());
     }
-
-    @Override
-    @RequiresRole(UserRole.EMPLOYEE)
-    public boolean subscribeTo(String sessionId, String topicName) throws SessionExpired, NoPermissionForOperation {
-        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        employee.subscribeTo(topicName);
-        return true;
-    }
-
-    @Override
-    @RequiresRole(UserRole.EMPLOYEE)
-    public boolean unsubscribeFrom(String sessionId, String topicName) throws SessionExpired, NoPermissionForOperation {
-        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.unsubscribeFrom(topicName);
-    }
 }
