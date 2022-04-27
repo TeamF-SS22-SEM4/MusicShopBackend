@@ -51,6 +51,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         // with .withTopicNames(employee.getSubscribedTopics()) --> Employee not Serializeable?
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
+                .withEmployeeId(employee.getEmployeeId().getUUID().toString())
                 .withRoles(employee.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
                 .withTopicNames(new ArrayList<>(employee.getSubscribedTopics()))
                 .build();

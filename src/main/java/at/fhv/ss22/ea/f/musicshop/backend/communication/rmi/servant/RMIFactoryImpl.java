@@ -50,4 +50,9 @@ public class RMIFactoryImpl extends UnicastRemoteObject implements RMIFactory {
     public MessagingService getMessagingService() throws RemoteException {
         return InstanceProvider.getMessagingService();
     }
+
+    @Override
+    public OrderingService getOrderingService() throws RemoteException {
+        return null;
+    }
 }

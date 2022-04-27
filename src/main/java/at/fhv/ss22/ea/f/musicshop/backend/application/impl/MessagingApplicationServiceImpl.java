@@ -15,6 +15,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 
 import javax.jms.JMSException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
@@ -49,23 +50,6 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
     public List<String> getSubscribedTopics(@SessionKey String sessionId) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.getSubscribedTopics();
-    }
-
-    @Override
-    @RequiresRole(UserRole.EMPLOYEE)
-    public boolean subscribeTo(@SessionKey String sessionId, String topicName) throws SessionExpired {
-        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        employee.subscribeTo(topicName);
-        return true;
-    }
-
-    @Override
-    @RequiresRole(UserRole.EMPLOYEE)
-    public boolean unsubscribeFrom(@SessionKey String sessionId, String topicName) throws SessionExpired {
-        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.unsubscribeFrom(topicName);
+        return new ArrayList<>(employee.getSubscribedTopics());
     }
 }
