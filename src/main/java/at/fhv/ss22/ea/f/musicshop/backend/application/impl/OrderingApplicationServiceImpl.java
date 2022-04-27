@@ -84,7 +84,7 @@ public class OrderingApplicationServiceImpl implements OrderingApplicationServic
     @Override
     @RequiresRole(UserRole.OPERATOR)
     public boolean denyOrder(@SessionKey String sessionId, SoundCarrierOrderDTO orderDTO) {
-        //TODO figure out how this can be done
+        //TODO delete, since not needed
         return false;
     }
 }
