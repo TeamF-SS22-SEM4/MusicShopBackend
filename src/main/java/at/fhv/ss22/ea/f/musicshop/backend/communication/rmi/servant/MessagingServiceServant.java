@@ -9,6 +9,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class MessagingServiceServant extends UnicastRemoteObject implements MessagingService {
@@ -27,5 +28,15 @@ public class MessagingServiceServant extends UnicastRemoteObject implements Mess
     @Override
     public List<String> getSubscribedTopics(String sessionId) throws RemoteException, SessionExpired, NoPermissionForOperation {
         return messagingApplicationService.getSubscribedTopics(sessionId);
+    }
+
+    @Override
+    public void updateLastViewed(String sessionId, LocalDateTime lastViewedMessages) throws SessionExpired, NoPermissionForOperation {
+        messagingApplicationService.updateLastViewed(sessionId, lastViewedMessages);
+    }
+
+    @Override
+    public LocalDateTime getLastViewed(String sessionId) throws SessionExpired, NoPermissionForOperation {
+        return messagingApplicationService.getLastViewed(sessionId);
     }
 }
