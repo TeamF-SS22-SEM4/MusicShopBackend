@@ -21,11 +21,11 @@ public class RoleCheckInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        //TODO figure out how to check if annotation is present in Impl-class -> annotations could be removed from interface
-        if (method.isAnnotationPresent(RequiresRole.class)) {
-            UserRole role = method.getAnnotation(RequiresRole.class).value();
+        Method implementedMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
+        if (implementedMethod.isAnnotationPresent(RequiresRole.class)) {
+            UserRole role = implementedMethod.getAnnotation(RequiresRole.class).value();
 
-            int sessionKeyIndex = getSessionKeyIndex(method);
+            int sessionKeyIndex = getSessionKeyIndex(implementedMethod);
             if (sessionKeyIndex == -1) {
                 throw new IllegalStateException("Unable to find SessionKey Parameter");
             }
@@ -34,7 +34,7 @@ public class RoleCheckInvocationHandler implements InvocationHandler {
                 throw new NoPermissionForOperation();
             }
         }
-        return method.invoke(target, args);
+        return implementedMethod.invoke(target, args);
     }
 
     private int getSessionKeyIndex(Method method) {

@@ -5,9 +5,44 @@ insert into employee (employeeid, firstname, lastname, username) values
 ('501827a6-0e88-4d85-a4ac-cb4d58ba79c5', 'Lukas', 'Kaufmann', 'lka2222'), 
 ('b711d27d-3b7b-4e0d-bf51-c56c260aa565', 'Michael', 'Spiegel', 'msp3991'), 
 ('81d052be-f3ee-4a6b-bd36-9ca8ad2e0224', 'Stefan', 'Mayer', 'sma7959'), 
-('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Thomas', 'Feilhauer', 'tf-test');
+('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Thomas', 'Feilhauer', 'tf-test'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'Basic', 'Employee', 'employee'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Basic', 'Operator', 'operator');
 
-insert into employee_roles (employee_employeeid, roles) values 
+insert into employee_subscribedtopics (employee_employeeid, subscribedtopics) values
+('b3044bcb-10ac-4420-a626-071d8247f81e', 'Pop'),
+('b3044bcb-10ac-4420-a626-071d8247f81e', 'Metal'),
+('b3044bcb-10ac-4420-a626-071d8247f81e', 'Rock'),
+('22d0368b-89e4-49a8-88c8-5d933f704010', 'Pop'),
+('22d0368b-89e4-49a8-88c8-5d933f704010', 'Electronic'),
+('22d0368b-89e4-49a8-88c8-5d933f704010', 'Grunge'),
+('e586526c-c0f8-4b77-9bac-c6fc1d96a2c3', 'Electronic'),
+('e586526c-c0f8-4b77-9bac-c6fc1d96a2c3', 'Hip-Hop'),
+('e586526c-c0f8-4b77-9bac-c6fc1d96a2c3', 'Hard Rock'),
+('501827a6-0e88-4d85-a4ac-cb4d58ba79c5', 'Hip-Hop'),
+('501827a6-0e88-4d85-a4ac-cb4d58ba79c5', 'Pop'),
+('501827a6-0e88-4d85-a4ac-cb4d58ba79c5', 'Metal'),
+('b711d27d-3b7b-4e0d-bf51-c56c260aa565', 'Metal'),
+('b711d27d-3b7b-4e0d-bf51-c56c260aa565', 'Hard Rock'),
+('b711d27d-3b7b-4e0d-bf51-c56c260aa565', 'Grunge'),
+('81d052be-f3ee-4a6b-bd36-9ca8ad2e0224', 'Electronic'),
+('81d052be-f3ee-4a6b-bd36-9ca8ad2e0224', 'Metal'),
+('81d052be-f3ee-4a6b-bd36-9ca8ad2e0224', 'Pop'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Hard Rock'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Hip-Hop'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8976', 'Grunge'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'Pop'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'Metal'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'Rock'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Hard Rock'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Hip-Hop'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Grunge');
+
+
+insert into employee_roles (employee_employeeid, roles) values
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'EMPLOYEE'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'OPERATOR'),
+('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'EMPLOYEE'),
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'ADMIN'), 
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'OPERATOR'), 
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'EMPLOYEE'), 
@@ -244,7 +279,7 @@ insert into product (productid, duration, label, name, releaseyear) values
 
 insert into product_genre (product_productid, genre) values 
 ('7999daee-9454-4906-b159-4393c73a5d26', 'Pop'), 
-('7999daee-9454-4906-b159-4393c73a5d26', 'Metal'), 
+('7999daee-9454-4906-b159-4393c73a5d26', 'Metal'),
 ('7999daee-9454-4906-b159-4393c73a5d26', 'Pop'), 
 ('c95744c0-8078-4c71-90be-c6bfcb60d114', 'Metal'), 
 ('c95744c0-8078-4c71-90be-c6bfcb60d114', 'Rock'), 

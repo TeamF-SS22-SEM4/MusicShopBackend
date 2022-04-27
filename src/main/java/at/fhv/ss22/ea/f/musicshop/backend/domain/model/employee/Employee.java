@@ -6,6 +6,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 
 import javax.persistence.*;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +15,6 @@ public class Employee {
     @EmbeddedId
     private EmployeeId employeeId;
     private String username;
-    // password? no, only stored in ldap
     private String firstname;
     private String lastname;
     @Enumerated(EnumType.STRING)
@@ -22,6 +22,8 @@ public class Employee {
     private List<UserRole> roles;
     @ElementCollection
     private List<SaleId> sales;
+    @ElementCollection
+    private List<String> subscribedTopics;
 
     public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<UserRole> roles,List<SaleId> aSalesList) {
         return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, roles,aSalesList);
@@ -42,6 +44,18 @@ public class Employee {
         this.lastname = lastname;
         this.roles = roles;
         this.sales = sales;
+        this.subscribedTopics = new LinkedList<>();
+    }
+
+    public void subscribeTo(String topicName) {
+        this.subscribedTopics.add(topicName);
+    }
+    public boolean unsubscribeFrom(String topicName) {
+        return this.subscribedTopics.remove(topicName);
+    }
+
+    public List<String> getSubscribedTopics() {
+        return Collections.unmodifiableList(subscribedTopics);
     }
 
     public EmployeeId getEmployeeId() {

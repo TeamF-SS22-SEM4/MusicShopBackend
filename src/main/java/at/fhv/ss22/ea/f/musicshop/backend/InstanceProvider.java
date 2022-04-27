@@ -1,6 +1,8 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
 import at.fhv.ss22.ea.f.communication.api.*;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.*;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
@@ -13,6 +15,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RemoteRmiC
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RoleCheckInvocationHandler;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.*;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
@@ -39,13 +42,17 @@ public class InstanceProvider {
     private static AuthenticationService authenticationService;
     private static CustomerApplicationService customerApplicationService;
     private static CustomerRMIClient customerRMIClient;
+    private static JMSClient jmsClient;
+    private static MessagingApplicationService messagingApplicationService;
 
+    private static MessagingApplicationService testingMessagingApplicationService;
     private static CustomerApplicationService testingCustomerApplicationService;
     private static ProductSearchService testingProductSearchService;
     private static ProductApplicationService testingProductApplicationService;
     private static SaleApplicationService testingBuyingApplicationService;
     private static AuthenticationApplicationService testingAuthenticationApplicationService;
 
+    private static JMSClient mockedJMSClient;
     private static CustomerApplicationService mockedCustomerApplicationService;
     private static AuthenticationApplicationService mockedAuthenticationApplicationService;
     private static SessionRepository mockedSessionRepository;
@@ -71,6 +78,34 @@ public class InstanceProvider {
             customerRMIClient = new CustomerRMIClient();
         }
         return customerRMIClient;
+    }
+
+    public static JMSClient getJmsClient() {
+        if (null == jmsClient) {
+            jmsClient = new JMSClient();
+        }
+        return jmsClient;
+    }
+
+    public static MessagingApplicationService getMessagingApplicationService() {
+        if (null == messagingApplicationService) {
+            messagingApplicationService = new MessagingApplicationServiceImpl(getJmsClient(), getEmployeeRepository(), getSessionRepository());
+        }
+        return messagingApplicationService;
+    }
+
+    public static MessagingApplicationService getTestingMessagingApplicationService() {
+        if (null == testingMessagingApplicationService) {
+            testingMessagingApplicationService = new MessagingApplicationServiceImpl(getMockedJMSClient(), getMockedEmployeeRepository(), getMockedSessionRepository());
+        }
+        return testingMessagingApplicationService;
+    }
+
+    public static JMSClient getMockedJMSClient() {
+        if (null == mockedJMSClient) {
+            mockedJMSClient = mock(JMSClient.class);
+        }
+        return mockedJMSClient;
     }
 
     public static CustomerRMIClient getMockedCustomerRmiClient() {
@@ -230,6 +265,15 @@ public class InstanceProvider {
         return null;
     }
 
+    public static MessagingService getMessagingService() {
+        try {
+            return new MessagingServiceServant(getMessagingApplicationService());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static CustomerSearchService getCustomerSearchService() {
         try {
             return new CustomerSearchService(getCustomerApplicationService());
@@ -255,7 +299,7 @@ public class InstanceProvider {
 
     public static SaleApplicationService getMockedBuyingApplicationService() {
         if (null == mockedBuyingApplicationService) {
-            mockedBuyingApplicationService = mock(SaleApplicationService.class);
+            mockedBuyingApplicationService = mock(SaleApplicationServiceImpl.class);
         }
         return mockedBuyingApplicationService;
     }

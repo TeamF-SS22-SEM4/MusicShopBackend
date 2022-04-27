@@ -13,6 +13,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,9 +43,12 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
         EntityManagerUtil.commit();
 
+        // with .withTopicNames(employee.getSubscribedTopics()) --> Employee not Serializeable?
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
+                .withEmployeeId(employee.getEmployeeId().getUUID().toString())
                 .withRoles(employee.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
+                .withTopicNames(new ArrayList<>(employee.getSubscribedTopics()))
                 .build();
     }
 
