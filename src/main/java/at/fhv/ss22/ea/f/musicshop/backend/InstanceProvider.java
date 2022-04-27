@@ -70,7 +70,7 @@ public class InstanceProvider {
 
     public static OrderingApplicationService getOrderingApplicationService() {
         if (null == orderingApplicationService) {
-            OrderingApplicationService service = new OrderingApplicationServiceImpl(getJmsClient(), getSoundCarrierRepository());
+            OrderingApplicationService service = new OrderingApplicationServiceImpl(getJmsClient(), getSoundCarrierRepository(), getEmployeeRepository(), getProductRepository(), getSessionRepository());
             orderingApplicationService = (OrderingApplicationService) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
                     service.getClass().getInterfaces(),
                     new RoleCheckInvocationHandler(service, getAuthenticationApplicationService()));
@@ -80,7 +80,7 @@ public class InstanceProvider {
 
     public static OrderingApplicationService getTestingOrderingApplicationService() {
         if (null == testingOrderingApplicationService) {
-            testingOrderingApplicationService = new OrderingApplicationServiceImpl(getMockedJMSClient(), getMockedSoundCarrierRepository());
+            testingOrderingApplicationService = new OrderingApplicationServiceImpl(getMockedJMSClient(), getMockedSoundCarrierRepository(), getMockedEmployeeRepository(), getMockedProductRepository(), getMockedSessionRepository());
         }
         return testingOrderingApplicationService;
     }

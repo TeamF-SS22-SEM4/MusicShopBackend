@@ -1,6 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.jms;
 
-import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
+import at.fhv.ss22.ea.f.communication.dto.DetailedOrderDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,12 +31,13 @@ public class JMSClient {
             TopicSession orderSession = orderConnection.createTopicSession(false, Session.CLIENT_ACKNOWLEDGE);
             Topic topic = orderSession.createTopic(ORDER_TOPIC_NAME);
             TopicSubscriber subscriber = orderSession.createDurableSubscriber(topic, ORDER_CLIENT_NAME);
+            subscriber.close();
             orderSession.close();
+            orderConnection.stop();
             orderConnection.close();
         } catch (JMSException e) {
             e.printStackTrace();
         }
-
     }
 
     public void reconnect() {
@@ -73,7 +74,7 @@ public class JMSClient {
         logger.info("Sent message: {} to topic {}", message, topic);
         producer.send(textMessage);
     }
-    public void publishOrder(SoundCarrierOrderDTO orderDTO) throws JMSException {
+    public void publishOrder(DetailedOrderDTO orderDTO) throws JMSException {
         Destination destination = session.createTopic(ORDER_TOPIC_NAME);
         MessageProducer producer = session.createProducer(destination);
         producer.setDeliveryMode(DeliveryMode.PERSISTENT);
