@@ -26,6 +26,7 @@ public class JMSClient {
     public void createOrderSubscriber() {
         try {
             TopicConnection orderConnection = connectionFactory.createTopicConnection();
+            this.connectionFactory.setTrustAllPackages(true);
             orderConnection.setClientID(ORDER_CLIENT_CONNECTION_ID);
             orderConnection.start();
             TopicSession orderSession = orderConnection.createTopicSession(false, Session.CLIENT_ACKNOWLEDGE);
