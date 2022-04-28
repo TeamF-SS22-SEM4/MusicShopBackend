@@ -12,12 +12,15 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AuthenticationApplicationServiceImpl implements AuthenticationApplicationService {
+    private static final Logger logger = LogManager.getLogger(AuthenticationApplicationServiceImpl.class);
 
     private LdapClient ldapClient;
     private SessionRepository sessionRepository;
@@ -32,6 +35,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
     @Override
     public LoginResultDTO login(String username, String password) throws AuthenticationFailed {
         if (!ldapClient.credentialsValid(username, password)) {
+            logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
             throw new AuthenticationFailed();
         }
         Optional<Employee> opt = employeeRepository.employeeByUserName(username);
@@ -40,8 +44,9 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         EntityManagerUtil.beginTransaction();
 
         sessionRepository.add(session);
-
         EntityManagerUtil.commit();
+
+        logger.info("successfuly logged {} in", username);
 
         // with .withTopicNames(employee.getSubscribedTopics()) --> Employee not Serializeable?
         return LoginResultDTO.builder()

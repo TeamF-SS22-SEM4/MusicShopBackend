@@ -2,6 +2,8 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi;
 
 import at.fhv.ss22.ea.f.communication.api.RMIFactory;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.RMIFactoryImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -9,6 +11,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 public class RMIServer {
+    private static final Logger logger = LogManager.getLogger(RMIServer.class);
+
     private static int PORT = Integer.parseInt(System.getenv("RMI_PORT"));
     private static String PROTOCOL = "rmi://";
     private static String RMI_REGISTRY_HOST = "localhost"; // NOTE: this value doesn't have the same
@@ -19,6 +23,7 @@ public class RMIServer {
 
     public static void startRMIServer() {
         try {
+            logger.info("starting rmi server");
             //needed because else stub-endpoints are bound to the standard docker ip-network (172.- something)
             // which makes our remote objects then unreachable
             System.setProperty("java.rmi.server.hostname", System.getenv("RMI_HOSTNAME"));
@@ -27,9 +32,9 @@ public class RMIServer {
             LocateRegistry.createRegistry(PORT);
             Naming.rebind(PROTOCOL + RMI_REGISTRY_HOST + ":" + PORT + "/" + REMOTE_OBJECT_NAME, rmiFactory);
 
-            System.out.println("RMIFactory bound in registry on port " + PORT);
+            logger.info("RMIFactory bound in registry on port {}", PORT);
         } catch (RemoteException | MalformedURLException e) {
-            e.printStackTrace();
+            logger.fatal("Failed to start RMI-Server", e);
         }
     }
 }
