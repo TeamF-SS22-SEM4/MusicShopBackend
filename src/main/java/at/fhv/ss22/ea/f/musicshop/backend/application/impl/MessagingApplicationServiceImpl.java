@@ -12,8 +12,10 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
 import javax.jms.JMSException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +52,24 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
         return new ArrayList<>(employee.getSubscribedTopics());
+    }
+
+    @Override
+    @RequiresRole(UserRole.EMPLOYEE)
+    public void updateLastViewed(String sessionId, LocalDateTime lastViewedMessages) throws SessionExpired, NoPermissionForOperation {
+        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
+        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
+
+        EntityManagerUtil.beginTransaction();
+        employee.updateLastViewed(lastViewedMessages);
+        EntityManagerUtil.commit();
+    }
+
+    @Override
+    @RequiresRole(UserRole.EMPLOYEE)
+    public LocalDateTime getLastViewed(String sessionId) throws SessionExpired, NoPermissionForOperation {
+        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
+        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
+        return employee.getLastViewed();
     }
 }

@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class Employee {
     private String username;
     private String firstname;
     private String lastname;
+
+    private LocalDateTime lastViewed;
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = UserRole.class)
     private List<UserRole> roles;
@@ -26,11 +29,20 @@ public class Employee {
     private List<String> subscribedTopics;
 
     public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<UserRole> roles,List<SaleId> aSalesList) {
-        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, roles,aSalesList);
+        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, roles, aSalesList);
     }
 
     public boolean hasRole(UserRole role) {
         return this.roles.contains(role);
+    }
+
+    public void updateLastViewed(LocalDateTime updatedLastViewed) {
+        // New lastViewed can not be before old value
+        if(updatedLastViewed.isBefore(this.lastViewed)) {
+            throw new UnsupportedOperationException("New value can not be before old value.");
+        }
+
+        this.lastViewed = updatedLastViewed;
     }
 
     @Generated
@@ -45,6 +57,7 @@ public class Employee {
         this.roles = roles;
         this.sales = sales;
         this.subscribedTopics = new LinkedList<>();
+        this.lastViewed = LocalDateTime.MIN;
     }
 
     public void subscribeTo(String topicName) {
@@ -72,6 +85,10 @@ public class Employee {
 
     public String getLastname() {
         return lastname;
+    }
+
+    public LocalDateTime getLastViewed() {
+        return lastViewed;
     }
 
     public List<UserRole> getRoles() {
