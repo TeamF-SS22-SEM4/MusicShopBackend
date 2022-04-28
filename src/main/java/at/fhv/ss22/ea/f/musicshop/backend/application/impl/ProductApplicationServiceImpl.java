@@ -10,6 +10,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
@@ -46,10 +47,15 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     }
 
     private ProductOverviewDTO overviewDtoFromProduct(Product product) {
+        List<SoundCarrier> carriers = soundCarrierRepository.soundCarriersByProductId(product.getProductId());
+        double smallestPrice = carriers.stream().mapToDouble(SoundCarrier::getPrice).min().orElse(0);
+
         return ProductOverviewDTO.builder()
                 .withId(product.getProductId().getUUID())
                 .withName(product.getName())
                 .withReleaseYear(product.getReleaseYear())
+                .withGenre(String.join(", ", product.getGenre()))
+                .withSmallestPrice((float) smallestPrice)
                 .withArtistName(product.getArtistIds().stream()
                         .map(artistId -> artistRepository.artistById(artistId))
                         .filter(Optional::isPresent)
@@ -79,6 +85,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                                         .withSoundCarrierName(carrier.getType().getFriendlyName())
                                         .withAvailableAmount(carrier.getAmountInStore())
                                         .withPricePerCarrier(carrier.getPrice())
+                                        .withLocation(carrier.getLocation())
                                         .build())
                                 .collect(Collectors.toList())
                 )
