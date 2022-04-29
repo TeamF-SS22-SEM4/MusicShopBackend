@@ -30,29 +30,6 @@ public class Application {
             e.printStackTrace();
         }
 
-        //TODO remove this
-        try {
-            AuthenticationApplicationService authService = InstanceProvider.getAuthenticationApplicationService();
-            String sessionId = authService.login("lka2222", "password").getSessionId();
-            OrderingApplicationService service = InstanceProvider.getOrderingApplicationService();
-            service.placeOrder(sessionId, SoundCarrierOrderDTO.builder().withOrderId(UUID.randomUUID())
-                            .withCarrierId(UUID.fromString("1ce152c6-77f3-4293-98ff-a7ad43653bdd"))
-                            .withAmount(2)
-                            .build()
-                    );
-            service.placeOrder(sessionId, SoundCarrierOrderDTO.builder().withOrderId(UUID.randomUUID())
-                    .withCarrierId(UUID.fromString("1ce152c6-77f3-4293-98ff-a7ad43653bdd"))
-                    .withAmount(5)
-                    .build()
-            );
-        } catch (SessionExpired e) {
-            e.printStackTrace();
-        } catch (NoPermissionForOperation e) {
-            e.printStackTrace();
-        } catch (AuthenticationFailed authenticationFailed) {
-            authenticationFailed.printStackTrace();
-        }
-
     }
 
     public static void initialize() throws IOException {

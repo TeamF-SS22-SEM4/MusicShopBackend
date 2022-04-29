@@ -42,7 +42,6 @@ public class SaleItem {
        if(refundedAmount <= amountOfCarriers) {
            refundedAmount += amount;
        } else {
-           // TODO: Use appropriate exception
            throw new UnsupportedOperationException("You can't refund more than you bought.");
        }
     }

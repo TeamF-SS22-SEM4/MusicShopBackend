@@ -62,7 +62,6 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             throw new CarrierNotAvailableException(invalidCarriers);
         }
 
-        //TODO check if customerId exists
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         long currentAmountOfSales = saleRepository.amountOfSales();
         Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getEmployeeId(), paymentMethod, new CustomerId(customerId));
@@ -82,9 +81,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     @RequiresRole(UserRole.EMPLOYEE)
     public void refund(@SessionKey String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) {
         EntityManagerUtil.beginTransaction();
-        //TODO replace with domain specific exceptions
-        Sale sale = saleRepository.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
 
+        Sale sale = saleRepository.saleByInvoiceNumber(invoiceNumber).orElseThrow(NoSuchElementException::new);
         refundedSaleItems.forEach(refundedSaleItem -> {
             // Set matching saleItem isRefund to true
             SaleItem saleItem = sale.getSaleItemList().stream().filter(si ->
@@ -101,12 +99,11 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     private SaleDTO saleDtoFromSale(Sale sale) {
-        // TODO: Get carrier and product infos with stream, map and check if isPresent
         List<SaleItemDTO> saleItemDTOs = new ArrayList<>();
 
         for (SaleItem saleItem : sale.getSaleItemList()) {
             SoundCarrier soundCarrier = soundCarrierRepository.soundCarrierById(saleItem.getCarrierId()).orElseThrow(IllegalStateException::new);
-            //TODO replace with domain specific exceptions
+
             Product product = productRepository.productById(soundCarrier.getProductId()).orElseThrow(IllegalStateException::new);
 
             SaleItemDTO dto = SaleItemDTO.builder()
