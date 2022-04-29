@@ -80,11 +80,4 @@ public class OrderingApplicationServiceImpl implements OrderingApplicationServic
         EntityManagerUtil.commit();
         return true;
     }
-
-    @Override
-    @RequiresRole(UserRole.OPERATOR)
-    public boolean denyOrder(@SessionKey String sessionId, SoundCarrierOrderDTO orderDTO) {
-        //TODO delete, since not needed
-        return false;
-    }
 }
