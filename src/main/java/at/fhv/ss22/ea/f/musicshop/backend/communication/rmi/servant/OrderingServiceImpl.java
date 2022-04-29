@@ -27,9 +27,4 @@ public class OrderingServiceImpl extends UnicastRemoteObject implements Ordering
     public boolean approveOrder(String sessionId, SoundCarrierOrderDTO orderDTO) throws RemoteException, SessionExpired, NoPermissionForOperation {
         return this.orderingApplicationService.approveOrder(sessionId, orderDTO);
     }
-
-    @Override
-    public boolean denyOrder(String sessionId, SoundCarrierOrderDTO orderDTO) throws RemoteException, SessionExpired, NoPermissionForOperation {
-        return this.orderingApplicationService.denyOrder(sessionId, orderDTO);
-    }
 }

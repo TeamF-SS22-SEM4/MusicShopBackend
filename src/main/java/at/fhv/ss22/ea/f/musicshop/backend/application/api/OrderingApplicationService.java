@@ -10,6 +10,4 @@ public interface OrderingApplicationService {
 
     boolean approveOrder(String sessionId, SoundCarrierOrderDTO orderDTO) throws SessionExpired, NoPermissionForOperation;
 
-    boolean denyOrder(String sessionId, SoundCarrierOrderDTO orderDTO) throws SessionExpired, NoPermissionForOperation;
-
 }

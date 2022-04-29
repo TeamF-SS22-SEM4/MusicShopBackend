@@ -54,7 +54,6 @@ public class SoundCarrier {
         if(amount > 0) {
             this.amountInStore += amount;
         }
-        // TODO: else throw appropriate exception
     }
 
     public void approvedOrder(SoundCarrierOrderDTO orderDTO) {
