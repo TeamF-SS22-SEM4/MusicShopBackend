@@ -7,6 +7,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RemoteRmiCallDecorator;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -17,6 +18,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -63,4 +65,23 @@ class RmiDecoratorTests {
         assertThrows(RuntimeException.class, () -> decoratedService.search("some", "another some"));
     }
 
+    @Test
+    void when_no_exception_then_result_returned() throws Exception {
+        //given
+        reset(undecoratedService);
+        CustomerDTO customer = CustomerDTO.builder()
+                        .id(UUID.randomUUID())
+                        .givenName("max")
+                        .familyName("Mustermann")
+                        .city("dornbirn")
+                        .country("Österreich")
+                        .build();
+        when(undecoratedService.customerById("placeholder session", customer.getCustomerId())).thenReturn(customer);
+
+        CustomerDTO customerAct = decoratedService.customerById("placeholder session", customer.getCustomerId());
+
+        assertEquals(customer.getFamilyName(), customerAct.getFamilyName());
+        assertEquals(customer.getCity(), customerAct.getCity());
+        assertEquals(customer.getGivenName(), customerAct.getGivenName());
+    }
 }

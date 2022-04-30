@@ -35,7 +35,9 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "at/fhv/**/Application.class",
-                    "at/fhv/**/InstanceProvider.class"
+                    "at/fhv/**/InstanceProvider.class",
+                    "**/exceptions/**",
+                    "**/infrastructure/bridges"
             ])
         }))
     }
