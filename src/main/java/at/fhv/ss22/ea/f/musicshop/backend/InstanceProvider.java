@@ -3,20 +3,12 @@ package at.fhv.ss22.ea.f.musicshop.backend;
 import at.fhv.ss22.ea.f.communication.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.*;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.*;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.CustomerApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RemoteRmiCallDecorator;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RoleCheckInvocationHandler;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.ejb.*;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant.*;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.*;
 
@@ -163,11 +155,7 @@ public class InstanceProvider {
 
     public static AuthenticationService getAuthenticationService() {
         if (null == authenticationService) {
-            try {
-                authenticationService = new AuthenticationServiceImpl(getAuthenticationApplicationService());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            authenticationService = new AuthenticationServiceImpl(getAuthenticationApplicationService());
         }
         return authenticationService;
     }
@@ -259,20 +247,10 @@ public class InstanceProvider {
     }
 
     public static ProductSearchService getProductSearchService() {
-        try {
-            return new ProductSearchServiceImpl(getProductApplicationService());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new ProductSearchServiceImpl(getProductApplicationService());
     }
     public static BuyingService getBuyingService() {
-        try {
-            return new BuyingServiceImpl(getSaleApplicationService());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new BuyingServiceImpl(getSaleApplicationService());
     }
 
     public static SaleSearchService getSaleSearchService() {
@@ -285,12 +263,7 @@ public class InstanceProvider {
     }
 
     public static RefundSaleService getRefundSaleService() {
-        try {
-            return new RefundSaleServiceImpl(getSaleApplicationService());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new RefundSaleServiceImpl(getSaleApplicationService());
     }
 
     public static MessagingService getMessagingService() {
@@ -303,12 +276,7 @@ public class InstanceProvider {
     }
 
     public static CustomerSearchService getCustomerSearchService() {
-        try {
-            return new CustomerSearchService(getCustomerApplicationService());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new CustomerSearchService(getCustomerApplicationService());
     }
 
     public static SaleApplicationService getSaleApplicationService() {
@@ -335,11 +303,7 @@ public class InstanceProvider {
 
     public static ProductSearchService getTestingProductSearchService() {
         if (null == testingProductSearchService) {
-            try {
-                testingProductSearchService = new ProductSearchServiceImpl(getMockedProductApplicationService());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            testingProductSearchService = new ProductSearchServiceImpl(getMockedProductApplicationService());
         }
         return testingProductSearchService;
     }

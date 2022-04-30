@@ -1,11 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
-import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
-import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
-import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
-import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.UUID;
 
 public class Application {
     private static final Logger logger = LogManager.getLogger(Application.class);

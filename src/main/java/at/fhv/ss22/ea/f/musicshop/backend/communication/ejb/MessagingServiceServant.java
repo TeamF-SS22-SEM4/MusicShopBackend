@@ -1,32 +1,30 @@
-package at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.servant;
+package at.fhv.ss22.ea.f.musicshop.backend.communication.ejb;
 
 import at.fhv.ss22.ea.f.communication.api.MessagingService;
 import at.fhv.ss22.ea.f.communication.dto.MessageDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.MessagingApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import javax.ejb.EJB;
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class MessagingServiceServant extends UnicastRemoteObject implements MessagingService {
+@Remote(MessagingService.class)
+@Stateless
+public class MessagingServiceServant implements MessagingService {
+    @EJB
     private MessagingApplicationService messagingApplicationService;
 
-    public MessagingServiceServant(MessagingApplicationService messagingApplicationService) throws RemoteException {
-        super(RMIServer.getPort());
-        this.messagingApplicationService = messagingApplicationService;
-    }
-
     @Override
-    public boolean publish(String sessionId, MessageDTO message) throws RemoteException, SessionExpired, NoPermissionForOperation {
+    public boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation {
         return messagingApplicationService.publish(sessionId, message);
     }
 
     @Override
-    public List<String> getSubscribedTopics(String sessionId) throws RemoteException, SessionExpired, NoPermissionForOperation {
+    public List<String> getSubscribedTopics(String sessionId) throws SessionExpired, NoPermissionForOperation {
         return messagingApplicationService.getSubscribedTopics(sessionId);
     }
 

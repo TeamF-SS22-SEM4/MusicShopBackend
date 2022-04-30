@@ -15,11 +15,15 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Local(MessagingApplicationService.class)
+@Stateless
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
 
     private JMSClient jmsClient;

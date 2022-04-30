@@ -1,16 +1,14 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
 import at.fhv.ss22.ea.f.communication.dto.DetailedOrderDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
@@ -21,9 +19,13 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import java.util.Optional;
 
+@Local(OrderingApplicationService.class)
+@Stateless
 public class OrderingApplicationServiceImpl implements OrderingApplicationService {
 
     private JMSClient jmsClient;

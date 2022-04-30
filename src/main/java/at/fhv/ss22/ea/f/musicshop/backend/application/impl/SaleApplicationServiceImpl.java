@@ -21,9 +21,13 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Local(SaleApplicationService.class)
+@Stateless
 public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     private SoundCarrierRepository soundCarrierRepository;

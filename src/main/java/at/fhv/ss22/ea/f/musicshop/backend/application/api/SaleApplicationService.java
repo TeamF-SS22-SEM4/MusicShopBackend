@@ -7,10 +7,12 @@ import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 
+import javax.ejb.Local;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Local
 public interface SaleApplicationService {
 
     String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation;

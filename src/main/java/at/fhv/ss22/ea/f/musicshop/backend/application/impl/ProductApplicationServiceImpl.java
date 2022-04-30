@@ -15,11 +15,15 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Local(ProductApplicationService.class)
+@Stateless
 public class ProductApplicationServiceImpl implements ProductApplicationService {
 
     private ProductRepository productRepository;

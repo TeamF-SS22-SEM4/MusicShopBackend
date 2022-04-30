@@ -6,6 +6,9 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 
+import javax.ejb.Local;
+
+@Local
 public interface AuthenticationApplicationService {
 
     /**

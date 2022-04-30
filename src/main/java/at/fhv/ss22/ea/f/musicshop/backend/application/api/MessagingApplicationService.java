@@ -4,9 +4,11 @@ import at.fhv.ss22.ea.f.communication.dto.MessageDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 
+import javax.ejb.Local;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Local
 public interface MessagingApplicationService {
 
     boolean publish(String sessionId, MessageDTO message) throws SessionExpired, NoPermissionForOperation;
