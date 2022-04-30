@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,7 +56,6 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
         logger.info("successfuly logged {} in", username);
 
-        // with .withTopicNames(employee.getSubscribedTopics()) --> Employee not Serializeable?
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
                 .withEmployeeId(employee.getEmployeeId().getUUID().toString())
