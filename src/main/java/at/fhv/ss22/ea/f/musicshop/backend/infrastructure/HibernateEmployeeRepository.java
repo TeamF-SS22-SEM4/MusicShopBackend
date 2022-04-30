@@ -4,10 +4,14 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
+@Local(EmployeeRepository.class)
+@Stateless
 public class HibernateEmployeeRepository implements EmployeeRepository {
 
     private EntityManager em;

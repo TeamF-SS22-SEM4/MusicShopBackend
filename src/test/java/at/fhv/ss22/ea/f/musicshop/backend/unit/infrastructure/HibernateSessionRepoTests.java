@@ -1,11 +1,11 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSessionRepository;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HibernateSessionRepoTests {
 
-    private SessionRepository sessionRepository = InstanceProvider.getSessionRepository();
+    private SessionRepository sessionRepository = new HibernateSessionRepository();
 
     @Test
     void null_safety_when_getting_by_id() {

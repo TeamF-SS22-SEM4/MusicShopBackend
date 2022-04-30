@@ -8,6 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.rmi.RemoteException;
@@ -18,7 +19,9 @@ import java.util.UUID;
 @Stateless
 public class CustomerApplicationServiceImpl implements CustomerApplicationService {
 
-    private CustomerRMIClient client;
+    @EJB private CustomerRMIClient client;
+
+    public CustomerApplicationServiceImpl() {}
 
     public CustomerApplicationServiceImpl(CustomerRMIClient rmiClient) {
         this.client = rmiClient;

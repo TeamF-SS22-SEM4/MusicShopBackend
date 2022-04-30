@@ -21,6 +21,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.util.*;
@@ -30,11 +31,13 @@ import java.util.stream.Collectors;
 @Stateless
 public class SaleApplicationServiceImpl implements SaleApplicationService {
 
-    private SoundCarrierRepository soundCarrierRepository;
-    private SaleRepository saleRepository;
-    private ProductRepository productRepository;
-    private ArtistRepository artistRepository;
-    private SessionRepository sessionRepository;
+    @EJB private SoundCarrierRepository soundCarrierRepository;
+    @EJB private SaleRepository saleRepository;
+    @EJB private ProductRepository productRepository;
+    @EJB private ArtistRepository artistRepository;
+    @EJB private SessionRepository sessionRepository;
+
+    public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
                                       ProductRepository productRepository, ArtistRepository artistRepository) {

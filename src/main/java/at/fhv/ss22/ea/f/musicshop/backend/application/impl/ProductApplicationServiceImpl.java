@@ -15,6 +15,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.util.List;
@@ -26,9 +27,11 @@ import java.util.stream.Collectors;
 @Stateless
 public class ProductApplicationServiceImpl implements ProductApplicationService {
 
-    private ProductRepository productRepository;
-    private ArtistRepository artistRepository;
-    private SoundCarrierRepository soundCarrierRepository;
+    @EJB private ProductRepository productRepository;
+    @EJB private ArtistRepository artistRepository;
+    @EJB private SoundCarrierRepository soundCarrierRepository;
+
+    public ProductApplicationServiceImpl() {}
 
     public ProductApplicationServiceImpl(ProductRepository productRepository, ArtistRepository artistRepository, SoundCarrierRepository soundCarrierRepository) {
         this.productRepository = productRepository;

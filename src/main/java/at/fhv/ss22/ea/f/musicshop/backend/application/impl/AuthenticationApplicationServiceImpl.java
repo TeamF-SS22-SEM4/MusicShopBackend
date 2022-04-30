@@ -15,6 +15,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ import java.util.stream.Collectors;
 public class AuthenticationApplicationServiceImpl implements AuthenticationApplicationService {
     private static final Logger logger = LogManager.getLogger(AuthenticationApplicationServiceImpl.class);
 
-    private LdapClient ldapClient; // Needs to be a local stateless bean
-    private SessionRepository sessionRepository; // Needs to be a local stateless bean
-    private EmployeeRepository employeeRepository; // Needs to be a local stateless bean
+    @EJB private LdapClient ldapClient;
+    @EJB private SessionRepository sessionRepository;
+    @EJB private EmployeeRepository employeeRepository;
+
+    public AuthenticationApplicationServiceImpl() {}
 
     public AuthenticationApplicationServiceImpl(LdapClient ldapClient, SessionRepository sessionRepository, EmployeeRepository employeeRepository) {
         this.ldapClient = ldapClient;

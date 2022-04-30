@@ -1,10 +1,10 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateArtistRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HibernateArtistRepoTests {
 
-    private ArtistRepository artistRepository = InstanceProvider.getArtistRepository();
+    private ArtistRepository artistRepository = new HibernateArtistRepository();
 
     @Test
     void given_invalid_id_when_search_then_empty() {

@@ -3,8 +3,8 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
@@ -12,7 +12,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.lang.reflect.Field;
 import java.time.Duration;
@@ -25,15 +27,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthenticationApplicationTests {
 
-    private AuthenticationApplicationService authenticationApplicationService = InstanceProvider.getTestingAuthenticationApplicationService();
+    private AuthenticationApplicationService authenticationApplicationService;
 
-    private LdapClient ldapClient = InstanceProvider.getMockedLdapClient();
+    private LdapClient ldapClient = mock(LdapClient.class);
 
-    private EmployeeRepository employeeRepository = InstanceProvider.getMockedEmployeeRepository();
+    private EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
 
-    private SessionRepository sessionRepository = InstanceProvider.getMockedSessionRepository();
+    private SessionRepository sessionRepository = mock(SessionRepository.class);
+
+    @BeforeAll
+    void setup() {
+        this.authenticationApplicationService = new AuthenticationApplicationServiceImpl(ldapClient, sessionRepository, employeeRepository);
+    }
 
     @Test
     void basic_login() throws AuthenticationFailed {

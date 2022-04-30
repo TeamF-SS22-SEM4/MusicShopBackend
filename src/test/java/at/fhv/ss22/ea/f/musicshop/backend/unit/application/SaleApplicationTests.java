@@ -6,9 +6,9 @@ import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
@@ -22,10 +22,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -39,21 +36,23 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SaleApplicationTests {
 
-    private SaleApplicationService buyingApplicationService = InstanceProvider.getTestingSoundCarrierApplicationService();
-    private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getMockedSoundCarrierRepository();
-    private SaleRepository saleRepository = InstanceProvider.getMockedSaleRepository();
-    private ProductRepository productRepository = InstanceProvider.getMockedProductRepository();
-    private SessionRepository sessionRepository = InstanceProvider.getMockedSessionRepository();
-    private AuthenticationApplicationService authenticationApplicationService = InstanceProvider.getMockedAuthenticationApplicationService();
+    private SaleApplicationService saleApplicationService;
+
+    private SoundCarrierRepository soundCarrierRepository = mock(SoundCarrierRepository.class);
+    private SaleRepository saleRepository = mock(SaleRepository.class);
+    private ProductRepository productRepository = mock(ProductRepository.class);
+    private SessionRepository sessionRepository = mock(SessionRepository.class);
+    private AuthenticationApplicationService authenticationApplicationService = mock(AuthenticationApplicationService.class);
+    private ArtistRepository artistRepository = mock(ArtistRepository.class);
 
     @BeforeAll
     void setup() throws SessionExpired {
+        this.saleApplicationService = new SaleApplicationServiceImpl(sessionRepository, soundCarrierRepository, saleRepository, productRepository, artistRepository);
         when(authenticationApplicationService.hasRole(any(), any())).thenReturn(true);
     }
 
@@ -77,7 +76,7 @@ class SaleApplicationTests {
                             .withAmount(2)
                             .withCarrierId(carriers.get(0).getCarrierId().getUUID()).build();
 
-        buyingApplicationService.buy("placeholder", List.of(buyingDTO), "CASH", customerIdExpected);
+        saleApplicationService.buy("placeholder", List.of(buyingDTO), "CASH", customerIdExpected);
 
         //then
         assertEquals(3, carriers.get(0).getAmountInStore());
@@ -120,7 +119,7 @@ class SaleApplicationTests {
         when(saleRepository.saleByInvoiceNumber(invoiceNumberExpected)).thenReturn(Optional.of(sale));
 
         // when
-        Optional<SaleDTO> saleOptActual = buyingApplicationService.saleByInvoiceNumber("placeholder", invoiceNumberExpected);
+        Optional<SaleDTO> saleOptActual = saleApplicationService.saleByInvoiceNumber("placeholder", invoiceNumberExpected);
 
 
         // then
@@ -212,7 +211,7 @@ class SaleApplicationTests {
         when(soundCarrierRepository.soundCarrierById(soundCarrier3.getCarrierId())).thenReturn(Optional.of(soundCarrier3));
 
         // when
-        buyingApplicationService.refund("placeholder", invoiceNumberExpected, refundedSaleItems);
+        saleApplicationService.refund("placeholder", invoiceNumberExpected, refundedSaleItems);
 
 
         // then

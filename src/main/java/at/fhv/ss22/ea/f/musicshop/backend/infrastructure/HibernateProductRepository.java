@@ -10,6 +10,9 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Arrays;
@@ -18,13 +21,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Local(ProductRepository.class)
+@Stateless
 public class HibernateProductRepository implements ProductRepository {
 
     private EntityManager em;
+
     private FullTextEntityManager fullTextEM;
 
     public HibernateProductRepository() {
         this.em = EntityManagerUtil.getEntityManager();
+        this.setup();
+    }
+
+    @PostConstruct
+    void setup() {
         this.fullTextEM = Search.getFullTextEntityManager(this.em);
         try {
             this.fullTextEM.createIndexer().startAndWait();

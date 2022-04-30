@@ -15,6 +15,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.jms.JMSException;
@@ -26,11 +27,11 @@ import java.util.List;
 @Stateless
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
 
-    private JMSClient jmsClient;
+    @EJB private JMSClient jmsClient;
+    @EJB private EmployeeRepository employeeRepository;
+    @EJB private SessionRepository sessionRepository;
 
-    private EmployeeRepository employeeRepository; //needed to get subscribed list from employee
-
-    private SessionRepository sessionRepository;
+    public MessagingApplicationServiceImpl() {}
 
     public MessagingApplicationServiceImpl(JMSClient jmsClient, EmployeeRepository employeeRepository, SessionRepository sessionRepository) {
         this.jmsClient = jmsClient;

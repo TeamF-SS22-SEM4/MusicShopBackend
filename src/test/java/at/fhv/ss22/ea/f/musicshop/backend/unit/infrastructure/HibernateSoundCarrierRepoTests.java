@@ -1,6 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
@@ -10,6 +9,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSoundCarrierRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateSoundCarrierRepoTests {
 
-    private SoundCarrierRepository soundCarrierRepository = InstanceProvider.getSoundCarrierRepository();
+    private SoundCarrierRepository soundCarrierRepository = new HibernateSoundCarrierRepository();
 
     @Test
     void given_soundcarrier_when_searched_by_equal_but_not_same_id_then_carrier_found() {

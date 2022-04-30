@@ -6,9 +6,9 @@ import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
@@ -31,23 +31,24 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductApplicationTests {
 
-    private ProductApplicationService productApplicationService = InstanceProvider.getTestingProductApplicationService();
+    private ProductApplicationService productApplicationService;
 
-    private ProductRepository mockedProductRepository = InstanceProvider.getMockedProductRepository();
-    private SoundCarrierRepository mockedSoundCarrierRepo = InstanceProvider.getMockedSoundCarrierRepository();
-    private ArtistRepository mockedArtistRepo = InstanceProvider.getMockedArtistRepository();
-    private AuthenticationApplicationService authenticationApplicationService = InstanceProvider.getMockedAuthenticationApplicationService();
+    private ProductRepository mockedProductRepository = mock(ProductRepository.class);
+    private SoundCarrierRepository mockedSoundCarrierRepo = mock(SoundCarrierRepository.class);
+    private ArtistRepository mockedArtistRepo = mock(ArtistRepository.class);
+//    private AuthenticationApplicationService authenticationApplicationService = mock(AuthenticationApplicationService.class);
 
     @BeforeAll
-    void setup() throws SessionExpired {
-        when(authenticationApplicationService.hasRole(any(), any())).thenReturn(true);
+    void setup() {
+        this.productApplicationService = new ProductApplicationServiceImpl(mockedProductRepository, mockedArtistRepo, mockedSoundCarrierRepo);
+//        when(authenticationApplicationService.hasRole(any(), any())).thenReturn(true);
     }
 
     @Test

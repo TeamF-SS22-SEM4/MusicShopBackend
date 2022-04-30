@@ -1,6 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
@@ -9,6 +8,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateArtistRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateProductRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateProductRepoTests {
 
-    private ArtistRepository artistRepository = InstanceProvider.getArtistRepository();
+    private ArtistRepository artistRepository = new HibernateArtistRepository();
 
-    private ProductRepository productRepository = InstanceProvider.getProductRepository();
+    private ProductRepository productRepository = new HibernateProductRepository();
 
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {

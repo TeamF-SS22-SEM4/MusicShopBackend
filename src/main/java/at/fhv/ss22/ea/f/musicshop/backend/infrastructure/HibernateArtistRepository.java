@@ -4,12 +4,17 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
+@Local(ArtistRepository.class)
+@Stateless
 public class HibernateArtistRepository implements ArtistRepository {
 
+    //TODO for all repositories, how to inject em, so that it also is injected in tests
     private EntityManager em;
 
     public HibernateArtistRepository() {

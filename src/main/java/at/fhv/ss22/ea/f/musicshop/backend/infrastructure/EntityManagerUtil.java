@@ -21,6 +21,7 @@ public class EntityManagerUtil {
 
     private EntityManagerUtil() {
     }
+    //TODO remove and inject persistenceContext, make application services transactional (at least when changes in db happen)
 
     public static EntityManager getEntityManager() {
         if (ENTITY_MANAGER == null) {

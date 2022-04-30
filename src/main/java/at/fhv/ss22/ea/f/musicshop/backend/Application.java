@@ -1,6 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend;
 
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rmi.RMIServer;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,8 +14,7 @@ public class Application {
     private static final Logger logger = LogManager.getLogger(Application.class);
 
     public static void main(String[] args) {
-        RMIServer.startRMIServer();
-
+        //TODO remove this since main is never called in a javaEE server
         try {
             initialize();
         } catch (IOException e) {
@@ -25,6 +23,7 @@ public class Application {
 
     }
 
+    //TODO figure out how to execute this on startup
     public static void initialize() throws IOException {
         logger.info("Initializing database");
         // (Data 1/2) Prepare data from data.sql

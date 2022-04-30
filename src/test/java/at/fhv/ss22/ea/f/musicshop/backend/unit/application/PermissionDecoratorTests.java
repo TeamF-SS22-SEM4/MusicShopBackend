@@ -4,9 +4,9 @@ import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RoleCheckInvocationHandler;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
@@ -27,9 +27,9 @@ import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PermissionDecoratorTests {
 
-    private SaleApplicationService saleApplicationService = InstanceProvider.getMockedBuyingApplicationService();
-
-    private AuthenticationApplicationService authenticationApplicationService = InstanceProvider.getMockedAuthenticationApplicationService();
+    //Mocking impl, not interface because tests also check for the annotations defined in the implementation
+    private SaleApplicationServiceImpl saleApplicationService = mock(SaleApplicationServiceImpl.class);
+    private AuthenticationApplicationServiceImpl authenticationApplicationService = mock(AuthenticationApplicationServiceImpl.class);
 
     @Test
     void call_method_with_valid_permissions() throws SessionExpired, NoPermissionForOperation, CarrierNotAvailableException {

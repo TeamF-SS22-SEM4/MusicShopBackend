@@ -1,6 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
@@ -9,6 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSaleRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HibernateSaleRepoTests {
-    private SaleRepository saleRepository = InstanceProvider.getSaleRepository();
+
+    private SaleRepository saleRepository = new HibernateSaleRepository();
 
     @Test
     void given_product_when_searched_by_equal_but_not_same_id_then_product_found() {

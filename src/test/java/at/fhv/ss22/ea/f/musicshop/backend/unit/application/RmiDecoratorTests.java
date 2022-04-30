@@ -3,7 +3,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RemoteRmiCallDecorator;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
@@ -23,9 +22,10 @@ import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RmiDecoratorTests {
-    private CustomerApplicationService undecoratedService = InstanceProvider.getMockedCustomerApplicationService();
 
-    private CustomerRMIClient customerRMIClient = InstanceProvider.getMockedCustomerRmiClient();
+    private CustomerApplicationService undecoratedService = mock(CustomerApplicationService.class);
+
+    private CustomerRMIClient customerRMIClient = mock(CustomerRMIClient.class);
 
     private CustomerApplicationService decoratedService;
 

@@ -4,10 +4,14 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
+@Local(SaleRepository.class)
+@Stateless
 public class HibernateSaleRepository implements SaleRepository {
 
     private EntityManager em;

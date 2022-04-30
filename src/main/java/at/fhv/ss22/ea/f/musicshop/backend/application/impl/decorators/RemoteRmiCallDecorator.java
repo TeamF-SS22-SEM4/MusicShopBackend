@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.NoSuchObjectException;
 
+//TODO change to interceptors
 public class RemoteRmiCallDecorator implements InvocationHandler {
 
     private Object target;
