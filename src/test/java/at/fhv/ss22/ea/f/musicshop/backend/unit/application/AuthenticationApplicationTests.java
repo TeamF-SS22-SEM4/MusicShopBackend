@@ -86,4 +86,15 @@ class AuthenticationApplicationTests {
         assertThrows(SessionExpired.class, () -> authenticationApplicationService.hasRole(session.getSessionId(), UserRole.EMPLOYEE));
         verify(sessionRepository, times(1)).removeExpiredSessions();
     }
+    @Test
+    void when_invalid_credentials_then_login_fails() {
+        //given
+        String username = "fakeuser";
+        String password = "fakepassword";
+        when(ldapClient.credentialsValid(username, password)).thenReturn(false);
+
+        //when - then
+        assertThrows(AuthenticationFailed.class, () -> authenticationApplicationService.login(username, password));
+
+    }
 }
