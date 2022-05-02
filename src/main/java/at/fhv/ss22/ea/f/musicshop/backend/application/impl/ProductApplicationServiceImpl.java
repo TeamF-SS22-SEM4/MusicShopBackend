@@ -19,6 +19,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -41,8 +42,8 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public Optional<ProductDetailsDTO> productById(@SessionKey String sessionId, UUID productId) {
-        return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct);
+    public ProductDetailsDTO productById(@SessionKey String sessionId, UUID productId) {
+        return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

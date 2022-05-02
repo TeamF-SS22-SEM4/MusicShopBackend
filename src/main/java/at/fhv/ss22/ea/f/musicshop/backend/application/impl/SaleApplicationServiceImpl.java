@@ -80,8 +80,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public Optional<SaleDTO> saleByInvoiceNumber(@SessionKey String sessionId, String invoiceNumber) {
-        return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
+    public SaleDTO saleByInvoiceNumber(@SessionKey String sessionId, String invoiceNumber) {
+        return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

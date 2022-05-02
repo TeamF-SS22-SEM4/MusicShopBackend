@@ -7,13 +7,14 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 
 import javax.ejb.Local;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
 @Local
 public interface ProductApplicationService {
 
-    Optional<ProductDetailsDTO> productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation;
+    ProductDetailsDTO productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation, NoSuchElementException;
 
     List<ProductOverviewDTO> search(String sessionId, String queryString) throws SessionExpired, NoPermissionForOperation;
 

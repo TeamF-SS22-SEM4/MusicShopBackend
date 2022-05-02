@@ -9,7 +9,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import java.util.NoSuchElementException;
 
 @Remote(SaleSearchService.class)
 @Stateless
@@ -20,6 +19,6 @@ public class SaleSearchServiceImpl implements SaleSearchService {
 
     @Override
     public SaleDTO saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation {
-       return saleApplicationService.saleByInvoiceNumber(sessionId, invoiceNumber).orElseThrow(NoSuchElementException::new);
+       return saleApplicationService.saleByInvoiceNumber(sessionId, invoiceNumber);
     }
 }

@@ -119,12 +119,10 @@ class SaleApplicationTests {
         when(saleRepository.saleByInvoiceNumber(invoiceNumberExpected)).thenReturn(Optional.of(sale));
 
         // when
-        Optional<SaleDTO> saleOptActual = saleApplicationService.saleByInvoiceNumber("placeholder", invoiceNumberExpected);
+        SaleDTO saleActual = saleApplicationService.saleByInvoiceNumber("placeholder", invoiceNumberExpected);
 
 
         // then
-        assertTrue(saleOptActual.isPresent());
-        SaleDTO saleActual = saleOptActual.get();
         assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
         assertEquals(sale.getSaleItemList().size(), saleActual.getSaleItems().size());
         assertEquals(sale.getTotalPrice(), saleActual.getTotalPrice());

@@ -129,12 +129,10 @@ class ProductApplicationTests {
         when(mockedSoundCarrierRepo.soundCarriersByProductId(rosenrot.getProductId())).thenReturn(soundCarriers);
 
         //when
-        Optional<ProductDetailsDTO> productOpt = productApplicationService.productById("placeholder", rosenrot.getProductId().getUUID());
+        ProductDetailsDTO product = productApplicationService.productById("placeholder", rosenrot.getProductId().getUUID());
 
 
         //then
-        assertTrue(productOpt.isPresent());
-        ProductDetailsDTO product = productOpt.get();
         assertEquals(rosenrot.getProductId().getUUID(), product.getProductId());
         assertEquals(rosenrot.getName(), product.getName());
         assertEquals(rosenrot.getLabel(), product.getLabelName());

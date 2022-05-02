@@ -11,7 +11,6 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Remote(ProductSearchService.class)
@@ -22,7 +21,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 
     @Override
     public ProductDetailsDTO productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation {
-        return productApplicationService.productById(sessionId, productId).orElseThrow(NoSuchElementException::new);
+        return productApplicationService.productById(sessionId, productId);
     }
 
     @Override
