@@ -20,7 +20,7 @@ public class CustomerSearchService implements CustomerService {
     @EJB
     private CustomerApplicationService customerApplicationService;
 
-    // TODO: Maybe only ejb that has to throw RemoteException (Adding to interface in sharedlib)
+    //TODO error handling
     @Override
     public CustomerDTO customerById(String sessionId, UUID uuid) throws SessionExpired, NoPermissionForOperation {
         try {

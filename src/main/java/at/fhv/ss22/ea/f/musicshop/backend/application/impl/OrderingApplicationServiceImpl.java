@@ -19,6 +19,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -35,11 +36,15 @@ public class OrderingApplicationServiceImpl implements OrderingApplicationServic
     @EJB private ProductRepository productRepository;
     @EJB private SessionRepository sessionRepository;
 
+    @PostConstruct
+    void setup() {
+        this.jmsClient.createOrderSubscriber();
+    }
+
     public OrderingApplicationServiceImpl() {}
 
     public OrderingApplicationServiceImpl(JMSClient jmsClient, SoundCarrierRepository soundCarrierRepository, EmployeeRepository employeeRepository, ProductRepository productRepository, SessionRepository sessionRepository) {
         this.jmsClient = jmsClient;
-        jmsClient.createOrderSubscriber(); //TODO now move this to postConstruct. here or in client?
         this.soundCarrierRepository = soundCarrierRepository;
         this.employeeRepository = employeeRepository;
         this.productRepository = productRepository;

@@ -31,11 +31,6 @@ public class HibernateProductRepository implements ProductRepository {
 
     public HibernateProductRepository() {
         this.em = EntityManagerUtil.getEntityManager();
-        this.setup();
-    }
-
-    @PostConstruct
-    void setup() {
         this.fullTextEM = Search.getFullTextEntityManager(this.em);
         try {
             this.fullTextEM.createIndexer().startAndWait();

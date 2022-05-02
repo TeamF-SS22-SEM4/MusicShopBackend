@@ -14,7 +14,6 @@ import java.util.Optional;
 @Stateless
 public class HibernateArtistRepository implements ArtistRepository {
 
-    //TODO for all repositories, how to inject em, so that it also is injected in tests
     private EntityManager em;
 
     public HibernateArtistRepository() {

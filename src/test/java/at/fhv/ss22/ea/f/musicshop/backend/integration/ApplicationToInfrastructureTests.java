@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 //@ManagedBean
 class ApplicationToInfrastructureTests {
 
-    //TODO figure out
+    //TODO uncomment
 
 //    @Resource
     private SoundCarrierRepository soundCarrierRepository;

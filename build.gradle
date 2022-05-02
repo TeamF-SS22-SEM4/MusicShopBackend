@@ -58,7 +58,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'com.h2database:h2:2.1.210'
-    implementation "org.mockito:mockito-core:3.+" //TODO change to testImpl when InstanceProvider doesn't mock anymore
+    testImplementation "org.mockito:mockito-core:3.+"
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
