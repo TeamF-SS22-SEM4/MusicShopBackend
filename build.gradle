@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id 'war'
 }
 
 group 'at.fhv.ec'
@@ -53,8 +54,7 @@ dependencies {
     compileOnly('javax.ejb:javax.ejb-api:3.2.2')
     compileOnly('javax.enterprise:cdi-api:2.0.SP1')
 
-    testImplementation 'javax.ejb:javax.ejb-api:3.2.2'
-    testImplementation 'javax.enterprise:cdi-api:2.0.SP1'
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'com.h2database:h2:2.1.210'
