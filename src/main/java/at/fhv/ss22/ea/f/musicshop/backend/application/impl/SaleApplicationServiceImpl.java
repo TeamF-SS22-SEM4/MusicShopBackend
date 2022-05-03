@@ -1,10 +1,10 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
-import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
-import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
-import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
-import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.communication.dto.*;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
@@ -24,6 +24,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     @EJB private ArtistRepository artistRepository;
     @EJB private SessionRepository sessionRepository;
 
+    @EJB private CustomerApplicationService customerApplicationService;
+
     public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
@@ -46,6 +49,22 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.artistRepository = artistRepository;
+    }
+
+
+    @Override
+    @RequiresRole(UserRole.EMPLOYEE)
+    public String buyAsCustomer(@SessionKey String sessionId, List<SoundCarrierAmountDTO> soundCarriers,
+                                String paymentMethod, UUID customerId, String creditCardNumber) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException {
+        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
+        // TODO: Get customerId/userId from session
+        if(paymentMethod.equals("Credit Card")) {
+            // TODO: Check Credit Card Number
+            CustomerDTO customer = customerApplicationService.customerById(sessionId, customerId);
+
+        }
+
+        return buy(sessionId, soundCarriers, paymentMethod, customerId);
     }
 
     @Override
@@ -69,9 +88,10 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             throw new CarrierNotAvailableException(invalidCarriers);
         }
 
+        // Maybe check Sessionid earlier before adding saleItems
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         long currentAmountOfSales = saleRepository.amountOfSales();
-        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getEmployeeId(), paymentMethod, new CustomerId(customerId));
+        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getUserId(), paymentMethod, new CustomerId(customerId));
         saleRepository.add(sale);
         EntityManagerUtil.commit();
 

@@ -1,8 +1,8 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +12,12 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EmployeeTests {
+class UserTests {
 
     @Test
     void employee_has_roles() {
         UUID employeeIdUUID = UUID.randomUUID();
-        EmployeeId employeeIdExpected = new EmployeeId(employeeIdUUID);
+        UserId userIdExpected = new UserId(employeeIdUUID);
         String usernameExpected = "john42";
         String firstnameExpected = "John";
         String lastNameExpected = "Doe";
@@ -30,8 +30,8 @@ class EmployeeTests {
         };
 
         // when
-        Employee employee = Employee.create(
-                employeeIdExpected,
+        User user = User.create(
+                userIdExpected,
                 usernameExpected,
                 firstnameExpected,
                 lastNameExpected,
@@ -40,8 +40,8 @@ class EmployeeTests {
         );
 
         //then
-        assertTrue(employee.hasRole(UserRole.OPERATOR));
-        assertFalse(employee.hasRole(UserRole.ADMIN));
+        assertTrue(user.hasRole(UserRole.OPERATOR));
+        assertFalse(user.hasRole(UserRole.ADMIN));
     }
 
 
@@ -49,7 +49,7 @@ class EmployeeTests {
     void given_employeedetails_when_creating_employee_then_details_equals() {
         // given
         UUID employeeIdUUID = UUID.randomUUID();
-        EmployeeId employeeIdExpected = new EmployeeId(employeeIdUUID);
+        UserId userIdExpected = new UserId(employeeIdUUID);
         String usernameExpected = "john42";
         String firstnameExpected = "John";
         String lastNameExpected = "Doe";
@@ -62,8 +62,8 @@ class EmployeeTests {
         };
 
         // when
-        Employee employee = Employee.create(
-                employeeIdExpected,
+        User user = User.create(
+                userIdExpected,
                 usernameExpected,
                 firstnameExpected,
                 lastNameExpected,
@@ -72,17 +72,17 @@ class EmployeeTests {
         );
 
         // then
-        assertEquals(employeeIdExpected, employee.getEmployeeId());
-        assertEquals(employeeIdUUID, employee.getEmployeeId().getUUID());
-        assertEquals(usernameExpected, employee.getUsername());
-        assertEquals(firstnameExpected, employee.getFirstname());
-        assertEquals(lastNameExpected, employee.getLastname());
-        assertEquals(salesExpected.size(), employee.getSales().size());
+        assertEquals(userIdExpected, user.getUserId());
+        assertEquals(employeeIdUUID, user.getUserId().getUUID());
+        assertEquals(usernameExpected, user.getUsername());
+        assertEquals(firstnameExpected, user.getFirstname());
+        assertEquals(lastNameExpected, user.getLastname());
+        assertEquals(salesExpected.size(), user.getSales().size());
 
         // Check content of lists
         for(int i = 0; i < salesExpected.size(); i++) {
-            assertEquals(salesExpected.get(i), employee.getSales().get(i));
-            assertEquals(salesExpected.get(i).getUUID(), employee.getSales().get(i).getUUID());
+            assertEquals(salesExpected.get(i), user.getSales().get(i));
+            assertEquals(salesExpected.get(i).getUUID(), user.getSales().get(i).getUUID());
         }
     }
 }

@@ -11,7 +11,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song;
@@ -69,7 +69,7 @@ class SaleApplicationTests {
         for (SoundCarrier s : carriers) {
             when(soundCarrierRepository.soundCarrierById(s.getCarrierId())).thenReturn(Optional.of(s));
         }
-        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(Session.newForEmployee(new EmployeeId(UUID.randomUUID()))));
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(Session.newForUser(new UserId(UUID.randomUUID()))));
 
         //when
         SoundCarrierAmountDTO buyingDTO = SoundCarrierAmountDTO.builder()
@@ -186,7 +186,7 @@ class SaleApplicationTests {
                 "Cash",
                 new CustomerId(UUID.randomUUID()),
                 saleItems,
-                new EmployeeId(UUID.randomUUID())
+                new UserId(UUID.randomUUID())
         );
 
         List<RefundedSaleItemDTO> refundedSaleItems = new ArrayList<>();

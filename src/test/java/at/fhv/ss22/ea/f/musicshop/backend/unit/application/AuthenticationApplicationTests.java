@@ -7,10 +7,10 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicat
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,21 +34,21 @@ class AuthenticationApplicationTests {
 
     private LdapClient ldapClient = mock(LdapClient.class);
 
-    private EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
+    private UserRepository userRepository = mock(UserRepository.class);
 
     private SessionRepository sessionRepository = mock(SessionRepository.class);
 
     @BeforeAll
     void setup() {
-        this.authenticationApplicationService = new AuthenticationApplicationServiceImpl(ldapClient, sessionRepository, employeeRepository);
+        this.authenticationApplicationService = new AuthenticationApplicationServiceImpl(ldapClient, sessionRepository, userRepository);
     }
 
     @Test
     void basic_login() throws AuthenticationFailed {
         //given
-        Employee employee = Employee.create(new EmployeeId(UUID.randomUUID()), "userA", "max", "mustermann", List.of(UserRole.EMPLOYEE, UserRole.OPERATOR),List.of());
+        User user = User.create(new UserId(UUID.randomUUID()), "userA", "max", "mustermann", List.of(UserRole.EMPLOYEE, UserRole.OPERATOR),List.of());
         when(ldapClient.credentialsValid(any(), any())).thenReturn(true);
-        when(employeeRepository.employeeByUserName(anyString())).thenReturn(Optional.of(employee));
+        when(userRepository.userByUserName(anyString())).thenReturn(Optional.of(user));
 
         //when
         LoginResultDTO loginResultDTO = authenticationApplicationService.login("lukas1", "password");
@@ -60,17 +60,17 @@ class AuthenticationApplicationTests {
     @Test
     void roles_of_valid_session() throws SessionExpired {
         //given
-        Employee employee = Employee.create(
-                new EmployeeId(UUID.randomUUID()),
+        User user = User.create(
+                new UserId(UUID.randomUUID()),
                 "buttsoup-barnes",
                 "Buut",
                 "Soup",
                 List.of(UserRole.EMPLOYEE),
                 List.of()
         );
-        Session session = Session.newForEmployee(employee.getEmployeeId());
+        Session session = Session.newForUser(user.getUserId());
         when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
-        when(employeeRepository.employeeById(employee.getEmployeeId())).thenReturn(Optional.of(employee));
+        when(userRepository.userById(user.getUserId())).thenReturn(Optional.of(user));
 
         //when
         boolean resultOperator = authenticationApplicationService.hasRole(session.getSessionId(), UserRole.OPERATOR);
@@ -83,7 +83,7 @@ class AuthenticationApplicationTests {
 
     @Test
     void roles_of_invalid_session() throws NoSuchFieldException, IllegalAccessException {
-        Session session = Session.newForEmployee(new EmployeeId(UUID.randomUUID()));
+        Session session = Session.newForUser(new UserId(UUID.randomUUID()));
         //make expired
         Field validUntil = Session.class.getDeclaredField("validUntil");
         validUntil.setAccessible(true);

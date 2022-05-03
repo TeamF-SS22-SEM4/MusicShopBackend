@@ -1,4 +1,4 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.user;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import org.hibernate.annotations.Type;
@@ -10,21 +10,21 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Embeddable
-public class EmployeeId implements Serializable {
+public class UserId implements Serializable {
     @Column
     @Type(type = "uuid-char")
-    private UUID employeeId;
+    private UUID userId;
 
-    public EmployeeId(UUID id) {
-        this.employeeId = id;
+    public UserId(UUID id) {
+        this.userId = id;
     }
 
     @Generated
-    protected EmployeeId() {
+    protected UserId() {
     }
 
     public UUID getUUID() {
-        return employeeId;
+        return userId;
     }
 
     @Generated
@@ -32,13 +32,13 @@ public class EmployeeId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EmployeeId that = (EmployeeId) o;
-        return Objects.equals(employeeId, that.employeeId);
+        UserId that = (UserId) o;
+        return Objects.equals(userId, that.userId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId);
+        return Objects.hash(userId);
     }
 }

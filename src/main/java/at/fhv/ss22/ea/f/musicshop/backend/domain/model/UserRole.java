@@ -3,8 +3,9 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model;
 public enum UserRole {
     EMPLOYEE("Employee"),
     OPERATOR("Operator"),
-    ADMIN("Admin");
-//    Customer role needed?
+    ADMIN("Admin"),
+
+    CUSTOMER("Customer");
 
     private String niceName;
 
@@ -24,6 +25,8 @@ public enum UserRole {
                 return OPERATOR;
             case "admin":
                 return ADMIN;
+            case "customer":
+                return CUSTOMER;
             default:
                 throw new IllegalStateException("Unknown rolename");
         }

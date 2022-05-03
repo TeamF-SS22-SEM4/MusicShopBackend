@@ -6,10 +6,10 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,14 +29,14 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
     @EJB private LdapClient ldapClient;
     @EJB private SessionRepository sessionRepository;
-    @EJB private EmployeeRepository employeeRepository;
+    @EJB private UserRepository userRepository;
 
     public AuthenticationApplicationServiceImpl() {}
 
-    public AuthenticationApplicationServiceImpl(LdapClient ldapClient, SessionRepository sessionRepository, EmployeeRepository employeeRepository) {
+    public AuthenticationApplicationServiceImpl(LdapClient ldapClient, SessionRepository sessionRepository, UserRepository userRepository) {
         this.ldapClient = ldapClient;
         this.sessionRepository = sessionRepository;
-        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -46,9 +45,9 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
             logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
             throw new AuthenticationFailed();
         }
-        Optional<Employee> opt = employeeRepository.employeeByUserName(username);
-        Employee employee = opt.orElseThrow(AuthenticationFailed::new);
-        Session session = Session.newForEmployee(employee.getEmployeeId());
+        Optional<User> opt = userRepository.userByUserName(username);
+        User user = opt.orElseThrow(AuthenticationFailed::new);
+        Session session = Session.newForUser(user.getUserId());
         EntityManagerUtil.beginTransaction();
 
         sessionRepository.add(session);
@@ -58,9 +57,9 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
-                .withEmployeeId(employee.getEmployeeId().getUUID().toString())
-                .withRoles(employee.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
-                .withTopicNames(new ArrayList<>(employee.getSubscribedTopics()))
+                .withEmployeeId(user.getUserId().getUUID().toString())
+                .withRoles(user.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
+                .withTopicNames(new ArrayList<>(user.getSubscribedTopics()))
                 .build();
     }
 
@@ -74,7 +73,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         EntityManagerUtil.beginTransaction();
         session.refreshDuration();
         EntityManagerUtil.commit();
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.hasRole(userRole);
+        User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
+        return user.hasRole(userRole);
     }
 }

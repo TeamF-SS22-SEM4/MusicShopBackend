@@ -1,4 +1,4 @@
-package at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee;
+package at.fhv.ss22.ea.f.musicshop.backend.domain.model.user;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Employee {
+@Table(name = "`user`")
+public class User {
     @EmbeddedId
-    private EmployeeId employeeId;
+    private UserId userId;
     private String username;
     private String firstname;
     private String lastname;
@@ -28,8 +29,8 @@ public class Employee {
     @ElementCollection
     private List<String> subscribedTopics;
 
-    public static Employee create(EmployeeId aEmployeeId, String aUsername, String aFirstname, String aLastname, List<UserRole> roles,List<SaleId> aSalesList) {
-        return new Employee(aEmployeeId, aUsername, aFirstname, aLastname, roles, aSalesList);
+    public static User create(UserId aUserId, String aUsername, String aFirstname, String aLastname, List<UserRole> roles, List<SaleId> aSalesList) {
+        return new User(aUserId, aUsername, aFirstname, aLastname, roles, aSalesList);
     }
 
     public boolean hasRole(UserRole role) {
@@ -46,11 +47,11 @@ public class Employee {
     }
 
     @Generated
-    protected Employee() {
+    protected User() {
     }
 
-    private Employee(EmployeeId employeeId, String username, String firstname, String lastname, List<UserRole> roles, List<SaleId> sales) {
-        this.employeeId = employeeId;
+    private User(UserId userId, String username, String firstname, String lastname, List<UserRole> roles, List<SaleId> sales) {
+        this.userId = userId;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -60,19 +61,12 @@ public class Employee {
         this.lastViewed = LocalDateTime.MIN;
     }
 
-    public void subscribeTo(String topicName) {
-        this.subscribedTopics.add(topicName);
-    }
-    public boolean unsubscribeFrom(String topicName) {
-        return this.subscribedTopics.remove(topicName);
-    }
-
     public List<String> getSubscribedTopics() {
         return Collections.unmodifiableList(subscribedTopics);
     }
 
-    public EmployeeId getEmployeeId() {
-        return employeeId;
+    public UserId getUserId() {
+        return userId;
     }
 
     public String getUsername() {
@@ -104,13 +98,13 @@ public class Employee {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(employeeId, employee.employeeId);
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId);
+        return Objects.hash(userId);
     }
 }

@@ -1,7 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
@@ -104,7 +104,7 @@ class HibernateSaleRepoTests {
                         LocalDateTime.now(),
                         "CASH" , null,
                         List.of(),
-                        new EmployeeId(UUID.randomUUID())
+                        new UserId(UUID.randomUUID())
                 ),
                 Sale.create(
                         new SaleId(UUID.randomUUID()),
@@ -112,7 +112,7 @@ class HibernateSaleRepoTests {
                         LocalDateTime.now(),
                         "CASH" , null,
                         List.of(),
-                        new EmployeeId(UUID.randomUUID())
+                        new UserId(UUID.randomUUID())
                 ),
                 Sale.create(
                         new SaleId(UUID.randomUUID()),
@@ -120,7 +120,7 @@ class HibernateSaleRepoTests {
                         LocalDateTime.now(),
                         "CASH" , null,
                         List.of(),
-                        new EmployeeId(UUID.randomUUID())
+                        new UserId(UUID.randomUUID())
                 )
         );
 
