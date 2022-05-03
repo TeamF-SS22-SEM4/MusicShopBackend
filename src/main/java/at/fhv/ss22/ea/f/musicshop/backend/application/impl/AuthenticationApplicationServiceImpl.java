@@ -52,6 +52,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
                 .withEmployeeId(employee.getEmployeeId().getUUID().toString())
+                .withUsername(employee.getUsername())
                 .withRoles(employee.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
                 .withTopicNames(new ArrayList<>(employee.getSubscribedTopics()))
                 .build();
