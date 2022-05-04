@@ -13,9 +13,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.List;
 
-@Path("/order")
+@Path("/orders")
 public class BuyingController {
     @EJB
     private SaleApplicationService saleApplicationService;
@@ -23,11 +24,11 @@ public class BuyingController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response order(@HeaderParam("session-id") String sessionId, @RequestBody List<SoundCarrierAmountDTO> orderItems, @RequestBody PaymentInformation paymentInformation) {
+    public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody SoundCarrierAmountDTO[] orderItems, @RequestBody PaymentInformation paymentInformation) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(
                     sessionId,
-                    orderItems,
+                    Arrays.asList(orderItems),
                     paymentInformation.getPaymentMethod(),
                     paymentInformation.getCreditCardType(),
                     paymentInformation.getCreditCardNumber(),
@@ -36,13 +37,13 @@ public class BuyingController {
 
             return Response.ok().entity(saleNumber).build();
         } catch (SessionExpired e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        } catch (NoPermissionForOperation e) {
             return Response.status(Response.Status.FORBIDDEN).build();
+        } catch (NoPermissionForOperation e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         } catch (RemoteException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (CarrierNotAvailableException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 }
