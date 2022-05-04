@@ -23,10 +23,13 @@ public class ProductController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    //TODO maybe extract sessionId (also from application)
     public Response productById(@HeaderParam("session-id") String sessionId, @PathParam("id") String productId) {
         try {
             ProductDetailsDTO product = productApplicationService.productById(sessionId, UUID.fromString(productId));
             return Response.ok().entity(product).build();
+
+            //TODO move all catches from controller to single location
         } catch (SessionExpired e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         } catch (NoPermissionForOperation e) {
