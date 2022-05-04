@@ -30,12 +30,8 @@ public class ProductController {
             return Response.ok().entity(product).build();
 
             //TODO move all catches from controller to single location
-        } catch (SessionExpired e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        } catch (NoPermissionForOperation e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        } catch (NoSuchElementException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + productId + " not found").build();
+        } catch (SessionExpired | NoPermissionForOperation | NoSuchElementException e) {
+            return ExceptionHandler.handleException(e);
         }
     }
 
@@ -46,10 +42,8 @@ public class ProductController {
         try {
             List<ProductOverviewDTO> products = productApplicationService.search(sessionId, query);
             return Response.ok().entity(products).build();
-        } catch (SessionExpired e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        } catch (NoPermissionForOperation e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        } catch (SessionExpired | NoPermissionForOperation e) {
+            return ExceptionHandler.handleException(e);
         }
     }
 }

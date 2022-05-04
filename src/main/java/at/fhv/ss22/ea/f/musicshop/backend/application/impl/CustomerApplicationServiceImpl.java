@@ -28,20 +28,20 @@ public class CustomerApplicationServiceImpl implements CustomerApplicationServic
     }
 
     @Override
-    @RequiresRole(UserRole.EMPLOYEE)
+    //@RequiresRole(UserRole.EMPLOYEE) TODO: Add Customer Role
     public CustomerDTO customerById(@SessionKey String sessionId, UUID uuid) throws RemoteException {
         return client.getCustomerInternalService().customerById(uuid);
     }
 
     @Override
-    @RequiresRole(UserRole.EMPLOYEE)
+    //@RequiresRole(UserRole.EMPLOYEE)
     public List<CustomerDTO> customerListByIds(@SessionKey String sessionId, List<UUID> uuidList) throws RemoteException {
         return client.getCustomerInternalService().customerListByIds(uuidList);
 
     }
 
     @Override
-    @RequiresRole(UserRole.EMPLOYEE)
+    //@RequiresRole(UserRole.EMPLOYEE)
     public List<CustomerDTO> search(@SessionKey String sessionId, String query) throws RemoteException, SessionExpired {
         return client.getCustomerInternalService().search(query);
     }

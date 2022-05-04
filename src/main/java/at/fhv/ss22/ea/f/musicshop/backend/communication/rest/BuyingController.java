@@ -7,6 +7,7 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.PaymentInformation;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Purchase;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import javax.ejb.EJB;
@@ -25,26 +26,20 @@ public class BuyingController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody OrderItem[] orderItems, @RequestBody PaymentInformation paymentInformation) {
+    public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(
                     sessionId,
-                    Arrays.asList(orderItems),
-                    paymentInformation.getPaymentMethod(),
-                    paymentInformation.getCreditCardType(),
-                    paymentInformation.getCreditCardNumber(),
-                    paymentInformation.getCvc()
+                    Arrays.asList(purchase.getOrderItems()),
+                    purchase.getPaymentInformation().getPaymentMethod(),
+                    purchase.getPaymentInformation().getCreditCardType(),
+                    purchase.getPaymentInformation().getCreditCardNumber(),
+                    purchase.getPaymentInformation().getCvc()
             );
 
             return Response.ok().entity(saleNumber).build();
-        } catch (SessionExpired e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        } catch (NoPermissionForOperation e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        } catch (RemoteException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        } catch (CarrierNotAvailableException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (SessionExpired | CarrierNotAvailableException | RemoteException | NoPermissionForOperation e) {
+            return ExceptionHandler.handleException(e);
         }
     }
 }

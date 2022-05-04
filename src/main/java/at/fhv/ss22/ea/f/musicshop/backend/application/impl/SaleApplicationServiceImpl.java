@@ -105,7 +105,6 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             throw new CarrierNotAvailableException(invalidCarriers);
         }
 
-        // Maybe check Sessionid earlier before adding saleItems
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         long currentAmountOfSales = saleRepository.amountOfSales();
         Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getUserId(), paymentMethod, new CustomerId(customerId));
