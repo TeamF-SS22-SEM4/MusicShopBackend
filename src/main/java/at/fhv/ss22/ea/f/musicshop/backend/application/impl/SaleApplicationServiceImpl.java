@@ -8,6 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationSer
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -53,8 +54,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
 
     @Override
-    @RequiresRole(UserRole.CUSTOMER)
-    public String buyAsCustomer(@SessionKey String sessionId, List<SoundCarrierAmountDTO> soundCarriers,
+    //@RequiresRole(UserRole.CUSTOMER)
+    public String buyAsCustomer(@SessionKey String sessionId, List<OrderItem> orderItems,
                                 String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException, UnsupportedOperationException {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         UUID customerId = session.getUserId().getUUID();
@@ -70,11 +71,21 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             }
         }
 
+        List<SoundCarrierAmountDTO> soundCarriers = new ArrayList<>();
+        orderItems.forEach(orderItem -> {
+            soundCarriers.add(
+                    SoundCarrierAmountDTO.builder()
+                            .withCarrierId(orderItem.getCarrierId())
+                            .withAmount(orderItem.getAmount())
+                            .build()
+            );
+        });
+
         return buy(sessionId, soundCarriers, paymentMethod, customerId);
     }
 
     @Override
-    @RequiresRole(UserRole.EMPLOYEE)
+    //@RequiresRole(UserRole.EMPLOYEE) TODO: Add Customer Role
     public String buy(@SessionKey String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
         List<SaleItem> saleItems = new LinkedList<>();
