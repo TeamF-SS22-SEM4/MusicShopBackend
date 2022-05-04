@@ -68,7 +68,7 @@ class SaleTests {
         assertEquals(paymentMethodExpected, sale.getPaymentMethod());
         assertEquals(customerIdExpected, sale.getCustomerOpt());
         assertEquals(saleItemsExpected.size(), sale.getSaleItemList().size());
-        assertEquals(performingEmployeeExpected, sale.getPerformingEmployee());
+        assertEquals(performingEmployeeExpected, sale.getPerformingUser());
 
         // Check content of lists
         for(int i = 0; i < saleItemsExpected.size(); i++) {

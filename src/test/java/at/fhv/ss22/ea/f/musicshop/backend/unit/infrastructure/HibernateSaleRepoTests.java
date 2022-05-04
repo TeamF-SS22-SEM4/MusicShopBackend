@@ -40,7 +40,7 @@ class HibernateSaleRepoTests {
         assertEquals(sale.getInvoiceNumber(), s.getInvoiceNumber());
         assertEquals(sale.getPaymentMethod(), s.getPaymentMethod());
         assertEquals(sale.getTimeOfSale(), s.getTimeOfSale());
-        assertEquals(sale.getPerformingEmployee(), s.getPerformingEmployee());
+        assertEquals(sale.getPerformingUser(), s.getPerformingUser());
 
         EntityManagerUtil.rollback();
     }
@@ -64,7 +64,7 @@ class HibernateSaleRepoTests {
         assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
         assertEquals(sale.getPaymentMethod(), saleActual.getPaymentMethod());
         assertEquals(sale.getTimeOfSale(), saleActual.getTimeOfSale());
-        assertEquals(sale.getPerformingEmployee(), saleActual.getPerformingEmployee());
+        assertEquals(sale.getPerformingUser(), saleActual.getPerformingUser());
 
         EntityManagerUtil.rollback();
     }

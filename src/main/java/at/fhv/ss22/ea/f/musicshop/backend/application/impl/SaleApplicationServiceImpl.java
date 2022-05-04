@@ -53,15 +53,21 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
 
     @Override
-    @RequiresRole(UserRole.EMPLOYEE)
+    @RequiresRole(UserRole.CUSTOMER)
     public String buyAsCustomer(@SessionKey String sessionId, List<SoundCarrierAmountDTO> soundCarriers,
-                                String paymentMethod, UUID customerId, String creditCardNumber) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException {
+                                String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException, UnsupportedOperationException {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
-        // TODO: Get customerId/userId from session
+        UUID customerId = session.getUserId().getUUID();
         if(paymentMethod.equals("Credit Card")) {
-            // TODO: Check Credit Card Number
+            // TODO: Add credit card information to DTO
             CustomerDTO customer = customerApplicationService.customerById(sessionId, customerId);
 
+            if(!customer.getCreditCardType().equals(creditCardType) ||
+                    !customer.getCreditCardNumber().equals(creditCardNumber) ||
+                    !customer.getCvc().equals(cvc)) {
+                // Which Exceptiontype?
+                throw new UnsupportedOperationException("Credit card information invalid");
+            }
         }
 
         return buy(sessionId, soundCarriers, paymentMethod, customerId);

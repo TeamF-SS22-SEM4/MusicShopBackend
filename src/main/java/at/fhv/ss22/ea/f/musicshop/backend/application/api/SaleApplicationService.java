@@ -17,7 +17,7 @@ import java.util.UUID;
 @Local
 public interface SaleApplicationService {
 
-    String buyAsCustomer(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId, String creditCardNumber) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException;
+    String buyAsCustomer(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException;
     String buy(String sessionId, List<SoundCarrierAmountDTO> soundCarriers, String paymentMethod, UUID customerId) throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation;
 
     SaleDTO saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation, NoSuchElementException;
