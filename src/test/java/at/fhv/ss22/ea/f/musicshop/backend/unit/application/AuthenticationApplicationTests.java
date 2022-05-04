@@ -47,11 +47,11 @@ class AuthenticationApplicationTests {
     void basic_login() throws AuthenticationFailed {
         //given
         User user = User.create(new UserId(UUID.randomUUID()), "userA", "max", "mustermann", List.of(UserRole.EMPLOYEE, UserRole.OPERATOR),List.of());
-        when(ldapClient.credentialsValid(any(), any())).thenReturn(true);
+        when(ldapClient.employeeCredentialsValid(any(), any())).thenReturn(true);
         when(userRepository.userByUserName(anyString())).thenReturn(Optional.of(user));
 
         //when
-        LoginResultDTO loginResultDTO = authenticationApplicationService.login("lukas1", "password");
+        LoginResultDTO loginResultDTO = authenticationApplicationService.employeeLogin("lukas1", "password");
 
         //then
         verify(sessionRepository, times(1)).add(any());

@@ -17,7 +17,8 @@ public interface AuthenticationApplicationService {
      * @return The created Session-Id and a List of the roles the user has.
      * @throws AuthenticationFailed If the login fails for whatever reason.
      */
-    LoginResultDTO login(String username, String password) throws AuthenticationFailed;
+    LoginResultDTO employeeLogin(String username, String password) throws AuthenticationFailed;
+    LoginResultDTO customerLogin(String username, String password) throws AuthenticationFailed;
 
     /**Do <b>NOT</b> expose to communication!
      *

@@ -18,6 +18,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public LoginResultDTO login(String username, String password) throws AuthenticationFailed {
-        return this.authenticationApplicationService.login(username, password);
+        return this.authenticationApplicationService.employeeLogin(username, password);
     }
 }

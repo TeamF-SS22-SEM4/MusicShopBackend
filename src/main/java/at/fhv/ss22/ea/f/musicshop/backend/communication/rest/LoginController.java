@@ -25,7 +25,7 @@ public class LoginController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(@RequestBody Credentials credentials) {
         try {
-            LoginResultDTO loginResult = authenticationApplicationService.login(credentials.username, credentials.password);
+            LoginResultDTO loginResult = authenticationApplicationService.customerLogin(credentials.username, credentials.password);
             return Response.ok().entity(loginResult).build();
         } catch (AuthenticationFailed e) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Credentials are invalid").build();

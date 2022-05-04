@@ -40,11 +40,26 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
     }
 
     @Override
-    public LoginResultDTO login(String username, String password) throws AuthenticationFailed {
-        if (!ldapClient.credentialsValid(username, password)) {
+    public LoginResultDTO employeeLogin(String username, String password) throws AuthenticationFailed {
+        if (!ldapClient.employeeCredentialsValid(username, password)) {
             logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
             throw new AuthenticationFailed();
         }
+
+        return login(username, password);
+    }
+
+    @Override
+    public LoginResultDTO customerLogin(String username, String password) throws AuthenticationFailed {
+        if (!ldapClient.customerCredentialsValid(username, password)) {
+            logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
+            throw new AuthenticationFailed();
+        }
+
+        return login(username, password);
+    }
+
+    private LoginResultDTO login(String username, String password) throws AuthenticationFailed {
         Optional<User> opt = userRepository.userByUserName(username);
         User user = opt.orElseThrow(AuthenticationFailed::new);
         Session session = Session.newForUser(user.getUserId());
