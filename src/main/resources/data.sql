@@ -1,4 +1,4 @@
-insert into user (userid, firstname, lastname, username, lastviewed) values
+insert into users (userid, firstname, lastname, username, lastviewed) values
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'Dario', 'Birbamer', 'dbi6423', '2000-01-01'),
 ('22d0368b-89e4-49a8-88c8-5d933f704010', 'Dominik', 'Kühne', 'dku7033', '2000-01-01'),
 ('e586526c-c0f8-4b77-9bac-c6fc1d96a2c3', 'Johannes', 'Moosbrugger', 'jmo8620', '2000-01-01'),
@@ -9,7 +9,7 @@ insert into user (userid, firstname, lastname, username, lastviewed) values
 ('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'Basic', 'Employee', 'user', '2000-01-01'),
 ('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Basic', 'Operator', 'operator', '2000-01-01');
 
-insert into employee_subscribedtopics (employee_employeeid, subscribedtopics) values
+insert into user_subscribedtopics (user_userid, subscribedtopics) values
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'Pop'),
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'Metal'),
 ('b3044bcb-10ac-4420-a626-071d8247f81e', 'Rock'),
@@ -39,7 +39,7 @@ insert into employee_subscribedtopics (employee_employeeid, subscribedtopics) va
 ('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'Grunge');
 
 
-insert into employee_roles (employee_employeeid, roles) values
+insert into user_roles (user_userid, roles) values
 ('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'EMPLOYEE'),
 ('81f3f082-772c-44c3-8ca6-a64d1bfc8978', 'OPERATOR'),
 ('81f3f082-772c-44c3-8ca6-a64d1bfc8977', 'EMPLOYEE'),

@@ -28,7 +28,7 @@ public class LoginController {
             LoginResultDTO loginResult = authenticationApplicationService.login(credentials.username, credentials.password);
             return Response.ok().entity(loginResult).build();
         } catch (AuthenticationFailed e) {
-            return Response.status(400).entity("Credentials are invalid").build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Credentials are invalid").build();
         }
     }
 }
