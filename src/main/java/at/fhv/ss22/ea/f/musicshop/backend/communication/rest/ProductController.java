@@ -28,11 +28,11 @@ public class ProductController {
             ProductDetailsDTO product = productApplicationService.productById(sessionId, UUID.fromString(productId));
             return Response.ok().entity(product).build();
         } catch (SessionExpired e) {
-            return Response.status(401).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         } catch (NoPermissionForOperation e) {
-            return Response.status(403).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         } catch (NoSuchElementException e) {
-            return Response.status(400).entity("Product with id " + productId + " not found").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Product with id " + productId + " not found").build();
         }
     }
 
@@ -44,9 +44,9 @@ public class ProductController {
             List<ProductOverviewDTO> products = productApplicationService.search(sessionId, query);
             return Response.ok().entity(products).build();
         } catch (SessionExpired e) {
-            return Response.status(401).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         } catch (NoPermissionForOperation e) {
-            return Response.status(403).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 }
