@@ -20,12 +20,12 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     private ProductApplicationService productApplicationService;
 
     @Override
-    public ProductDetailsDTO productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation {
-        return productApplicationService.productById(sessionId, productId);
+    public ProductDetailsDTO productById(UUID productId) {
+        return productApplicationService.productById(productId);
     }
 
     @Override
-    public List<ProductOverviewDTO> fullTextSearch(String sessionId, String query) throws SessionExpired, NoPermissionForOperation {
-        return productApplicationService.search(sessionId, query);
+    public List<ProductOverviewDTO> fullTextSearch(String query) {
+        return productApplicationService.search(query);
     }
 }

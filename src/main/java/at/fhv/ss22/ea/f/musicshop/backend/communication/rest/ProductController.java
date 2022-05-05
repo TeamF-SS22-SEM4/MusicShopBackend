@@ -30,17 +30,14 @@ public class ProductController {
     @APIResponses({
             @APIResponse(responseCode = "403", description = "Not Authenticated"),
             @APIResponse(responseCode = "401", description = "Unauthorized for operation"),
-            @APIResponse(responseCode = "404", description = "unknown product id")
+            @APIResponse(responseCode = "404", description = "Unknown product id")
     })
     @APIResponseSchema(value = ProductDetailsDTO.class, responseCode = "200")
     @Operation(operationId = "getProduct")
-    //TODO maybe extract sessionId (also from application)
-    public Response productById(@HeaderParam("session-id") String sessionId, @PathParam("id") String productId) {
+    public Response productById(@PathParam("id") String productId) {
         try {
-            ProductDetailsDTO product = productApplicationService.productById(sessionId, UUID.fromString(productId));
+            ProductDetailsDTO product = productApplicationService.productById(UUID.fromString(productId));
             return Response.ok().entity(product).build();
-
-            //TODO move all catches from controller to single location
         } catch (Exception e) {
             return ExceptionHandler.handleException(e);
         }
@@ -49,18 +46,10 @@ public class ProductController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @APIResponses({
-            @APIResponse(responseCode = "403", description = "Not Authenticated"),
-            @APIResponse(responseCode = "401", description = "Unauthorized for operation")
-    })
     @APIResponseSchema(value = ProductOverviewDTO[].class, responseCode = "200")
     @Operation(operationId = "searchProducts")
-    public Response search(@HeaderParam("session-id") String sessionId, @QueryParam("search") @DefaultValue("") String query) {
-        try {
-            List<ProductOverviewDTO> products = productApplicationService.search(sessionId, query);
-            return Response.ok().entity(products).build();
-        } catch (Exception e) {
-            return ExceptionHandler.handleException(e);
-        }
+    public Response search(@QueryParam("search") @DefaultValue("") String query) {
+        List<ProductOverviewDTO> products = productApplicationService.search(query);
+        return Response.ok().entity(products).build();
     }
 }

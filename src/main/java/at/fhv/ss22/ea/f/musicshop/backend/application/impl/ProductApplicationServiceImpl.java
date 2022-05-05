@@ -41,14 +41,12 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     }
 
     @Override
-    //@RequiresRole(UserRole.EMPLOYEE) TODO: Add Customer Role
-    public ProductDetailsDTO productById(@SessionKey String sessionId, UUID productId) {
+    public ProductDetailsDTO productById(UUID productId) {
         return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    //@RequiresRole(UserRole.EMPLOYEE) TODO: Add Customer Role
-    public List<ProductOverviewDTO> search(@SessionKey String sessionId, String queryString) {
+    public List<ProductOverviewDTO> search(String queryString) {
         return this.productRepository.fullTextSearch(queryString).stream()
                 .map(this::overviewDtoFromProduct)
                 .collect(Collectors.toList());

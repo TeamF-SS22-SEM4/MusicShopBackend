@@ -82,7 +82,7 @@ class ProductApplicationTests {
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
         //when
-        List<ProductOverviewDTO> productDTOs = productApplicationService.search("placeholder", "irrelevant to this test");
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test");
 
 
         //then
@@ -129,7 +129,7 @@ class ProductApplicationTests {
         when(mockedSoundCarrierRepo.soundCarriersByProductId(rosenrot.getProductId())).thenReturn(soundCarriers);
 
         //when
-        ProductDetailsDTO product = productApplicationService.productById("placeholder", rosenrot.getProductId().getUUID());
+        ProductDetailsDTO product = productApplicationService.productById(rosenrot.getProductId().getUUID());
 
 
         //then

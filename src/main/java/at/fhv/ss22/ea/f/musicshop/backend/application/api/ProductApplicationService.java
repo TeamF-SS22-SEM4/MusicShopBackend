@@ -14,8 +14,8 @@ import java.util.UUID;
 @Local
 public interface ProductApplicationService {
 
-    ProductDetailsDTO productById(String sessionId, UUID productId) throws SessionExpired, NoPermissionForOperation, NoSuchElementException;
+    ProductDetailsDTO productById(UUID productId) throws NoSuchElementException;
 
-    List<ProductOverviewDTO> search(String sessionId, String queryString) throws SessionExpired, NoPermissionForOperation;
+    List<ProductOverviewDTO> search(String queryString);
 
 }

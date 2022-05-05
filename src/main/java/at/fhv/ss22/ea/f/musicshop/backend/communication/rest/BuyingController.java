@@ -29,6 +29,7 @@ public class BuyingController {
             @APIResponse(responseCode = "404", description = "unknown carrier id")
     })
     @Operation(operationId = "placeOrder")
+    //TODO maybe extract sessionId (also from application)
     public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(
