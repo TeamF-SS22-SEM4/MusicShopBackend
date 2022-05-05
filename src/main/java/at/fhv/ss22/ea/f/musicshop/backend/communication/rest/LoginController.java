@@ -4,6 +4,7 @@ import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Credentials;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
@@ -28,6 +29,7 @@ public class LoginController {
     @Consumes(MediaType.APPLICATION_JSON)
     @APIResponse(responseCode = "403", description = "invalid credentials")
     @APIResponseSchema(value = LoginResultDTO.class, responseCode = "200")
+    @Operation(operationId = "login")
     public Response login(@RequestBody Credentials credentials) {
         try {
             LoginResultDTO loginResult = authenticationApplicationService.customerLogin(credentials.username, credentials.password);

@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -32,6 +33,7 @@ public class ProductController {
             @APIResponse(responseCode = "404", description = "unknown product id")
     })
     @APIResponseSchema(value = ProductDetailsDTO.class, responseCode = "200")
+    @Operation(operationId = "getProduct")
     //TODO maybe extract sessionId (also from application)
     public Response productById(@HeaderParam("session-id") String sessionId, @PathParam("id") String productId) {
         try {
@@ -52,6 +54,7 @@ public class ProductController {
             @APIResponse(responseCode = "401", description = "Unauthorized for operation")
     })
     @APIResponseSchema(value = ProductOverviewDTO[].class, responseCode = "200")
+    @Operation(operationId = "searchProducts")
     public Response search(@HeaderParam("session-id") String sessionId, @QueryParam("search") @DefaultValue("") String query) {
         try {
             List<ProductOverviewDTO> products = productApplicationService.search(sessionId, query);

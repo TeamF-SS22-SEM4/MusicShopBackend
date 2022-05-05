@@ -2,6 +2,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.rest;
 
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Purchase;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
@@ -27,6 +28,7 @@ public class BuyingController {
             @APIResponse(responseCode = "401", description = "Unauthorized for operation"),
             @APIResponse(responseCode = "404", description = "unknown carrier id")
     })
+    @Operation(operationId = "placeOrder")
     public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(
