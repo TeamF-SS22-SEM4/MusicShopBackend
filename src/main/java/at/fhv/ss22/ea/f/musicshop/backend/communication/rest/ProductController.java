@@ -51,7 +51,7 @@ public class ProductController {
             @APIResponse(responseCode = "403", description = "Not Authenticated"),
             @APIResponse(responseCode = "401", description = "Unauthorized for operation")
     })
-    @APIResponseSchema(value = ProductDetailsDTO[].class, responseCode = "200")
+    @APIResponseSchema(value = ProductOverviewDTO[].class, responseCode = "200")
     public Response search(@HeaderParam("session-id") String sessionId, @QueryParam("search") @DefaultValue("") String query) {
         try {
             List<ProductOverviewDTO> products = productApplicationService.search(sessionId, query);
