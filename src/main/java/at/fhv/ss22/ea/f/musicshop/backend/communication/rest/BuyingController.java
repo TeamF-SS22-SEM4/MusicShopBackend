@@ -1,20 +1,15 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.rest;
 
-import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
-import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
-import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
-import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.PaymentInformation;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Purchase;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.rmi.RemoteException;
 import java.util.Arrays;
 
 
@@ -26,6 +21,12 @@ public class BuyingController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Ok, placed order"),
+            @APIResponse(responseCode = "403", description = "Not Authenticated"),
+            @APIResponse(responseCode = "401", description = "Unauthorized for operation"),
+            @APIResponse(responseCode = "404", description = "unknown carrier id")
+    })
     public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(
@@ -38,7 +39,7 @@ public class BuyingController {
             );
 
             return Response.ok().entity(saleNumber).build();
-        } catch (SessionExpired | CarrierNotAvailableException | RemoteException | NoPermissionForOperation e) {
+        } catch (Exception e) {
             return ExceptionHandler.handleException(e);
         }
     }
