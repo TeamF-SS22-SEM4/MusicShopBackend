@@ -34,6 +34,7 @@ public class Session {
         this.validUntil = validUntil;
     }
 
+    @Generated
     protected Session() {}
 
     public static Session newForUser(UserId userId) {
@@ -53,11 +54,11 @@ public class Session {
 
     private static SessionId newSessionId() {
         SecureRandom random = new SecureRandom();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while(sb.length() < SESSION_ID_BYTE_LENGTH){
             sb.append(Integer.toHexString(random.nextInt()));
         }
-        return new SessionId(sb.toString().substring(0, SESSION_ID_BYTE_LENGTH));
+        return new SessionId(sb.substring(0, SESSION_ID_BYTE_LENGTH));
     }
 
     public SessionId getSessionId() {
