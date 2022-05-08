@@ -2,32 +2,25 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
 import at.fhv.ss22.ea.f.communication.dto.DetailedOrderDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.OrderingApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 
 import javax.jms.JMSException;
@@ -62,8 +55,8 @@ class OrderingApplicationTests {
         //given
         Product product = Product.create(new ProductId(UUID.randomUUID()),
                 "best album", "1969", List.of("Rock"), "misc", "13:13", List.of(new ArtistId(UUID.randomUUID())), List.of());
-        Employee employee = Employee.create(new EmployeeId(UUID.randomUUID()), "test-user", "max", "mustermann", List.of(UserRole.EMPLOYEE), List.of());
-        Session session = Session.newForEmployee(employee.getEmployeeId());
+        User user = User.create(new UserId(UUID.randomUUID()), "test-user", "max", "mustermann", List.of(UserRole.EMPLOYEE), List.of());
+        Session session = Session.newForUser(user.getUserId());
         SoundCarrier carrier = SoundCarrier.create(
                 new SoundCarrierId(UUID.randomUUID()),
                 SoundCarrierType.VINYL, 14, 10, "SOME", product.getProductId());
@@ -73,7 +66,7 @@ class OrderingApplicationTests {
                 .withOrderId(UUID.randomUUID())
                 .build();
         when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
-        when(employeeRepository.employeeById(employee.getEmployeeId())).thenReturn(Optional.of(employee));
+        when(userRepository.userById(user.getUserId())).thenReturn(Optional.of(user));
         when(productRepository.productById(product.getProductId())).thenReturn(Optional.of(product));
         when(carrierRepository.soundCarrierById(carrier.getCarrierId())).thenReturn(Optional.of(carrier));
 

@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.MessagingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.MessagingApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;

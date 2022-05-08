@@ -99,10 +99,10 @@ class AuthenticationApplicationTests {
         //given
         String username = "fakeuser";
         String password = "fakepassword";
-        when(ldapClient.credentialsValid(username, password)).thenReturn(false);
+        when(ldapClient.employeeCredentialsValid(username, password)).thenReturn(false);
 
         //when - then
-        assertThrows(AuthenticationFailed.class, () -> authenticationApplicationService.login(username, password));
+        assertThrows(AuthenticationFailed.class, () -> authenticationApplicationService.employeeLogin(username, password));
 
     }
 }
