@@ -30,7 +30,7 @@ public class BuyingController {
     })
     @Operation(operationId = "placeOrder")
     //TODO maybe extract sessionId (also from application)
-    public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
+    public Response placeOrder(@HeaderParam(RestApplication.SESSION_HEADER) String sessionId, @RequestBody Purchase purchase) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(
                     sessionId,
