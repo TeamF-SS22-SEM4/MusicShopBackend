@@ -11,7 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
-@Remote(MessagingService.class)
+@Remote(OrderingService.class)
 @Stateless
 public class OrderingServiceImpl implements OrderingService {
     @EJB

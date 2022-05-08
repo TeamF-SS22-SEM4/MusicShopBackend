@@ -62,7 +62,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public void updateLastViewed(String sessionId, LocalDateTime lastViewedMessages) throws SessionExpired, NoPermissionForOperation {
+    public void updateLastViewed(@SessionKey String sessionId, LocalDateTime lastViewedMessages) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
 
@@ -73,7 +73,7 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public LocalDateTime getLastViewed(String sessionId) throws SessionExpired, NoPermissionForOperation {
+    public LocalDateTime getLastViewed(@SessionKey String sessionId) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
         User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
         return user.getLastViewed();
