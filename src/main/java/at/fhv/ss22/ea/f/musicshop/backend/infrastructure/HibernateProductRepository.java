@@ -15,10 +15,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Local(ProductRepository.class)
@@ -94,9 +91,10 @@ public class HibernateProductRepository implements ProductRepository {
         org.apache.lucene.search.Query query = buildedQuery.createQuery();
         FullTextQuery jpaQuery = fullTextEM.createFullTextQuery(query, Product.class);
 
-        List<Product> allProducts = new LinkedList<>();
+
+        Set<Product> allProducts = new HashSet<>();
         allProducts.addAll(jpaQuery.getResultList());
         allProducts.addAll(productsByArtistName);
-        return allProducts;
+        return new LinkedList<>(allProducts);
     }
 }

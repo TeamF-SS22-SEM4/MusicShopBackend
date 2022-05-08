@@ -22,6 +22,7 @@ class SessionTest {
 
         assertFalse(session.isExpired());
         assertNotNull(session.getSessionId().getValue());
+        assertTrue(session.getValidUntil().isAfter(Instant.now()));
         assertEquals(userId, session.getUserId());
     }
 
@@ -45,8 +46,7 @@ class SessionTest {
 
         assertTrue(session.isExpired());
 
-        assertThrows(SessionExpired.class, () ->
-           session.refreshDuration()
+        assertThrows(SessionExpired.class, session::refreshDuration
         );
     }
 }
