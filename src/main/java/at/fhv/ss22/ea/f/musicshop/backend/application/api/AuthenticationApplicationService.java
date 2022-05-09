@@ -6,6 +6,9 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 
+import javax.ejb.Local;
+
+@Local
 public interface AuthenticationApplicationService {
 
     /**
@@ -14,7 +17,8 @@ public interface AuthenticationApplicationService {
      * @return The created Session-Id and a List of the roles the user has.
      * @throws AuthenticationFailed If the login fails for whatever reason.
      */
-    LoginResultDTO login(String username, String password) throws AuthenticationFailed;
+    LoginResultDTO employeeLogin(String username, String password) throws AuthenticationFailed;
+    LoginResultDTO customerLogin(String username, String password) throws AuthenticationFailed;
 
     /**Do <b>NOT</b> expose to communication!
      *

@@ -4,9 +4,9 @@ import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.communication.internal.CustomerInternalService;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.CustomerApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.rmi.RemoteException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,18 +25,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CustomerApplicationTests {
+class CustomerApplicationTests {
 
-    private CustomerApplicationService customerService = InstanceProvider.getTestingCustomerApplicationService();
+    private CustomerApplicationService customerService;
 
-    private CustomerRMIClient rmiClient = InstanceProvider.getMockedCustomerRmiClient();
+    private CustomerRMIClient rmiClient = mock(CustomerRMIClient.class);
 
-    private AuthenticationApplicationService authenticationService = InstanceProvider.getMockedAuthenticationApplicationService();
+    private AuthenticationApplicationService authenticationService = mock(AuthenticationApplicationService.class);
 
     private CustomerInternalService customerInternalService;
 
     @BeforeAll
     void setup() throws SessionExpired {
+        this.customerService = new CustomerApplicationServiceImpl(rmiClient);
         this.customerInternalService = mock(CustomerInternalService.class);
         when(authenticationService.hasRole(any(SessionId.class), any(UserRole.class))).thenReturn(true);
         when(rmiClient.getCustomerInternalService()).thenReturn(this.customerInternalService);
@@ -49,7 +49,7 @@ public class CustomerApplicationTests {
         UUID id = UUID.randomUUID();
         CustomerDTO customer = CustomerDTO.builder()
                 .id(id)
-                .city("dornbirng")
+                .city("dornbirn")
                 .familyName("mustermann")
                 .givenName("max")
                 .build();

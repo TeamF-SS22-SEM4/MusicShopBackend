@@ -1,7 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
@@ -46,7 +46,7 @@ class SaleTests {
             }
         };
         UUID employeeIdUUID = UUID.randomUUID();
-        EmployeeId performingEmployeeExpected = new EmployeeId(employeeIdUUID);
+        UserId performingEmployeeExpected = new UserId(employeeIdUUID);
 
         // when
         Sale sale = Sale.create(
@@ -68,7 +68,7 @@ class SaleTests {
         assertEquals(paymentMethodExpected, sale.getPaymentMethod());
         assertEquals(customerIdExpected, sale.getCustomerOpt());
         assertEquals(saleItemsExpected.size(), sale.getSaleItemList().size());
-        assertEquals(performingEmployeeExpected, sale.getPerformingEmployee());
+        assertEquals(performingEmployeeExpected, sale.getPerformingUser());
 
         // Check content of lists
         for(int i = 0; i < saleItemsExpected.size(); i++) {

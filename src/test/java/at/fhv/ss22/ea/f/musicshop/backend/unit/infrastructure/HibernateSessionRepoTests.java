@@ -1,11 +1,11 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.infrastructure;
 
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
+import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.HibernateSessionRepository;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HibernateSessionRepoTests {
 
-    private SessionRepository sessionRepository = InstanceProvider.getSessionRepository();
+    private SessionRepository sessionRepository = new HibernateSessionRepository();
 
     @Test
     void null_safety_when_getting_by_id() {
@@ -30,15 +30,15 @@ class HibernateSessionRepoTests {
         EntityManagerUtil.beginTransaction();
         //given
 
-        EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
-        Session session = Session.newForEmployee(employeeId);
+        UserId userId = new UserId(UUID.randomUUID());
+        Session session = Session.newForUser(userId);
         SessionId surrogateId = new SessionId(session.getSessionId().getValue());
 
         sessionRepository.add(session);
 
         Session sessionAct = sessionRepository.sessionById(surrogateId).get();
 
-        assertEquals(employeeId, sessionAct.getEmployeeId());
+        assertEquals(userId, sessionAct.getUserId());
 
         EntityManagerUtil.rollback();
     }
@@ -54,8 +54,8 @@ class HibernateSessionRepoTests {
     void delete_expired_session() throws NoSuchFieldException, IllegalAccessException {
         EntityManagerUtil.beginTransaction();
         //given
-        Session validSession = Session.newForEmployee(new EmployeeId(UUID.randomUUID()));
-        Session invalidSession = Session.newForEmployee(new EmployeeId(UUID.randomUUID()));
+        Session validSession = Session.newForUser(new UserId(UUID.randomUUID()));
+        Session invalidSession = Session.newForUser(new UserId(UUID.randomUUID()));
         Field validUntil = Session.class.getDeclaredField("validUntil");
         validUntil.setAccessible(true);
         validUntil.set(invalidSession, Instant.now().minus(Duration.ofDays(1)));

@@ -13,8 +13,8 @@
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.Customer</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId</class>
-        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee</class>
-        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem</class>

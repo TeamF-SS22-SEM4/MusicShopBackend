@@ -8,29 +8,34 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRo
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Local(MessagingApplicationService.class)
+@Stateless
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
 
-    private JMSClient jmsClient;
+    @EJB private JMSClient jmsClient;
+    @EJB private UserRepository userRepository;
+    @EJB private SessionRepository sessionRepository;
 
-    private EmployeeRepository employeeRepository; //needed to get subscribed list from employee
+    public MessagingApplicationServiceImpl() {}
 
-    private SessionRepository sessionRepository;
-
-    public MessagingApplicationServiceImpl(JMSClient jmsClient, EmployeeRepository employeeRepository, SessionRepository sessionRepository) {
+    public MessagingApplicationServiceImpl(JMSClient jmsClient, UserRepository userRepository, SessionRepository sessionRepository) {
         this.jmsClient = jmsClient;
-        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
     }
 
@@ -51,26 +56,26 @@ public class MessagingApplicationServiceImpl implements MessagingApplicationServ
     @RequiresRole(UserRole.EMPLOYEE)
     public List<String> getSubscribedTopics(@SessionKey String sessionId) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return new ArrayList<>(employee.getSubscribedTopics());
+        User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
+        return new ArrayList<>(user.getSubscribedTopics());
     }
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public void updateLastViewed(String sessionId, LocalDateTime lastViewedMessages) throws SessionExpired, NoPermissionForOperation {
+    public void updateLastViewed(@SessionKey String sessionId, LocalDateTime lastViewedMessages) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
+        User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
 
         EntityManagerUtil.beginTransaction();
-        employee.updateLastViewed(lastViewedMessages);
+        user.updateLastViewed(lastViewedMessages);
         EntityManagerUtil.commit();
     }
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public LocalDateTime getLastViewed(String sessionId) throws SessionExpired, NoPermissionForOperation {
+    public LocalDateTime getLastViewed(@SessionKey String sessionId) throws SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(SessionExpired::new);
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.getLastViewed();
+        User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
+        return user.getLastViewed();
     }
 }

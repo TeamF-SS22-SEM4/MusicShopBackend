@@ -2,7 +2,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.CustomerAlreadyConnectedException;
 
 import javax.persistence.EmbeddedId;
@@ -25,15 +25,15 @@ public class Sale {
     private CustomerId customerId;
     @OneToMany
     private List<SaleItem> saleItemList;
-    private EmployeeId performingEmployee;
+    private UserId performingUser;
 
-    public static Sale newSale(String invoiceNumber, List<SaleItem> saleItems, EmployeeId employeeId, String paymentMethod, CustomerId customerId) {
+    public static Sale newSale(String invoiceNumber, List<SaleItem> saleItems, UserId userId, String paymentMethod, CustomerId customerId) {
         Sale sale = new Sale();
         sale.saleId = new SaleId(UUID.randomUUID());
         sale.invoiceNumber = invoiceNumber;
         sale.timeOfSale = LocalDateTime.now();
         sale.paymentMethod = paymentMethod;
-        sale.performingEmployee = employeeId;
+        sale.performingUser = userId;
         sale.saleItemList = saleItems;
         sale.totalPrice = saleItems.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
         sale.customerId = customerId;
@@ -41,7 +41,7 @@ public class Sale {
         return sale;
     }
 
-    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    public static Sale create(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, UserId aPerformingEmployee) {
         return new Sale(aSaleId, aInvoiceNumber, aTimeOfSale, aPaymentMethod, aCustomerId, aSaleItemList, aPerformingEmployee);
     }
 
@@ -49,22 +49,15 @@ public class Sale {
     protected Sale() {
     }
 
-    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, EmployeeId aPerformingEmployee) {
+    private Sale(SaleId aSaleId, String aInvoiceNumber, LocalDateTime aTimeOfSale, String aPaymentMethod, CustomerId aCustomerId, List<SaleItem> aSaleItemList, UserId aPerformingEmployee) {
         this.saleId = aSaleId;
         this.invoiceNumber = aInvoiceNumber;
         this.timeOfSale = aTimeOfSale;
         this.paymentMethod = aPaymentMethod;
         this.customerId = aCustomerId;
         this.saleItemList = aSaleItemList;
-        this.performingEmployee = aPerformingEmployee;
+        this.performingUser = aPerformingEmployee;
         this.totalPrice = saleItemList.stream().mapToDouble(item -> item.getAmountOfCarriers() * item.getPricePerCarrier()).sum();
-    }
-
-    public void addCustomer(CustomerId customerId) throws CustomerAlreadyConnectedException {
-        if (null == this.customerId) {
-            throw new CustomerAlreadyConnectedException();
-        }
-        this.customerId = customerId;
     }
 
     public SaleId getSaleId() {
@@ -95,8 +88,8 @@ public class Sale {
         return Collections.unmodifiableList(saleItemList);
     }
 
-    public EmployeeId getPerformingEmployee() {
-        return performingEmployee;
+    public UserId getPerformingUser() {
+        return performingUser;
     }
 
     @Generated

@@ -6,41 +6,63 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Local(AuthenticationApplicationService.class)
+@Stateless
 public class AuthenticationApplicationServiceImpl implements AuthenticationApplicationService {
     private static final Logger logger = LogManager.getLogger(AuthenticationApplicationServiceImpl.class);
 
-    private LdapClient ldapClient;
-    private SessionRepository sessionRepository;
-    private EmployeeRepository employeeRepository;
+    @EJB private LdapClient ldapClient;
+    @EJB private SessionRepository sessionRepository;
+    @EJB private UserRepository userRepository;
 
-    public AuthenticationApplicationServiceImpl(LdapClient ldapClient, SessionRepository sessionRepository, EmployeeRepository employeeRepository) {
+    public AuthenticationApplicationServiceImpl() {}
+
+    public AuthenticationApplicationServiceImpl(LdapClient ldapClient, SessionRepository sessionRepository, UserRepository userRepository) {
         this.ldapClient = ldapClient;
         this.sessionRepository = sessionRepository;
-        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public LoginResultDTO login(String username, String password) throws AuthenticationFailed {
-        if (!ldapClient.credentialsValid(username, password)) {
+    public LoginResultDTO employeeLogin(String username, String password) throws AuthenticationFailed {
+        if (!ldapClient.employeeCredentialsValid(username, password)) {
             logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
             throw new AuthenticationFailed();
         }
-        Optional<Employee> opt = employeeRepository.employeeByUserName(username);
-        Employee employee = opt.orElseThrow(AuthenticationFailed::new);
-        Session session = Session.newForEmployee(employee.getEmployeeId());
+
+        return login(username, password);
+    }
+
+    @Override
+    public LoginResultDTO customerLogin(String username, String password) throws AuthenticationFailed {
+        if (!ldapClient.customerCredentialsValid(username, password)) {
+            logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
+            throw new AuthenticationFailed();
+        }
+
+        return login(username, password);
+    }
+
+    private LoginResultDTO login(String username, String password) throws AuthenticationFailed {
+        Optional<User> opt = userRepository.userByUserName(username);
+        User user = opt.orElseThrow(AuthenticationFailed::new);
+        Session session = Session.newForUser(user.getUserId());
         EntityManagerUtil.beginTransaction();
 
         sessionRepository.add(session);
@@ -48,13 +70,12 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
 
         logger.info("successfuly logged {} in", username);
 
-        // with .withTopicNames(employee.getSubscribedTopics()) --> Employee not Serializeable?
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
-                .withEmployeeId(employee.getEmployeeId().getUUID().toString())
-                .withUsername(employee.getUsername())
-                .withRoles(employee.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
-                .withTopicNames(new ArrayList<>(employee.getSubscribedTopics()))
+                .withEmployeeId(user.getUserId().getUUID().toString())
+                .withUsername(user.getUsername())
+                .withRoles(user.getRoles().stream().map(UserRole::getNiceName).collect(Collectors.toList()))
+                .withTopicNames(new ArrayList<>(user.getSubscribedTopics()))
                 .build();
     }
 
@@ -68,7 +89,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         EntityManagerUtil.beginTransaction();
         session.refreshDuration();
         EntityManagerUtil.commit();
-        Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
-        return employee.hasRole(userRole);
+        User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
+        return user.hasRole(userRole);
     }
 }

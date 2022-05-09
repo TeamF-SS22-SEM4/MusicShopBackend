@@ -5,12 +5,17 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+@Local(SoundCarrierRepository.class)
+@Stateless
 public class HibernateSoundCarrierRepository implements SoundCarrierRepository {
+
     private EntityManager em;
 
     public HibernateSoundCarrierRepository() {

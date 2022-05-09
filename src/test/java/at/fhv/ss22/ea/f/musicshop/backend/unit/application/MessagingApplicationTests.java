@@ -3,18 +3,16 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 import at.fhv.ss22.ea.f.communication.dto.MessageDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.communication.internal.CustomerInternalService;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.MessagingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.MessagingApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,18 +32,20 @@ import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MessagingApplicationTests {
-    private MessagingApplicationService messagingApplicationService = InstanceProvider.getTestingMessagingApplicationService();
 
-    private AuthenticationApplicationService authenticationService = InstanceProvider.getMockedAuthenticationApplicationService();
+    private MessagingApplicationService messagingApplicationService;
 
-    private SessionRepository sessionRepository = InstanceProvider.getMockedSessionRepository();
+    private AuthenticationApplicationService authenticationService = mock(AuthenticationApplicationService.class);
 
-    private EmployeeRepository employeeRepository = InstanceProvider.getMockedEmployeeRepository();
+    private SessionRepository sessionRepository = mock(SessionRepository.class);
 
-    private JMSClient jmsClient = InstanceProvider.getMockedJMSClient();
+    private JMSClient jmsClient = mock(JMSClient.class);
+
+    private UserRepository userRepository = mock(UserRepository.class);
 
     @BeforeAll
     void setup() throws SessionExpired {
+        messagingApplicationService = new MessagingApplicationServiceImpl(jmsClient, userRepository, sessionRepository);
         when(authenticationService.hasRole(any(), any())).thenReturn(true);
     }
 
@@ -53,11 +53,11 @@ class MessagingApplicationTests {
     void when_publish_message_ok_then_true() throws Exception {
         //given
         MessageDTO messageDTO = MessageDTO.builder()
-                        .withEmployeeUsername("mustermann")
-                        .withContent("some message")
-                        .withTitle("very Important")
-                        .withTopicName("test")
-                        .build();
+                .withEmployeeUsername("mustermann")
+                .withContent("some message")
+                .withTitle("very Important")
+                .withTopicName("test")
+                .build();
         doNothing().when(jmsClient).publishMessage(anyString(), anyString());
 
         //when
@@ -86,43 +86,17 @@ class MessagingApplicationTests {
     }
 
     @Test
-    void get_subscribed_topics() throws Exception {
-        //given
-        Employee employee = Employee.create(
-                new EmployeeId(UUID.randomUUID()),
-                "test-user",
-                "max",
-                "mustermann",
-                List.of(UserRole.EMPLOYEE),
-                List.of()
-        );
-        Session session = Session.newForEmployee(employee.getEmployeeId());
-        employee.subscribeTo("testTopicA");
-        employee.subscribeTo("testTopicB");
-        when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
-        when(employeeRepository.employeeById(employee.getEmployeeId())).thenReturn(Optional.of(employee));
-
-        //when
-        List<String> topicsAct = messagingApplicationService.getSubscribedTopics(session.getSessionId().getValue());
-
-        //then
-        assertTrue(topicsAct.contains("testTopicA"));
-        assertTrue(topicsAct.contains("testTopicB"));
-        assertFalse(topicsAct.contains("testTopicC"));
-    }
-
-    @Test
     void update_last_viewed() throws SessionExpired, NoPermissionForOperation {
         // given
         LocalDateTime lastViewedExpected = LocalDateTime.now();
         UUID employeeIdUUID = UUID.randomUUID();
-        EmployeeId employeeIdExpected = new EmployeeId(employeeIdUUID);
+        UserId userIdExpected = new UserId(employeeIdUUID);
         String usernameExpected = "john42";
         String firstnameExpected = "John";
         String lastNameExpected = "Doe";
 
-        Employee employee = Employee.create(
-                employeeIdExpected,
+        User user = User.create(
+                userIdExpected,
                 usernameExpected,
                 firstnameExpected,
                 lastNameExpected,
@@ -130,12 +104,12 @@ class MessagingApplicationTests {
                 Collections.emptyList()
         );
 
-        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(Session.newForEmployee(employeeIdExpected)));
-        when(employeeRepository.employeeById(employeeIdExpected)).thenReturn(Optional.of(employee));
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(Session.newForUser(userIdExpected)));
+        when(userRepository.userById(userIdExpected)).thenReturn(Optional.of(user));
 
         // when
         messagingApplicationService.updateLastViewed("some", lastViewedExpected);
-        LocalDateTime lastViewedActual = employee.getLastViewed();
+        LocalDateTime lastViewedActual = user.getLastViewed();
 
         // then
         assertEquals(lastViewedExpected, lastViewedActual);

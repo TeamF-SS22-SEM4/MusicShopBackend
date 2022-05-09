@@ -1,13 +1,14 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
-import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
-import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
-import at.fhv.ss22.ea.f.communication.dto.SaleItemDTO;
-import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
+import at.fhv.ss22.ea.f.communication.dto.*;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
+import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -21,16 +22,26 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Local(SaleApplicationService.class)
+@Stateless
 public class SaleApplicationServiceImpl implements SaleApplicationService {
 
-    private SoundCarrierRepository soundCarrierRepository;
-    private SaleRepository saleRepository;
-    private ProductRepository productRepository;
-    private ArtistRepository artistRepository;
-    private SessionRepository sessionRepository;
+    @EJB private SoundCarrierRepository soundCarrierRepository;
+    @EJB private SaleRepository saleRepository;
+    @EJB private ProductRepository productRepository;
+    @EJB private ArtistRepository artistRepository;
+    @EJB private SessionRepository sessionRepository;
+
+    @EJB private CustomerApplicationService customerApplicationService;
+
+    public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
                                       ProductRepository productRepository, ArtistRepository artistRepository) {
@@ -41,8 +52,40 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         this.artistRepository = artistRepository;
     }
 
+
     @Override
-    @RequiresRole(UserRole.EMPLOYEE)
+    //@RequiresRole(UserRole.CUSTOMER)
+    public String buyAsCustomer(@SessionKey String sessionId, List<OrderItem> orderItems,
+                                String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException, UnsupportedOperationException {
+        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
+        UUID customerId = session.getUserId().getUUID();
+        if(paymentMethod.equals("Credit Card")) {
+            // TODO: Add credit card information to DTO
+            CustomerDTO customer = customerApplicationService.customerById(sessionId, customerId);
+
+            if(!customer.getCreditCardType().equals(creditCardType) ||
+                    !customer.getCreditCardNumber().equals(creditCardNumber) ||
+                    !customer.getCvc().equals(cvc)) {
+                // Which Exceptiontype?
+                throw new UnsupportedOperationException("Credit card information invalid");
+            }
+        }
+
+        List<SoundCarrierAmountDTO> soundCarriers = new ArrayList<>();
+        orderItems.forEach(orderItem -> {
+            soundCarriers.add(
+                    SoundCarrierAmountDTO.builder()
+                            .withCarrierId(orderItem.getCarrierId())
+                            .withAmount(orderItem.getAmount())
+                            .build()
+            );
+        });
+
+        return buy(sessionId, soundCarriers, paymentMethod, customerId);
+    }
+
+    @Override
+    //@RequiresRole(UserRole.EMPLOYEE) TODO: Add Customer Role
     public String buy(@SessionKey String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
         List<SaleItem> saleItems = new LinkedList<>();
@@ -64,7 +107,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         long currentAmountOfSales = saleRepository.amountOfSales();
-        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getEmployeeId(), paymentMethod, new CustomerId(customerId));
+        Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getUserId(), paymentMethod, new CustomerId(customerId));
         saleRepository.add(sale);
         EntityManagerUtil.commit();
 
@@ -73,8 +116,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @Override
     @RequiresRole(UserRole.EMPLOYEE)
-    public Optional<SaleDTO> saleByInvoiceNumber(@SessionKey String sessionId, String invoiceNumber) {
-        return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale);
+    public SaleDTO saleByInvoiceNumber(@SessionKey String sessionId, String invoiceNumber) {
+        return saleRepository.saleByInvoiceNumber(invoiceNumber).map(this::saleDtoFromSale).orElseThrow(NoSuchElementException::new);
     }
 
     @Override

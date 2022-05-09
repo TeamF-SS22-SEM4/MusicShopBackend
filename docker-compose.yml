@@ -33,6 +33,8 @@ services:
     build: .
     ports:
       - ${RMI_PORT}:${RMI_PORT}
+      - "9990:9990"
+      - "8080:8080"
     networks:
       - musicshop_backend
     depends_on:

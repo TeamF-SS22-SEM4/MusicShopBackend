@@ -2,22 +2,22 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
 import at.fhv.ss22.ea.f.communication.dto.DetailedOrderDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.InstanceProvider;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.OrderingApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,26 +32,31 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import static org.mockito.Mockito.mock;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderingApplicationTests {
 
-    private OrderingApplicationService orderingService = InstanceProvider.getTestingOrderingApplicationService();
+    private OrderingApplicationService orderingService;
 
-    private JMSClient jmsClient = InstanceProvider.getMockedJMSClient();
+    private JMSClient jmsClient = mock(JMSClient.class);
+    private SoundCarrierRepository carrierRepository = mock(SoundCarrierRepository.class);
+    private UserRepository userRepository = mock(UserRepository.class);
+    private ProductRepository productRepository = mock(ProductRepository.class);
+    private SessionRepository sessionRepository = mock(SessionRepository.class);
 
-    private SoundCarrierRepository carrierRepository = InstanceProvider.getMockedSoundCarrierRepository();
-
-    private EmployeeRepository employeeRepository = InstanceProvider.getMockedEmployeeRepository();
-    private ProductRepository productRepository = InstanceProvider.getMockedProductRepository();
-    private SessionRepository sessionRepository = InstanceProvider.getMockedSessionRepository();
+    @BeforeAll
+    void setup() {
+        this.orderingService = new OrderingApplicationServiceImpl(jmsClient, carrierRepository, userRepository, productRepository, sessionRepository);
+    }
 
     @Test
     void when_placing_valid_order_then_order_message_published_and_true() throws Exception {
         //given
         Product product = Product.create(new ProductId(UUID.randomUUID()),
                 "best album", "1969", List.of("Rock"), "misc", "13:13", List.of(new ArtistId(UUID.randomUUID())), List.of());
-        Employee employee = Employee.create(new EmployeeId(UUID.randomUUID()), "test-user", "max", "mustermann", List.of(UserRole.EMPLOYEE), List.of());
-        Session session = Session.newForEmployee(employee.getEmployeeId());
+        User user = User.create(new UserId(UUID.randomUUID()), "test-user", "max", "mustermann", List.of(UserRole.EMPLOYEE), List.of());
+        Session session = Session.newForUser(user.getUserId());
         SoundCarrier carrier = SoundCarrier.create(
                 new SoundCarrierId(UUID.randomUUID()),
                 SoundCarrierType.VINYL, 14, 10, "SOME", product.getProductId());
@@ -61,7 +66,7 @@ class OrderingApplicationTests {
                 .withOrderId(UUID.randomUUID())
                 .build();
         when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
-        when(employeeRepository.employeeById(employee.getEmployeeId())).thenReturn(Optional.of(employee));
+        when(userRepository.userById(user.getUserId())).thenReturn(Optional.of(user));
         when(productRepository.productById(product.getProductId())).thenReturn(Optional.of(product));
         when(carrierRepository.soundCarrierById(carrier.getCarrierId())).thenReturn(Optional.of(carrier));
 
@@ -80,8 +85,8 @@ class OrderingApplicationTests {
         reset(jmsClient);
         Product product = Product.create(new ProductId(UUID.randomUUID()),
                 "best album", "1969", List.of("Rock"), "misc", "13:13", List.of(new ArtistId(UUID.randomUUID())), List.of());
-        Employee employee = Employee.create(new EmployeeId(UUID.randomUUID()), "test-user", "max", "mustermann", List.of(UserRole.EMPLOYEE), List.of());
-        Session session = Session.newForEmployee(employee.getEmployeeId());
+        User user = User.create(new UserId(UUID.randomUUID()), "test-user", "max", "mustermann", List.of(UserRole.EMPLOYEE), List.of());
+        Session session = Session.newForUser(user.getUserId());
         SoundCarrier carrier = SoundCarrier.create(
                 new SoundCarrierId(UUID.randomUUID()),
                 SoundCarrierType.VINYL, 14, 10, "SOME", product.getProductId());
@@ -91,7 +96,7 @@ class OrderingApplicationTests {
                 .withOrderId(UUID.randomUUID())
                 .build();
         when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
-        when(employeeRepository.employeeById(employee.getEmployeeId())).thenReturn(Optional.of(employee));
+        when(userRepository.userById(user.getUserId())).thenReturn(Optional.of(user));
         when(productRepository.productById(product.getProductId())).thenReturn(Optional.of(product));
         when(carrierRepository.soundCarrierById(carrier.getCarrierId())).thenReturn(Optional.of(carrier));
         doThrow(new JMSException("")).when(jmsClient).publishOrder(any());
@@ -142,5 +147,6 @@ class OrderingApplicationTests {
 
         assertFalse(success);
     }
+
 
 }

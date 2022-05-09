@@ -2,7 +2,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.session;
 
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.bridges.SessionIdBridge;
 import org.hibernate.search.annotations.FieldBridge;
 
@@ -24,21 +24,21 @@ public class Session {
     @FieldBridge(impl = SessionIdBridge.class)
     @AttributeOverride(name = "value", column = @Column(name = "sessionId"))
     private SessionId sessionId;
-    @AttributeOverride(name = "employeeId", column = @Column(name = "employeeId"))
-    private EmployeeId employeeId;
+    @AttributeOverride(name = "userId", column = @Column(name = "userId"))
+    private UserId userId;
     private Instant validUntil;
 
-    private Session(SessionId sessionId, EmployeeId employeeId, Instant validUntil) {
+    private Session(SessionId sessionId, UserId userId, Instant validUntil) {
         this.sessionId = sessionId;
-        this.employeeId = employeeId;
+        this.userId = userId;
         this.validUntil = validUntil;
     }
 
     @Generated
     protected Session() {}
 
-    public static Session newForEmployee(EmployeeId employeeId) {
-        return new Session(newSessionId(), employeeId, Instant.now().plus(STANDARD_VALID_DURATION));
+    public static Session newForUser(UserId userId) {
+        return new Session(newSessionId(), userId, Instant.now().plus(STANDARD_VALID_DURATION));
     }
 
     public boolean isExpired() {
@@ -65,8 +65,8 @@ public class Session {
         return sessionId;
     }
 
-    public EmployeeId getEmployeeId() {
-        return employeeId;
+    public UserId getUserId() {
+        return userId;
     }
 
     public Instant getValidUntil() {

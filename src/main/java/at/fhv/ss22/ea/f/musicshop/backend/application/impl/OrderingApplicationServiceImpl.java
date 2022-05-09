@@ -1,42 +1,52 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 
 import at.fhv.ss22.ea.f.communication.dto.DetailedOrderDTO;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.Employee;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.employee.EmployeeId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EmployeeRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import java.util.Optional;
 
+@Local(OrderingApplicationService.class)
+@Stateless
 public class OrderingApplicationServiceImpl implements OrderingApplicationService {
 
-    private JMSClient jmsClient;
-    private SoundCarrierRepository soundCarrierRepository;
-    private EmployeeRepository employeeRepository;
-    private ProductRepository productRepository;
-    private SessionRepository sessionRepository;
+    @EJB private JMSClient jmsClient;
+    @EJB private SoundCarrierRepository soundCarrierRepository;
+    @EJB private UserRepository userRepository;
+    @EJB private ProductRepository productRepository;
+    @EJB private SessionRepository sessionRepository;
 
-    public OrderingApplicationServiceImpl(JMSClient jmsClient, SoundCarrierRepository soundCarrierRepository, EmployeeRepository employeeRepository, ProductRepository productRepository, SessionRepository sessionRepository) {
+    @PostConstruct
+    void setup() {
+        this.jmsClient.createOrderSubscriber();
+    }
+
+    public OrderingApplicationServiceImpl() {}
+
+    public OrderingApplicationServiceImpl(JMSClient jmsClient, SoundCarrierRepository soundCarrierRepository, UserRepository userRepository, ProductRepository productRepository, SessionRepository sessionRepository) {
         this.jmsClient = jmsClient;
-        jmsClient.createOrderSubscriber();
         this.soundCarrierRepository = soundCarrierRepository;
-        this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.sessionRepository = sessionRepository;
     }
@@ -48,13 +58,13 @@ public class OrderingApplicationServiceImpl implements OrderingApplicationServic
             SoundCarrier carrier = soundCarrierRepository.soundCarrierById(new SoundCarrierId(orderDTO.getSoundCarrierId())).orElseThrow(IllegalStateException::new);
             Product product = productRepository.productById(carrier.getProductId()).orElseThrow(IllegalStateException::new);
             Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalAccessError::new);
-            Employee employee = employeeRepository.employeeById(session.getEmployeeId()).orElseThrow(IllegalStateException::new);
+            User user = userRepository.userById(session.getUserId()).orElseThrow(IllegalStateException::new);
 
             DetailedOrderDTO detailedOrder = DetailedOrderDTO.builder()
                     .withCarrierId(orderDTO.getSoundCarrierId())
                     .withOrderId(orderDTO.getOrderId())
                     .withAmount(orderDTO.getAmount())
-                    .withEmployeeName(employee.getUsername())
+                    .withEmployeeName(user.getUsername())
                     .withCarrierType(carrier.getType().getFriendlyName())
                     .withProductName(product.getName())
                     .build();
