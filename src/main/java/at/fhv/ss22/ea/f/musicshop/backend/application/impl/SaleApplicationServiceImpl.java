@@ -52,7 +52,6 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         this.artistRepository = artistRepository;
     }
 
-
     @Override
     //@RequiresRole(UserRole.CUSTOMER)
     public String buyAsCustomer(@SessionKey String sessionId, List<OrderItem> orderItems,
@@ -60,14 +59,12 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         UUID customerId = session.getUserId().getUUID();
         if(paymentMethod.equals("Credit Card")) {
-            // TODO: Add credit card information to DTO
             CustomerDTO customer = customerApplicationService.customerById(sessionId, customerId);
 
             if(!customer.getCreditCardType().equals(creditCardType) ||
                     !customer.getCreditCardNumber().equals(creditCardNumber) ||
                     !customer.getCvc().equals(cvc)) {
-                // Which Exceptiontype?
-                throw new UnsupportedOperationException("Credit card information invalid");
+                throw new IllegalArgumentException("Credit card information invalid");
             }
         }
 

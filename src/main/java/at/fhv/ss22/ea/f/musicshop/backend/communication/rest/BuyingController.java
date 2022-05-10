@@ -27,7 +27,8 @@ public class BuyingController {
             @APIResponse(responseCode = "200", description = "Ok, placed order"),
             @APIResponse(responseCode = "403", description = "Not Authenticated"),
             @APIResponse(responseCode = "401", description = "Unauthorized for operation"),
-            @APIResponse(responseCode = "404", description = "unknown carrier id")
+            @APIResponse(responseCode = "404", description = "unknown carrier id"),
+            @APIResponse(responseCode = "400", description = "Payment information invalid")
     })
     @APIResponseSchema(value = String.class, responseCode = "200")
     @Operation(operationId = "placeOrder")
