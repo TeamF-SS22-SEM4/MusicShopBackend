@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - musicshop_backend
+      - musicshop_backend_network
     env_file:
       - .env
   jms-provider:
@@ -25,7 +25,7 @@ services:
       - "61616:61616"
       - "8161:8161"
     networks:
-      - musicshop_backend
+      - musicshop_backend_network
     env_file:
       - .env
   backend:
@@ -36,7 +36,7 @@ services:
       - "9990:9990"
       - "8080:8080"
     networks:
-      - musicshop_backend
+      - musicshop_backend_network
     depends_on:
       - jms-provider
     links:
@@ -46,5 +46,6 @@ services:
       - .env
 
 networks:
-  musicshop_backend:
+  musicshop_backend_network:
+    name: musicshop_backend_network
     driver: bridge
