@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Purchase;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import javax.ejb.EJB;
@@ -28,6 +29,7 @@ public class BuyingController {
             @APIResponse(responseCode = "401", description = "Unauthorized for operation"),
             @APIResponse(responseCode = "404", description = "unknown carrier id")
     })
+    @APIResponseSchema(value = String.class, responseCode = "200")
     @Operation(operationId = "placeOrder")
     //TODO maybe extract sessionId (also from application)
     public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
@@ -40,9 +42,11 @@ public class BuyingController {
                     purchase.getPaymentInformation().getCreditCardNumber(),
                     purchase.getPaymentInformation().getCvc()
             );
+            System.out.println("DEBUG " + saleNumber);
 
             return Response.ok().entity(saleNumber).build();
         } catch (Exception e) {
+            System.out.println("DEBUG in catch block");
             return ExceptionHandler.handleException(e);
         }
     }
