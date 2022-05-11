@@ -18,6 +18,9 @@ public class ExceptionHandler {
             response = Response.status(Response.Status.UNAUTHORIZED).build();
         } else if(exception instanceof CarrierNotAvailableException || exception instanceof NoSuchElementException) {
             response = Response.status(Response.Status.NOT_FOUND).build();
+        } else if(exception instanceof IllegalArgumentException || exception instanceof javax.ejb.EJBException) {
+            // If the IllegalArgumentException is thrown it is stacked with an EJBException
+            response = Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         return response;
