@@ -5,6 +5,7 @@ import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
 import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Local(ProductApplicationService.class)
 @Stateless
+@Logged
 public class ProductApplicationServiceImpl implements ProductApplicationService {
 
     @EJB private ProductRepository productRepository;
