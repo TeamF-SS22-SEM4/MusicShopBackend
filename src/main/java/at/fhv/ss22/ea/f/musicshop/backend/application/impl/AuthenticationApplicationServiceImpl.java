@@ -70,7 +70,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         sessionRepository.add(session);
         EntityManagerUtil.commit();
 
-        logger.info("successfuly logged {} in", username);
+        logger.info("successfully logged {} in", username);
 
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
