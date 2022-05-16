@@ -45,7 +45,11 @@ public class SoundCarrier {
         if (amount > this.amountInStore) {
             throw new SoundCarrierUnavailableException();
         }
-        this.amountInStore -= amount;
+
+        // Don't change amount of digital carriers
+        if(!this.type.equals(SoundCarrierType.DIGITAL)) {
+            this.amountInStore -= amount;
+        }
 
         return SaleItem.ofCarrier(amount, this);
     }

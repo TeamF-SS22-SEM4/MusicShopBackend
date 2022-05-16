@@ -8,6 +8,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationSer
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.client.RestClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
@@ -19,6 +20,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
@@ -41,6 +43,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @EJB private CustomerApplicationService customerApplicationService;
 
+    @EJB private RestClient restClient;
+
     public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
@@ -53,7 +57,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    //@RequiresRole(UserRole.CUSTOMER)
+    @RequiresRole(UserRole.CUSTOMER)
     public String buyAsCustomer(@SessionKey String sessionId, List<OrderItem> orderItems,
                                 String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException, UnsupportedOperationException {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
@@ -92,6 +96,11 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
             try {
                 saleItems.add(carrier.sell(dto.getAmount()));
+
+                if(carrier.getType().equals(SoundCarrierType.DIGITAL)) {
+                    restClient.sendPurchaseToPlaylistMicroservice();
+                    System.out.println("Sent event to microservice");
+                }
             } catch (SoundCarrierUnavailableException e) {
                 invalidCarriers.add(carrier.getCarrierId().getUUID());
             }
