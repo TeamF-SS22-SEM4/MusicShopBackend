@@ -8,8 +8,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationSer
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
-import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.client.RestClient;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -21,6 +22,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
@@ -40,10 +43,9 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     @EJB private ProductRepository productRepository;
     @EJB private ArtistRepository artistRepository;
     @EJB private SessionRepository sessionRepository;
-
     @EJB private CustomerApplicationService customerApplicationService;
 
-    @EJB private RestClient restClient;
+    @EJB private UserRepository userRepository;
 
     public SaleApplicationServiceImpl() {}
 
@@ -98,8 +100,19 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                 saleItems.add(carrier.sell(dto.getAmount()));
 
                 if(carrier.getType().equals(SoundCarrierType.DIGITAL)) {
-                    restClient.sendPurchaseToPlaylistMicroservice();
-                    System.out.println("Sent event to microservice");
+                    Product product = productRepository.productById(carrier.getProductId()).orElseThrow(IllegalStateException::new);
+                    User user = userRepository.userById(new UserId(customerId)).orElseThrow(IllegalStateException::new); // In this case customer = user
+
+                    // Create new event
+                    DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
+                            new DigitalProductPurchasedId(UUID.randomUUID()),
+                            user.getUserId(),
+                            user.getUsername(),
+                            product.getProductId(),
+                            product.getName(),
+                            product.getDuration(),
+                            carrier.getCarrierId()
+                    );
                 }
             } catch (SoundCarrierUnavailableException e) {
                 invalidCarriers.add(carrier.getCarrierId().getUUID());
@@ -115,6 +128,8 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         long currentAmountOfSales = saleRepository.amountOfSales();
         Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getUserId(), paymentMethod, new CustomerId(customerId));
         saleRepository.add(sale);
+        // TODO: Implement EventRepository
+        // TODO: Store event in database
         EntityManagerUtil.commit();
 
         return sale.getInvoiceNumber();
