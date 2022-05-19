@@ -6,6 +6,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 @Local(EventRepository.class)
@@ -25,7 +26,11 @@ public class HibernateEventRepository implements EventRepository {
 
     @Override
     public Optional<DigitalProductPurchased> getNextOutgoing() {
+        TypedQuery<DigitalProductPurchased> query = this.em.createQuery("select d from DigitalProductPurchased d"
+                ,DigitalProductPurchased.class);
         //TODO
-        return Optional.empty();
+        Optional<DigitalProductPurchased> opt = query.getResultStream().findFirst();
+        opt.ifPresent(digitalProductPurchased -> this.em.remove(digitalProductPurchased));
+        return opt;
     }
 }
