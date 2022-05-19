@@ -9,6 +9,7 @@ import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
@@ -50,9 +51,11 @@ class SaleApplicationTests {
     private AuthenticationApplicationService authenticationApplicationService = mock(AuthenticationApplicationService.class);
     private ArtistRepository artistRepository = mock(ArtistRepository.class);
 
+    private EventPlacer eventPlacer = mock(EventPlacer.class);
+
     @BeforeAll
     void setup() throws SessionExpired {
-        this.saleApplicationService = new SaleApplicationServiceImpl(sessionRepository, soundCarrierRepository, saleRepository, productRepository, artistRepository);
+        this.saleApplicationService = new SaleApplicationServiceImpl(sessionRepository, soundCarrierRepository, saleRepository, productRepository, artistRepository, eventPlacer);
         when(authenticationApplicationService.hasRole(any(), any())).thenReturn(true);
     }
 

@@ -9,6 +9,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
@@ -47,15 +48,18 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @EJB private UserRepository userRepository;
 
+    @EJB private EventPlacer eventPlacer;
+
     public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
-                                      ProductRepository productRepository, ArtistRepository artistRepository) {
+                                      ProductRepository productRepository, ArtistRepository artistRepository, EventPlacer eventPlacer) {
         this.sessionRepository = sessionRepository;
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.artistRepository = artistRepository;
+        this.eventPlacer = eventPlacer;
     }
 
     @Override
@@ -113,6 +117,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                             product.getDuration(),
                             carrier.getCarrierId()
                     );
+                    eventPlacer.placeProductPurchase(digitalProductPurchased);
                 }
             } catch (SoundCarrierUnavailableException e) {
                 invalidCarriers.add(carrier.getCarrierId().getUUID());
