@@ -3,6 +3,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.application.impl;
 import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Local(CustomerApplicationService.class)
 @Stateless
+@Logged
 public class CustomerApplicationServiceImpl implements CustomerApplicationService {
 
     @EJB private CustomerRMIClient client;

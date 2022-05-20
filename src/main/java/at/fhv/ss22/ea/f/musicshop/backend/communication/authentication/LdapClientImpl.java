@@ -1,5 +1,9 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.authentication;
 
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.naming.Context;

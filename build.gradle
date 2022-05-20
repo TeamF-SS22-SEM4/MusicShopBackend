@@ -66,6 +66,7 @@ dependencies {
 
     compileOnly('javax.ejb:javax.ejb-api:3.2.2')
     compileOnly('javax.enterprise:cdi-api:2.0.SP1')
+    testImplementation("javax.interceptor:javax.interceptor-api:1.2")
 
     implementation 'javax.ws.rs:javax.ws.rs-api:2.0'
 

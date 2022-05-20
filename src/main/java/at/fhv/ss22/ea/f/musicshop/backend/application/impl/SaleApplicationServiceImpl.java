@@ -6,6 +6,7 @@ import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Local(SaleApplicationService.class)
 @Stateless
+@Logged
 public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @EJB private SoundCarrierRepository soundCarrierRepository;

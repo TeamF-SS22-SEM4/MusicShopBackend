@@ -55,8 +55,10 @@ public class JMSClientImpl implements JMSClient {
             connection = connectionFactory.createTopicConnection();
             connection.start();
             session = connection.createTopicSession(false, Session.CLIENT_ACKNOWLEDGE);
+            logger.info("Successfully connected to JMS-Provider at {}:{}", HOST, PORT);
         } catch (JMSException e) {
             e.printStackTrace();
+            logger.warn("Failed to connect to JMS-Provider at {}:{}", HOST, PORT);
         }
     }
     @Override
@@ -81,8 +83,8 @@ public class JMSClientImpl implements JMSClient {
         producer.setDeliveryMode(DeliveryMode.PERSISTENT);
         TextMessage textMessage = session.createTextMessage(message);
 
-        logger.info("Sent message: {} to topic {}", message, topic);
         producer.send(textMessage);
+        logger.info("Sent message: {} to topic {}", message, topic);
     }
     @Override
     public void publishOrder(DetailedOrderDTO orderDTO) throws JMSException {
@@ -91,5 +93,6 @@ public class JMSClientImpl implements JMSClient {
         producer.setDeliveryMode(DeliveryMode.PERSISTENT);
         Message order = session.createObjectMessage(orderDTO);
         producer.send(order);
+        logger.info("Placed Order-message");
     }
 }
