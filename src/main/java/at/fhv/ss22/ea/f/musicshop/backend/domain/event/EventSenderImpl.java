@@ -3,6 +3,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.event;
 import at.fhv.ss22.ea.f.musicshop.backend.Application;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,14 +20,21 @@ public class EventSenderImpl implements EventSender {
     @EJB
     EventRepository eventRepository;
 
+    public EventSenderImpl() {
+    }
+    public EventSenderImpl(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
     @Override
     @Schedule(hour = "*", minute = "*", second = "*/5", info = "Send event timer")
     public void sendDigitalPurchase() {
         Optional< DigitalProductPurchased> opt =  this.eventRepository.getNextOutgoing();
         if (opt.isPresent()) {
             DigitalProductPurchased event = opt.get();
-            logger.warn("this is a DEBUG log. Sending to queue {}", event.getProductName());
-
+            Gson gson = new Gson();
+            logger.warn("this is a DEBUG log. Sending to queue {}", gson.toJson(event));
+            System.out.println(gson.toJson(event));
             //TODO create json
             //TODO place in queue provider (e.g. redis)
 
