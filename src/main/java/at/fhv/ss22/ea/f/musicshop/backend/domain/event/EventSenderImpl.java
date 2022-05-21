@@ -1,14 +1,13 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.event;
 
-import at.fhv.ss22.ea.f.musicshop.backend.Application;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.*;
 import java.util.Optional;
 
@@ -17,13 +16,19 @@ import java.util.Optional;
 public class EventSenderImpl implements EventSender {
     private static final Logger logger = LogManager.getLogger(EventSenderImpl.class);
 
+    private static final String PURCHASE_EVENT_QUEUE_NAME = "purchasedQueue";
+
     @EJB
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
+
+    private JedisPool jedisPool;
 
     public EventSenderImpl() {
+        this.jedisPool  = new JedisPool("localhost", 6379); //TODO get from .env (maybe move to constructor (not-testing))
     }
-    public EventSenderImpl(EventRepository eventRepository) {
+    public EventSenderImpl(EventRepository eventRepository, JedisPool jedisPool) {
         this.eventRepository = eventRepository;
+        this.jedisPool = jedisPool;
     }
 
     @Override
@@ -33,11 +38,12 @@ public class EventSenderImpl implements EventSender {
         if (opt.isPresent()) {
             DigitalProductPurchased event = opt.get();
             Gson gson = new Gson();
-            logger.warn("this is a DEBUG log. Sending to queue {}", gson.toJson(event));
-            System.out.println(gson.toJson(event));
-            //TODO create json
-            //TODO place in queue provider (e.g. redis)
+            String jsonEvent = gson.toJson(event);
 
+            try (Jedis jedis = jedisPool.getResource()) {
+                jedis.lpush(PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
+                logger.info("Successfully published to Redis {}: {}", PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
+            }
         }
     }
 }

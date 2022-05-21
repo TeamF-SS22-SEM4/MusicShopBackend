@@ -44,6 +44,15 @@ services:
       - jms-provider
     env_file:
       - .env
+#  TODO remove depending on the way the microservices are deployed (e.g. move this to ec2 or pod)
+  redis_queue:
+    container_name: redis-queue
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    networks:
+      - musicshop_backend_network
 
 networks:
   musicshop_backend_network:

@@ -11,27 +11,33 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisClientConfig;
+import redis.clients.jedis.JedisPool;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EventSenderTests {
 
     private EventSender eventSender;
     private EventRepository eventRepository = mock(EventRepository.class);
+    private JedisPool jedisPool = mock(JedisPool.class);
 
     @BeforeAll
     void setup() {
-        this.eventSender = new EventSenderImpl(eventRepository);
+        this.eventSender = new EventSenderImpl(eventRepository, jedisPool);
     }
 
     @Test
     void when_event_in_repository_then_json_published_to_queue() {
         //given
+        Jedis jedis = mock(Jedis.class);
+        when(jedisPool.getResource()).thenReturn(jedis);
+
         DigitalProductPurchased event = new DigitalProductPurchased(
                 new DigitalProductPurchasedId(UUID.randomUUID()),
                 new UserId(UUID.randomUUID()),
@@ -46,10 +52,24 @@ class EventSenderTests {
         //when
         eventSender.sendDigitalPurchase();
 
+        verify(eventRepository, times(1)).getNextOutgoing();
+        verify(jedis, times(1)).lpush(anyString(), contains(event.getProductName()));
     }
 
     @Test
     void when_no_event_in_repo_then_no_op() {
-        //TODO
+        //given
+        Jedis jedis = mock(Jedis.class);
+        reset(jedisPool, eventRepository);
+        when(jedisPool.getResource()).thenReturn(jedis);
+
+        when(eventRepository.getNextOutgoing()).thenReturn(Optional.empty());
+
+        //when
+        eventSender.sendDigitalPurchase();
+
+        //then
+        verify(eventRepository, times(1)).getNextOutgoing();
+        verify(jedis, never()).lpush(anyString(), anyString());
     }
 }
