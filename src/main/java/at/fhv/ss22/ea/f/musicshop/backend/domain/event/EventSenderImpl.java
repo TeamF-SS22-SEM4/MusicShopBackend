@@ -17,6 +17,8 @@ public class EventSenderImpl implements EventSender {
     private static final Logger logger = LogManager.getLogger(EventSenderImpl.class);
 
     private static final String PURCHASE_EVENT_QUEUE_NAME = "purchasedQueue";
+    private static final String REDIS_HOST = System.getenv("REDIS_HOST");
+    private static final int REDIS_PORT = Integer.parseInt(System.getenv("REDIS_PORT"));
 
     @EJB
     private EventRepository eventRepository;
@@ -24,7 +26,7 @@ public class EventSenderImpl implements EventSender {
     private JedisPool jedisPool;
 
     public EventSenderImpl() {
-        this.jedisPool  = new JedisPool("localhost", 6379); //TODO get from .env (maybe move to constructor (not-testing))
+        this.jedisPool  = new JedisPool(REDIS_HOST, REDIS_PORT); // TODO: (maybe move to constructor (not-testing))
     }
     public EventSenderImpl(EventRepository eventRepository, JedisPool jedisPool) {
         this.eventRepository = eventRepository;
