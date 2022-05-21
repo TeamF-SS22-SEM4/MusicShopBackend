@@ -20,23 +20,14 @@ public class DigitalProductPurchasedTests {
         DigitalProductPurchasedId digitalProductPurchasedIdExpected = new DigitalProductPurchasedId(eventIdUUID);
         UUID userIdUUID = UUID.randomUUID();
         UserId userIdExpected = new UserId(userIdUUID);
-        String usernameExpected = "jbo007";
         UUID productIdUUID = UUID.randomUUID();
         ProductId productIdExpected = new ProductId(productIdUUID);
-        String productNameExpected = "SomeName";
-        String durationExpected = "20:00";
-        UUID carrierIdUUID = UUID.randomUUID();
-        SoundCarrierId soundCarrierIdExpected = new SoundCarrierId(carrierIdUUID);
 
         // when
         DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
                 digitalProductPurchasedIdExpected,
                 userIdExpected,
-                usernameExpected,
-                productIdExpected,
-                productNameExpected,
-                durationExpected,
-                soundCarrierIdExpected
+                productIdExpected
         );
 
         // then
@@ -44,12 +35,7 @@ public class DigitalProductPurchasedTests {
         assertEquals(eventIdUUID, digitalProductPurchased.getEventId().getUUID());
         assertEquals(userIdExpected, digitalProductPurchased.getUserId());
         assertEquals(userIdUUID, digitalProductPurchased.getUserId().getUUID());
-        assertEquals(usernameExpected, digitalProductPurchased.getUsername());
         assertEquals(productIdExpected, digitalProductPurchased.getProductId());
         assertEquals(productIdUUID, digitalProductPurchased.getProductId().getUUID());
-        assertEquals(productNameExpected, digitalProductPurchased.getProductName());
-        assertEquals(durationExpected, digitalProductPurchased.getDuration());
-        assertEquals(soundCarrierIdExpected, digitalProductPurchased.getCarrierId());
-        assertEquals(carrierIdUUID, digitalProductPurchased.getCarrierId().getUUID());
     }
 }

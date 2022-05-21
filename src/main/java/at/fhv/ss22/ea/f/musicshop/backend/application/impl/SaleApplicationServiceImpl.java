@@ -111,11 +111,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                     DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
                             new DigitalProductPurchasedId(UUID.randomUUID()),
                             user.getUserId(),
-                            user.getUsername(),
-                            product.getProductId(),
-                            product.getName(),
-                            product.getDuration(),
-                            carrier.getCarrierId()
+                            product.getProductId()
                     );
                     eventPlacer.placeProductPurchase(digitalProductPurchased);
                 }
