@@ -14,7 +14,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.ejb.*;
-import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +37,7 @@ public class EventSenderImpl implements EventSender {
     private JedisPool jedisPool;
 
     public EventSenderImpl() {
-        this.jedisPool  = new JedisPool(REDIS_HOST, Integer.parseInt(REDIS_PORT)); // TODO: (maybe move to constructor (not-testing))
+        this.jedisPool  = new JedisPool(REDIS_HOST, Integer.parseInt(REDIS_PORT));
     }
     public EventSenderImpl(EventRepository eventRepository, ProductRepository productRepository, JedisPool jedisPool) {
         this.eventRepository = eventRepository;
