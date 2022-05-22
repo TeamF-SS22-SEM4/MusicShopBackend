@@ -1,7 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 
 import javax.persistence.EmbeddedId;
@@ -11,12 +10,12 @@ import javax.persistence.Entity;
 public class DigitalProductPurchased {
     @EmbeddedId
     private DigitalProductPurchasedId eventId;
-    private UserId userId;
+    private String username;
     private ProductId productId;
 
-    public DigitalProductPurchased(DigitalProductPurchasedId eventId, UserId userId, ProductId productId) {
+    public DigitalProductPurchased(DigitalProductPurchasedId eventId, String username, ProductId productId) {
         this.eventId = eventId;
-        this.userId = userId;
+        this.username = username;
         this.productId = productId;
 
     }
@@ -29,8 +28,8 @@ public class DigitalProductPurchased {
         return eventId;
     }
 
-    public UserId getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
     public ProductId getProductId() {

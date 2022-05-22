@@ -3,7 +3,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import org.junit.jupiter.api.Test;
 
@@ -18,23 +17,21 @@ public class DigitalProductPurchasedTests {
         // given
         UUID eventIdUUID = UUID.randomUUID();
         DigitalProductPurchasedId digitalProductPurchasedIdExpected = new DigitalProductPurchasedId(eventIdUUID);
-        UUID userIdUUID = UUID.randomUUID();
-        UserId userIdExpected = new UserId(userIdUUID);
+        String usernameExpected = "jdo1111";
         UUID productIdUUID = UUID.randomUUID();
         ProductId productIdExpected = new ProductId(productIdUUID);
 
         // when
         DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
                 digitalProductPurchasedIdExpected,
-                userIdExpected,
+                usernameExpected,
                 productIdExpected
         );
 
         // then
         assertEquals(digitalProductPurchasedIdExpected, digitalProductPurchased.getEventId());
         assertEquals(eventIdUUID, digitalProductPurchased.getEventId().getUUID());
-        assertEquals(userIdExpected, digitalProductPurchased.getUserId());
-        assertEquals(userIdUUID, digitalProductPurchased.getUserId().getUUID());
+        assertEquals(usernameExpected, digitalProductPurchased.getUsername());
         assertEquals(productIdExpected, digitalProductPurchased.getProductId());
         assertEquals(productIdUUID, digitalProductPurchased.getProductId().getUUID());
     }

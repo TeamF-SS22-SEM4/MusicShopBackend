@@ -110,7 +110,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                     // Create new event
                     DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
                             new DigitalProductPurchasedId(UUID.randomUUID()),
-                            user.getUserId(),
+                            user.getUsername(),
                             product.getProductId()
                     );
                     eventPlacer.placeProductPurchase(digitalProductPurchased);
@@ -129,8 +129,6 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         long currentAmountOfSales = saleRepository.amountOfSales();
         Sale sale = Sale.newSale("R" + String.format("%06d", currentAmountOfSales + 1), saleItems, session.getUserId(), paymentMethod, new CustomerId(customerId));
         saleRepository.add(sale);
-        // TODO: Implement EventRepository
-        // TODO: Store event in database
         EntityManagerUtil.commit();
 
         return sale.getInvoiceNumber();

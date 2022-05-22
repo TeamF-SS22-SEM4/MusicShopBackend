@@ -54,7 +54,7 @@ public class EventSenderImpl implements EventSender {
             Product product = productRepository.productById(event.getProductId()).orElseThrow(NoSuchElementException::new);
 
             DigitalProductPurchasedDTO eventDTO = DigitalProductPurchasedDTO.builder()
-                    .withUserId(event.getUserId().toString())
+                    .withUserId(event.getUsername().toString())
                     .withAlbumName(product.getName())
                     .withArtistNames(product.getArtistIds()
                             .stream()

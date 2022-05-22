@@ -6,7 +6,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPu
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Collections;
@@ -57,7 +55,7 @@ class EventSenderTests {
 
         DigitalProductPurchased event = new DigitalProductPurchased(
                 new DigitalProductPurchasedId(UUID.randomUUID()),
-                new UserId(UUID.randomUUID()),
+                "jdo1111",
                 productId
         );
 
@@ -68,7 +66,7 @@ class EventSenderTests {
         eventSender.sendDigitalPurchase();
 
         verify(eventRepository, times(1)).getNextOutgoing();
-        verify(jedis, times(1)).lpush(anyString(), contains(event.getUserId().toString()));
+        verify(jedis, times(1)).lpush(anyString(), contains(event.getUsername().toString()));
     }
 
     @Test
