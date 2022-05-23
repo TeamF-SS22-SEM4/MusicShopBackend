@@ -54,15 +54,8 @@ public class EventSenderImpl implements EventSender {
             Product product = productRepository.productById(event.getProductId()).orElseThrow(NoSuchElementException::new);
 
             DigitalProductPurchasedDTO eventDTO = DigitalProductPurchasedDTO.builder()
-                    .withUserId(event.getUsername().toString())
+                    .withUsername(event.getUsername())
                     .withAlbumName(product.getName())
-                    .withArtistNames(product.getArtistIds()
-                            .stream()
-                            .map(artistId -> artistRepository.artistById(artistId))
-                            .filter(Optional::isPresent)
-                            .map(artist -> artist.get().getArtistName())
-                            .collect(Collectors.toList())
-                    )
                     .withPurchasedSongs(product.getSongs()
                             .stream()
                             .map(song -> SongDTO.builder()
