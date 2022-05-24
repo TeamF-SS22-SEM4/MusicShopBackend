@@ -245,10 +245,23 @@ class ProductApplicationTests {
         when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
+        List<Product> pageTwo = new ArrayList<>();
+
+        int start = (2 - 1) * 20;
+        int end = (start + 20) - 1;
+
+        for(int i = start; i <= end; i++){
+            pageTwo.add(products.get(i));
+        }
+
         //when
         List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 2);
         //then
-        assertEquals(20, productDTOs.size());
+        assertEquals(pageTwo.size(), productDTOs.size());
+
+        for(int i = 0; i < pageTwo.size(); i++) {
+            assertEquals(pageTwo.get(i).getProductId().getUUID(), productDTOs.get(i).getProductId());
+        }
     }
 
     @Test
@@ -294,9 +307,11 @@ class ProductApplicationTests {
         when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
+        int expectedSize = 0;
+
         //when
         List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 10);
         //then
-        assertEquals(0, productDTOs.size());
+        assertEquals(expectedSize, productDTOs.size());
     }
 }
