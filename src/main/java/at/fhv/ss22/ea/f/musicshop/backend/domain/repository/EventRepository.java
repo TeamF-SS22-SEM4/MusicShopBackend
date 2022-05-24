@@ -9,4 +9,6 @@ public interface EventRepository {
     void addOutgoingEvent(DigitalProductPurchased digitalProductPurchased);
 
     Optional<DigitalProductPurchased> getNextOutgoing();
+
+    void remove(DigitalProductPurchased event);
 }
