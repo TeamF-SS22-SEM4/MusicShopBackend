@@ -33,6 +33,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     @EJB private ProductRepository productRepository;
     @EJB private ArtistRepository artistRepository;
     @EJB private SoundCarrierRepository soundCarrierRepository;
+    private static final int PAGE_SIZE = 20;
 
     public ProductApplicationServiceImpl() {}
 
@@ -47,8 +48,30 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
         return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct).orElseThrow(NoSuchElementException::new);
     }
 
+//    public List<ProductOverviewDTO> search1(String queryString, int pageNumber) {
+//        //only used to get the length of the list
+//        List<ProductOverviewDTO> results =  this.productRepository.fullTextSearch(queryString).stream()
+//                .map(this::overviewDtoFromProduct)
+//                .collect(Collectors.toList());
+//
+//        int amountOfPages = results.toArray().length / PAGE_SIZE;
+//        int start = (pageNumber - 1) * PAGE_SIZE;
+//        int end = (start + PAGE_SIZE) - 1;
+//
+//        if(pageNumber == 0){
+//            return this.productRepository.fullTextSearch(queryString).stream()
+//                    .map(this::overviewDtoFromProduct)
+//                    .collect(Collectors.toList());
+//        }else{
+//            //give back the wanted page with using start and end
+//        }
+//
+//        //we should not return the results list, return page result array after implementing it
+//        return results;
+//    }
+
     @Override
-    public List<ProductOverviewDTO> search(String queryString) {
+    public List<ProductOverviewDTO> search(String queryString, int pageNumber) {
         return this.productRepository.fullTextSearch(queryString).stream()
                 .map(this::overviewDtoFromProduct)
                 .collect(Collectors.toList());

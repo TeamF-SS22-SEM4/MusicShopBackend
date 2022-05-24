@@ -24,6 +24,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -82,7 +83,7 @@ class ProductApplicationTests {
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
         //when
-        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test");
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 0);
 
 
         //then
@@ -149,5 +150,153 @@ class ProductApplicationTests {
         List<SoundCarrierDTO> carrierDTOS = product.getSoundCarriers();
         assertEquals(soundCarriers.size(), carrierDTOS.size());
 
+    }
+
+    @Test
+    void when_page_number_equals_zero_then_return_whole_list() throws SessionExpired, NoPermissionForOperation{
+        //given
+        ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
+
+        List<Product> products = new ArrayList<>();
+
+        for(int i = 1; i <= 100; i++){
+            Product p = Product.create(
+                    new ProductId(UUID.randomUUID()),
+                    "Rosenrot"+i,
+                    "2000"+i,
+                    List.of("Rock", "Metal"+i),
+                    "Rammstein GBR"+i,
+                    "40:00"+i,
+                    List.of(rammsteinId),
+                    List.of(
+                            Song.create("Benzin"+i, "3:46"+i),
+                            Song.create("Mann gegen Mann"+i, "3:00"+i),
+                            Song.create("Rosenrot"+i, "3:00"+i),
+                            Song.create("Spring"+i, "3:00"+i),
+                            Song.create("Wo bist du"+i, "3:00"+i),
+                            Song.create("Stirb nicht vor mir!"+i, "3:00"+i)
+                    )
+            );
+            products.add(p);
+        }
+
+        List<ProductId> productIds = new ArrayList<>();
+
+        for(int i = 0; i < products.size(); i++){
+            productIds.add(products.get(i).getProductId());
+        }
+
+        Artist rammstein = Artist.create(
+                rammsteinId,
+                "rammstein",
+                "deutschland",
+                productIds
+        );
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
+        when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
+
+        //when
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 0);
+
+        //then
+        assertEquals(products.size(), productDTOs.size());
+    }
+
+    @Test
+    void when_page_number_equals_two_and_two_exists_then_return_two() throws SessionExpired, NoPermissionForOperation {
+        //given
+        ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
+
+        List<Product> products = new ArrayList<>();
+
+        for(int i = 1; i <= 100; i++){
+            Product p = Product.create(
+                    new ProductId(UUID.randomUUID()),
+                    "Rosenrot"+i,
+                    "2000"+i,
+                    List.of("Rock", "Metal"+i),
+                    "Rammstein GBR"+i,
+                    "40:00"+i,
+                    List.of(rammsteinId),
+                    List.of(
+                            Song.create("Benzin"+i, "3:46"+i),
+                            Song.create("Mann gegen Mann"+i, "3:00"+i),
+                            Song.create("Rosenrot"+i, "3:00"+i),
+                            Song.create("Spring"+i, "3:00"+i),
+                            Song.create("Wo bist du"+i, "3:00"+i),
+                            Song.create("Stirb nicht vor mir!"+i, "3:00"+i)
+                    )
+            );
+            products.add(p);
+        }
+
+        List<ProductId> productIds = new ArrayList<>();
+
+        for(int i = 0; i < products.size(); i++){
+            productIds.add(products.get(i).getProductId());
+        }
+
+        Artist rammstein = Artist.create(
+                rammsteinId,
+                "rammstein",
+                "deutschland",
+                productIds
+        );
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
+        when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
+
+        //when
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 2);
+        //then
+        assertEquals(20, productDTOs.size());
+    }
+
+    @Test
+    void when_page_number_equals_ten_and_ten_does_not_exists_then_return_empty_list() throws SessionExpired, NoPermissionForOperation {
+        //given
+        ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
+
+        List<Product> products = new ArrayList<>();
+
+        for(int i = 1; i <= 100; i++){
+            Product p = Product.create(
+                    new ProductId(UUID.randomUUID()),
+                    "Rosenrot"+i,
+                    "2000"+i,
+                    List.of("Rock", "Metal"+i),
+                    "Rammstein GBR"+i,
+                    "40:00"+i,
+                    List.of(rammsteinId),
+                    List.of(
+                            Song.create("Benzin"+i, "3:46"+i),
+                            Song.create("Mann gegen Mann"+i, "3:00"+i),
+                            Song.create("Rosenrot"+i, "3:00"+i),
+                            Song.create("Spring"+i, "3:00"+i),
+                            Song.create("Wo bist du"+i, "3:00"+i),
+                            Song.create("Stirb nicht vor mir!"+i, "3:00"+i)
+                    )
+            );
+            products.add(p);
+        }
+
+        List<ProductId> productIds = new ArrayList<>();
+
+        for(int i = 0; i < products.size(); i++){
+            productIds.add(products.get(i).getProductId());
+        }
+
+        Artist rammstein = Artist.create(
+                rammsteinId,
+                "rammstein",
+                "deutschland",
+                productIds
+        );
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
+        when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
+
+        //when
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 10);
+        //then
+        assertEquals(0, productDTOs.size());
     }
 }

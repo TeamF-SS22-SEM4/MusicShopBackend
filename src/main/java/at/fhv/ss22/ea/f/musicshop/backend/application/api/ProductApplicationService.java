@@ -16,6 +16,6 @@ public interface ProductApplicationService {
 
     ProductDetailsDTO productById(UUID productId) throws NoSuchElementException;
 
-    List<ProductOverviewDTO> search(String queryString);
+    List<ProductOverviewDTO> search(String queryString, int pageNumber);
 
 }

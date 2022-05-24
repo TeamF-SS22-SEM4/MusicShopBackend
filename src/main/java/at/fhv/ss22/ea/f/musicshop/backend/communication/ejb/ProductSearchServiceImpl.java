@@ -26,6 +26,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 
     @Override
     public List<ProductOverviewDTO> fullTextSearch(String query) {
-        return productApplicationService.search(query);
+        // pass 0 as pageNumber because 0 returns all products and fx client has no pagination
+        return productApplicationService.search(query, 0);
     }
 }
