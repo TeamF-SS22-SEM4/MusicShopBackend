@@ -5,8 +5,10 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="INFO">
+        <Root level="info">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>
+
+<!--    TODO add http appender for monitoring tool-->
 </Configuration>

@@ -32,7 +32,6 @@ services:
     container_name: musicshop-backend
     build: .
     ports:
-      - ${RMI_PORT}:${RMI_PORT}
       - "9990:9990"
       - "8080:8080"
     networks:

@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 @RequiresRole
 public class RoleCheckInterceptor {
 
-
     @EJB private AuthenticationApplicationService authenticationApplicationService;
 
     public RoleCheckInterceptor() {}

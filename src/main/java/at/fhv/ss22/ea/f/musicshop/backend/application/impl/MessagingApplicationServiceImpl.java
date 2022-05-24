@@ -4,6 +4,7 @@ import at.fhv.ss22.ea.f.communication.dto.MessageDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.MessagingApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Local(MessagingApplicationService.class)
 @Stateless
+@Logged
 public class MessagingApplicationServiceImpl implements MessagingApplicationService {
 
     @EJB private JMSClient jmsClient;

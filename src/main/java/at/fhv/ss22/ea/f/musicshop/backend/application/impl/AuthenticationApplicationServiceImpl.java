@@ -4,6 +4,7 @@ import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
 import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Local(AuthenticationApplicationService.class)
 @Stateless
+@Logged
 public class AuthenticationApplicationServiceImpl implements AuthenticationApplicationService {
     private static final Logger logger = LogManager.getLogger(AuthenticationApplicationServiceImpl.class);
 
@@ -68,7 +70,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
         sessionRepository.add(session);
         EntityManagerUtil.commit();
 
-        logger.info("successfuly logged {} in", username);
+        logger.info("successfully logged {} in", username);
 
         return LoginResultDTO.builder()
                 .withId(session.getSessionId().getValue())
