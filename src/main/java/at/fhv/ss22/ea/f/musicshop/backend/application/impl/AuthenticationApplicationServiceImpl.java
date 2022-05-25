@@ -48,7 +48,7 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
             throw new AuthenticationFailed();
         }
 
-        return login(username, password);
+        return createSession(username);
     }
 
     @Override
@@ -58,10 +58,10 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
             throw new AuthenticationFailed();
         }
 
-        return login(username, password);
+        return createSession(username);
     }
 
-    private LoginResultDTO login(String username, String password) throws AuthenticationFailed {
+    private LoginResultDTO createSession(String username) throws AuthenticationFailed {
         Optional<User> opt = userRepository.userByUserName(username);
         User user = opt.orElseThrow(AuthenticationFailed::new);
         Session session = Session.newForUser(user.getUserId());

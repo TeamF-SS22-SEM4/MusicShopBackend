@@ -32,7 +32,6 @@ public class BuyingController {
     })
     @APIResponseSchema(value = String.class, responseCode = "200")
     @Operation(operationId = "placeOrder")
-    //TODO maybe extract sessionId (also from application)
     public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
         try {
             String saleNumber = saleApplicationService.buyAsCustomer(

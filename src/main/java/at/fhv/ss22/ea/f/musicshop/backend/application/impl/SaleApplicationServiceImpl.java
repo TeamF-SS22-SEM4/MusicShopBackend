@@ -10,6 +10,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -20,6 +23,9 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
@@ -40,22 +46,26 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     @EJB private ProductRepository productRepository;
     @EJB private ArtistRepository artistRepository;
     @EJB private SessionRepository sessionRepository;
-
     @EJB private CustomerApplicationService customerApplicationService;
+
+    @EJB private UserRepository userRepository;
+
+    @EJB private EventPlacer eventPlacer;
 
     public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
-                                      ProductRepository productRepository, ArtistRepository artistRepository) {
+                                      ProductRepository productRepository, ArtistRepository artistRepository, EventPlacer eventPlacer) {
         this.sessionRepository = sessionRepository;
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.artistRepository = artistRepository;
+        this.eventPlacer = eventPlacer;
     }
 
     @Override
-    //@RequiresRole(UserRole.CUSTOMER)
+    @RequiresRole(UserRole.CUSTOMER)
     public String buyAsCustomer(@SessionKey String sessionId, List<OrderItem> orderItems,
                                 String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException, UnsupportedOperationException {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
@@ -94,6 +104,19 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
             try {
                 saleItems.add(carrier.sell(dto.getAmount()));
+
+                if(carrier.getType().equals(SoundCarrierType.DIGITAL)) {
+                    Product product = productRepository.productById(carrier.getProductId()).orElseThrow(IllegalStateException::new);
+                    User user = userRepository.userById(new UserId(customerId)).orElseThrow(IllegalStateException::new); // In this case customer = user
+
+                    // Create new event
+                    DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
+                            new DigitalProductPurchasedId(UUID.randomUUID()),
+                            user.getUsername(),
+                            product.getProductId()
+                    );
+                    eventPlacer.placeProductPurchase(digitalProductPurchased);
+                }
             } catch (SoundCarrierUnavailableException e) {
                 invalidCarriers.add(carrier.getCarrierId().getUUID());
             }
