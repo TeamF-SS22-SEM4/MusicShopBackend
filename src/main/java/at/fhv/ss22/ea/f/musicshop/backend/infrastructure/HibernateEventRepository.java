@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Local(EventRepository.class)
@@ -26,11 +27,10 @@ public class HibernateEventRepository implements EventRepository {
     }
 
     @Override
-    public Optional<DigitalProductPurchased> getNextOutgoing() {
+    public List<DigitalProductPurchased> getNextOutgoing() {
         TypedQuery<DigitalProductPurchased> query = this.em.createQuery("select d from DigitalProductPurchased d"
                 ,DigitalProductPurchased.class);
-        //TODO
-        return query.getResultStream().findFirst();
+        return query.getResultList();
     }
 
     @Override

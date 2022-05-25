@@ -109,11 +109,19 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                     Product product = productRepository.productById(carrier.getProductId()).orElseThrow(IllegalStateException::new);
                     User user = userRepository.userById(new UserId(customerId)).orElseThrow(IllegalStateException::new); // In this case customer = user
 
+                    String artists = product.getArtistIds().stream()
+                            .map(id -> artistRepository.artistById(id))
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .map(artist -> artist.getArtistName())
+                            .collect(Collectors.joining(", "));
+
                     // Create new event
                     DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
                             new DigitalProductPurchasedId(UUID.randomUUID()),
                             user.getUsername(),
-                            product.getProductId()
+                            product.getProductId(),
+                            artists
                     );
                     eventPlacer.placeProductPurchase(digitalProductPurchased);
                 }

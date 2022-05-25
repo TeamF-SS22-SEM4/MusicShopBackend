@@ -13,11 +13,13 @@ public class DigitalProductPurchased {
     private String username;
     private ProductId productId;
 
-    public DigitalProductPurchased(DigitalProductPurchasedId eventId, String username, ProductId productId) {
+    private String artists;
+
+    public DigitalProductPurchased(DigitalProductPurchasedId eventId, String username, ProductId productId, String artists) {
         this.eventId = eventId;
         this.username = username;
         this.productId = productId;
-
+        this.artists = artists;
     }
 
     protected DigitalProductPurchased() {
@@ -34,5 +36,9 @@ public class DigitalProductPurchased {
 
     public ProductId getProductId() {
         return productId;
+    }
+
+    public String getArtists() {
+        return artists;
     }
 }

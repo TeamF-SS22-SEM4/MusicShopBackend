@@ -15,6 +15,7 @@ import redis.clients.jedis.JedisPool;
 
 import javax.ejb.*;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,14 +51,14 @@ public class EventSenderImpl implements EventSender {
     @Schedule(hour = "*", minute = "*", second = "*/5", info = "Send event timer")
     @Transactional
     public void sendDigitalPurchase() {
-        Optional<DigitalProductPurchased> opt =  this.eventRepository.getNextOutgoing();
-        if (opt.isPresent()) {
-            DigitalProductPurchased event = opt.get();
+        List<DigitalProductPurchased> events =  this.eventRepository.getNextOutgoing();
+        for (DigitalProductPurchased event : events) {
             Product product = productRepository.productById(event.getProductId()).orElseThrow(NoSuchElementException::new);
 
             DigitalProductPurchasedDTO eventDTO = DigitalProductPurchasedDTO.builder()
                     .withUsername(event.getUsername())
                     .withAlbumName(product.getName())
+                    .withArtists(event.getArtists())
                     .withPurchasedSongs(product.getSongs()
                             .stream()
                             .map(song -> SongDTO.builder()
