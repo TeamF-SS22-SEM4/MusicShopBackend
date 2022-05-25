@@ -247,8 +247,8 @@ class ProductApplicationTests {
 
         List<Product> pageTwo = new ArrayList<>();
 
-        int start = (2 - 1) * 20;
-        int end = (start + 20) - 1;
+        int start = 20;
+        int end = 39;
 
         for(int i = start; i <= end; i++){
             pageTwo.add(products.get(i));
