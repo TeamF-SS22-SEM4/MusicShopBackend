@@ -19,10 +19,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierReposito
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Local(ProductApplicationService.class)
@@ -33,6 +30,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     @EJB private ProductRepository productRepository;
     @EJB private ArtistRepository artistRepository;
     @EJB private SoundCarrierRepository soundCarrierRepository;
+    private static final int PAGE_SIZE = 20;
 
     public ProductApplicationServiceImpl() {}
 
@@ -48,10 +46,28 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     }
 
     @Override
-    public List<ProductOverviewDTO> search(String queryString) {
-        return this.productRepository.fullTextSearch(queryString).stream()
-                .map(this::overviewDtoFromProduct)
-                .collect(Collectors.toList());
+    public List<ProductOverviewDTO> search(String queryString, int pageNumber) {
+        //only used to get the length of the list
+        List<Product> allProducts =  this.productRepository.fullTextSearch(queryString);
+
+        int start = (pageNumber - 1) * PAGE_SIZE;
+        int end = (start + PAGE_SIZE) - 1;
+
+        List<Product> pagedProducts = new ArrayList<>();
+
+        if(pageNumber == 0){
+            return allProducts.stream().map(this::overviewDtoFromProduct)
+                    .collect(Collectors.toList());
+        } else if (start > (allProducts.size() - PAGE_SIZE)) {
+            return Collections.emptyList();
+        } else {
+            for(int i = start; i <= end; i++){
+                pagedProducts.add(allProducts.get(i));
+            }
+
+            return pagedProducts.stream().map(this::overviewDtoFromProduct)
+                    .collect(Collectors.toList());
+        }
     }
 
     private ProductOverviewDTO overviewDtoFromProduct(Product product) {

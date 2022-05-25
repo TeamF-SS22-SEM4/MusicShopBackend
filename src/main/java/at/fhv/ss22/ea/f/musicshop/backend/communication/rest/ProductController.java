@@ -48,8 +48,8 @@ public class ProductController {
     @Consumes(MediaType.APPLICATION_JSON)
     @APIResponseSchema(value = ProductOverviewDTO[].class, responseCode = "200")
     @Operation(operationId = "searchProducts")
-    public Response search(@QueryParam("search") @DefaultValue("") String query) {
-        List<ProductOverviewDTO> products = productApplicationService.search(query);
+    public Response search(@QueryParam("search") @DefaultValue("") String query, @QueryParam("pageNumber") @DefaultValue("0") int pageNumber) {
+        List<ProductOverviewDTO> products = productApplicationService.search(query, pageNumber);
         return Response.ok().entity(products).build();
     }
 }
