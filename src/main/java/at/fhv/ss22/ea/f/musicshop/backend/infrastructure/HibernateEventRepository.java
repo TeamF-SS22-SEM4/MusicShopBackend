@@ -7,9 +7,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Local(EventRepository.class)
 @Stateless
@@ -34,10 +32,12 @@ public class HibernateEventRepository implements EventRepository {
     }
 
     @Override
-    @Transactional
     public void remove(DigitalProductPurchased event) {
+        EntityManagerUtil.beginTransaction();
         this.em.remove(event);
         this.em.flush();
         this.em.clear();
+
+        EntityManagerUtil.commit();
     }
 }
