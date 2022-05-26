@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DigitalProductPurchasedTests {
+class DigitalProductPurchasedTests {
 
     @Test
     void given_purchaseeventdetails_when_creating_purchasevent_then_details_equals() {
@@ -25,7 +25,8 @@ public class DigitalProductPurchasedTests {
         DigitalProductPurchased digitalProductPurchased = new DigitalProductPurchased(
                 digitalProductPurchasedIdExpected,
                 usernameExpected,
-                productIdExpected
+                productIdExpected,
+                ""
         );
 
         // then
