@@ -20,6 +20,8 @@ public interface AuthenticationApplicationService {
     LoginResultDTO employeeLogin(String username, String password) throws AuthenticationFailed;
     LoginResultDTO customerLogin(String username, String password) throws AuthenticationFailed;
 
+    boolean checkValidity(String sessionId);
+
     /**Do <b>NOT</b> expose to communication!
      *
      * @param sessionId
