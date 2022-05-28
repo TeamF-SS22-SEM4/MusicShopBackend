@@ -19,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.security.spec.ECField;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -58,5 +59,21 @@ class RoleCheckTests {
         verify(context, times(1)).proceed();
         verify(authService, times(1)).hasRole(any(), any());
     }
+
+    @Test
+    void when_called_on_class_no_session_key_then_exception() throws Exception {
+        //given
+        TestingInterfaceMissingSessionKey object = (sessionId, anotherParam) -> false;
+        InvocationContext context = mock(InvocationContext.class);
+        Method method = TestingInterfaceMissingSessionKey.class.getMethod("testing", String.class, int.class);
+        when(context.getMethod()).thenReturn(method);
+        when(context.proceed()).thenReturn(false);
+
+        //when - then
+        assertThrows(IllegalStateException.class, () -> roleCheckInterceptor.intercept(context));
+
+
+    }
+
 
 }

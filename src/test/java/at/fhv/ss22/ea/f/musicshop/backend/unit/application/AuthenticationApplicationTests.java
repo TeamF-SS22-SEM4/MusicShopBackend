@@ -46,12 +46,28 @@ class AuthenticationApplicationTests {
     @Test
     void basic_login() throws AuthenticationFailed {
         //given
+        reset(sessionRepository);
         User user = User.create(new UserId(UUID.randomUUID()), "userA", "max", "mustermann", List.of(UserRole.EMPLOYEE, UserRole.OPERATOR),List.of());
         when(ldapClient.employeeCredentialsValid(any(), any())).thenReturn(true);
         when(userRepository.userByUserName(anyString())).thenReturn(Optional.of(user));
 
         //when
         LoginResultDTO loginResultDTO = authenticationApplicationService.employeeLogin("lukas1", "password");
+
+        //then
+        verify(sessionRepository, times(1)).add(any());
+    }
+
+    @Test
+    void basic_customer_login() throws AuthenticationFailed {
+        reset(sessionRepository);
+        //given
+        User user = User.create(new UserId(UUID.randomUUID()), "userA", "max", "mustermann", List.of(UserRole.EMPLOYEE, UserRole.OPERATOR),List.of());
+        when(ldapClient.customerCredentialsValid(any(), any())).thenReturn(true);
+        when(userRepository.userByUserName(anyString())).thenReturn(Optional.of(user));
+
+        //when
+        LoginResultDTO loginResultDTO = authenticationApplicationService.customerLogin("lukas1", "password");
 
         //then
         verify(sessionRepository, times(1)).add(any());
@@ -94,6 +110,7 @@ class AuthenticationApplicationTests {
         assertThrows(SessionExpired.class, () -> authenticationApplicationService.hasRole(session.getSessionId(), UserRole.EMPLOYEE));
         verify(sessionRepository, times(1)).removeExpiredSessions();
     }
+
     @Test
     void when_invalid_credentials_then_login_fails() {
         //given
@@ -103,6 +120,30 @@ class AuthenticationApplicationTests {
 
         //when - then
         assertThrows(AuthenticationFailed.class, () -> authenticationApplicationService.employeeLogin(username, password));
+    }
 
+    @Test
+    void when_invalid_credentials_of_customer_then_login_fails() {
+        //given
+        String username = "fakeuser";
+        String password = "fakepassword";
+        when(ldapClient.customerCredentialsValid(username, password)).thenReturn(false);
+
+        //when - then
+        assertThrows(AuthenticationFailed.class, () -> authenticationApplicationService.customerLogin(username, password));
+    }
+
+    @Test
+    void check_validity() throws SessionExpired {
+        //given
+        Session session = Session.newForUser(new UserId(UUID.randomUUID()));
+        Session sessionSpy = spy(session);
+        when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(sessionSpy));
+
+        //when
+        this.authenticationApplicationService.checkValidity(session.getSessionId().getValue());
+
+        //then
+        verify(sessionSpy).refreshDuration();
     }
 }

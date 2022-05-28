@@ -8,6 +8,7 @@ import org.hibernate.search.bridge.builtin.UUIDBridge;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.lang.annotation.Documented;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class DigitalProductPurchasedId implements Serializable {
     }
 
     @Override
+    @Generated
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -40,6 +42,7 @@ public class DigitalProductPurchasedId implements Serializable {
     }
 
     @Override
+    @Generated
     public int hashCode() {
         return Objects.hash(eventId);
     }

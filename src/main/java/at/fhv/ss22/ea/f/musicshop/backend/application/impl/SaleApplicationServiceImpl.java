@@ -55,13 +55,14 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     public SaleApplicationServiceImpl() {}
 
     public SaleApplicationServiceImpl(SessionRepository sessionRepository, SoundCarrierRepository soundCarrierRepository, SaleRepository saleRepository,
-                                      ProductRepository productRepository, ArtistRepository artistRepository, EventPlacer eventPlacer) {
+                                      ProductRepository productRepository, ArtistRepository artistRepository, EventPlacer eventPlacer, UserRepository userRepository) {
         this.sessionRepository = sessionRepository;
         this.soundCarrierRepository = soundCarrierRepository;
         this.saleRepository = saleRepository;
         this.productRepository = productRepository;
         this.artistRepository = artistRepository;
         this.eventPlacer = eventPlacer;
+        this.userRepository = userRepository;
     }
 
     @Override
