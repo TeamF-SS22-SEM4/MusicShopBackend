@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: musicshop-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: musicshop-backend
+  template:
+    metadata:
+      name: musicshop-backend
+      labels:
+        app: musicshop-backend
+    spec:
+      containers:
+        - name: musicshop-backend
+          image: team-f-musicshop-backend
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: LDAP_HOST
+              value: user-ldap-server
+            - name: LDAP_PORT
+              value: "10389"
+            - name: CUSTOMER_SERVICE_RMI_PORT
+              value: "1099"
+            - name: CUSTOMER_SERVICE_RMI_HOSTNAME
+              value: customer-db-service
+            - name: ACTIVEMQ_USER
+              value: admin
+            - name: ACTIVEMQ_PASSWORD
+              value: admin
+            - name: REDIS_HOST
+              value: redis-queue
+            - name: REDIS_PORT
+              value: "6379"
+          imagePullPolicy: Never
+          ports:
+            - name: wildfly-web
+              containerPort: 9990
+            - name: http
+              containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: musicshop-backend
+spec:
+  selector:
+    app: musicshop-backend
+  ports:
+    - name: wildfly-web
+      port: 9990
+      targetPort: wildfly-web
+    - name: http
+      port: 8080
+      targetPort: http

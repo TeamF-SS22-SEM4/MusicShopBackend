@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-server
+spec:
+  selector:
+    matchLabels:
+      app: postgres-server
+  template:
+    metadata:
+      labels:
+        app: postgres-server
+    spec:
+      containers:
+        - name: postgres-server
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: musicshopdb
+          ports:
+            - name: postgreport
+              containerPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-server
+spec:
+  selector:
+    app: postgres-server
+  ports:
+    - name: postgreport
+      port: 5432
+      targetPort: postgreport
