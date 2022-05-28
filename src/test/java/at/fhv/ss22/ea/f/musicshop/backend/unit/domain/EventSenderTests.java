@@ -15,10 +15,7 @@ import org.junit.jupiter.api.TestInstance;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -56,10 +53,11 @@ class EventSenderTests {
         DigitalProductPurchased event = new DigitalProductPurchased(
                 new DigitalProductPurchasedId(UUID.randomUUID()),
                 "jdo1111",
-                productId
+                productId,
+                ""
         );
 
-        when(eventRepository.getNextOutgoing()).thenReturn(Optional.of(event));
+        when(eventRepository.getNextOutgoing()).thenReturn(List.of(event));
         when(productRepository.productById(productId)).thenReturn(Optional.of(product));
 
         //when
@@ -76,7 +74,7 @@ class EventSenderTests {
         reset(jedisPool, eventRepository);
         when(jedisPool.getResource()).thenReturn(jedis);
 
-        when(eventRepository.getNextOutgoing()).thenReturn(Optional.empty());
+        when(eventRepository.getNextOutgoing()).thenReturn(new LinkedList<>());
 
         //when
         eventSender.sendDigitalPurchase();
