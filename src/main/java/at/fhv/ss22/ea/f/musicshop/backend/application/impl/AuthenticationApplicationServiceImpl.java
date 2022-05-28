@@ -52,6 +52,20 @@ public class AuthenticationApplicationServiceImpl implements AuthenticationAppli
     }
 
     @Override
+    public boolean checkValidity(String sessionId) {
+
+        Optional<Session> optSession = this.sessionRepository.sessionById(new SessionId(sessionId));
+        optSession.ifPresent(s -> {
+            try {
+                s.refreshDuration();
+            } catch (SessionExpired e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return optSession.isPresent();
+    }
+
+    @Override
     public LoginResultDTO customerLogin(String username, String password) throws AuthenticationFailed {
         if (!ldapClient.customerCredentialsValid(username, password)) {
             logger.warn("Failed to authenticate {} because of invalid credentials", username); //do NOT log the password
