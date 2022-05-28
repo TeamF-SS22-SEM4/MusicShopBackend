@@ -6,6 +6,14 @@ public class OrderItem {
     private UUID carrierId;
     private int amount;
 
+    public OrderItem() {
+    }
+
+    public OrderItem(UUID carrierId, int amount) {
+        this.carrierId = carrierId;
+        this.amount = amount;
+    }
+
     public UUID getCarrierId() {
         return carrierId;
     }
