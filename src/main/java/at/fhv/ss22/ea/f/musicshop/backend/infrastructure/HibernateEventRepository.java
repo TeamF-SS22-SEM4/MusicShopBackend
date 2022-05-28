@@ -25,7 +25,7 @@ public class HibernateEventRepository implements EventRepository {
     }
 
     @Override
-    public List<DigitalProductPurchased> getNextOutgoing() {
+    public List<DigitalProductPurchased> getNextOutgoings() {
         TypedQuery<DigitalProductPurchased> query = this.em.createQuery("select d from DigitalProductPurchased d"
                 ,DigitalProductPurchased.class);
         return query.getResultList();

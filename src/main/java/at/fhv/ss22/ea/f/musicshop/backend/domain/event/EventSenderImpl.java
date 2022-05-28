@@ -48,7 +48,7 @@ public class EventSenderImpl implements EventSender {
     @Override
     @Schedule(hour = "*", minute = "*", second = "*/5", info = "Send event timer")
     public void sendDigitalPurchase() {
-        List<DigitalProductPurchased> events =  this.eventRepository.getNextOutgoing();
+        List<DigitalProductPurchased> events =  this.eventRepository.getNextOutgoings();
         for (DigitalProductPurchased event : events) {
             Product product = productRepository.productById(event.getProductId()).orElseThrow(NoSuchElementException::new);
 

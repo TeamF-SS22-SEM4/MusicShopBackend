@@ -23,6 +23,7 @@
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session</class>
         <class>at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole</class>
+        <class>at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
