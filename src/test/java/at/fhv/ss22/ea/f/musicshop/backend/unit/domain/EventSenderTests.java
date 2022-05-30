@@ -6,7 +6,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPu
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,14 +56,14 @@ class EventSenderTests {
                 ""
         );
 
-        when(eventRepository.getNextOutgoing()).thenReturn(List.of(event));
+        when(eventRepository.getNextOutgoings()).thenReturn(List.of(event));
         when(productRepository.productById(productId)).thenReturn(Optional.of(product));
 
         //when
         eventSender.sendDigitalPurchase();
 
-        verify(eventRepository, times(1)).getNextOutgoing();
-        verify(jedis, times(1)).lpush(anyString(), contains(event.getUsername().toString()));
+        verify(eventRepository, times(1)).getNextOutgoings();
+        verify(jedis, times(1)).lpush(anyString(), contains(event.getUsername()));
     }
 
     @Test
@@ -74,13 +73,13 @@ class EventSenderTests {
         reset(jedisPool, eventRepository);
         when(jedisPool.getResource()).thenReturn(jedis);
 
-        when(eventRepository.getNextOutgoing()).thenReturn(new LinkedList<>());
+        when(eventRepository.getNextOutgoings()).thenReturn(new LinkedList<>());
 
         //when
         eventSender.sendDigitalPurchase();
 
         //then
-        verify(eventRepository, times(1)).getNextOutgoing();
+        verify(eventRepository, times(1)).getNextOutgoings();
         verify(jedis, never()).lpush(anyString(), anyString());
     }
 }

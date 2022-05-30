@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.application;
 
+import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
 import at.fhv.ss22.ea.f.communication.dto.RefundedSaleItemDTO;
 import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
@@ -7,11 +8,14 @@ import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
+import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
+import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
@@ -28,21 +32,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SaleApplicationTests {
 
-    private SaleApplicationService saleApplicationService;
+    private SaleApplicationServiceImpl saleApplicationService;
 
     private SoundCarrierRepository soundCarrierRepository = mock(SoundCarrierRepository.class);
     private SaleRepository saleRepository = mock(SaleRepository.class);
@@ -50,12 +51,13 @@ class SaleApplicationTests {
     private SessionRepository sessionRepository = mock(SessionRepository.class);
     private AuthenticationApplicationService authenticationApplicationService = mock(AuthenticationApplicationService.class);
     private ArtistRepository artistRepository = mock(ArtistRepository.class);
-
+    private UserRepository userRepository = mock(UserRepository.class);
+    private CustomerApplicationService customerApplicationService = mock(CustomerApplicationService.class);
     private EventPlacer eventPlacer = mock(EventPlacer.class);
 
     @BeforeAll
     void setup() throws SessionExpired {
-        this.saleApplicationService = new SaleApplicationServiceImpl(sessionRepository, soundCarrierRepository, saleRepository, productRepository, artistRepository, eventPlacer);
+        this.saleApplicationService = new SaleApplicationServiceImpl(sessionRepository, soundCarrierRepository, saleRepository, productRepository, artistRepository, eventPlacer, userRepository, customerApplicationService);
         when(authenticationApplicationService.hasRole(any(), any())).thenReturn(true);
     }
 
@@ -84,6 +86,162 @@ class SaleApplicationTests {
         //then
         assertEquals(3, carriers.get(0).getAmountInStore());
         verify(saleRepository).add(any());
+    }
+
+    @Test
+    void valid_buy_as_customer_with_cash() throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation, RemoteException {
+        //given
+        User user = User.create(
+                new UserId(UUID.randomUUID()),
+                "",
+                "",
+                "",
+                List.of(),
+                List.of()
+        );
+        Session session = Session.newForUser(user.getUserId());
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(session));
+        SaleApplicationServiceImpl saleImpl = spy(saleApplicationService);
+        doReturn("R0001").when(saleImpl).buy(any(), any(), anyString(), any());
+
+        //when
+        OrderItem orderItem = new OrderItem(UUID.randomUUID(), 1);
+        List<OrderItem> orderItems = new LinkedList<>();
+        orderItems.add(orderItem);
+        saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Cash", null, null, null);
+    }
+
+    @Test
+    void valid_buy_as_customer_with_credit_card() throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation, RemoteException {
+        //given
+        User user = User.create(
+                new UserId(UUID.randomUUID()),
+                "",
+                "",
+                "",
+                List.of(),
+                List.of()
+        );
+        Session session = Session.newForUser(user.getUserId());
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(session));
+        SaleApplicationServiceImpl saleImpl = spy(saleApplicationService);
+        doReturn("R0001").when(saleImpl).buy(any(), any(), anyString(), any());
+        when(customerApplicationService.customerById(any(), any())).thenReturn(CustomerDTO.builder()
+                        .id(UUID.randomUUID())
+                        .creditCardNumber("some-number")
+                        .creditCardType("mastercard")
+                        .cvc("1234")
+                .build());
+
+        //when
+        OrderItem orderItem = new OrderItem(UUID.randomUUID(), 1);
+        List<OrderItem> orderItems = new LinkedList<>();
+        orderItems.add(orderItem);
+        saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Credit Card", "mastercard", "some-number", "1234");
+    }
+
+    @Test
+    void valid_buy_as_customer_with_invalid_credit_card() throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation, RemoteException {
+        //given
+        User user = User.create(
+                new UserId(UUID.randomUUID()),
+                "",
+                "",
+                "",
+                List.of(),
+                List.of()
+        );
+        Session session = Session.newForUser(user.getUserId());
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(session));
+        SaleApplicationServiceImpl saleImpl = spy(saleApplicationService);
+        doReturn("R0001").when(saleImpl).buy(any(), any(), anyString(), any());
+        when(customerApplicationService.customerById(any(), any())).thenReturn(CustomerDTO.builder()
+                .id(UUID.randomUUID())
+                .creditCardNumber("some-number")
+                .creditCardType("mastercard")
+                .cvc("1234")
+                .build());
+
+        //when
+        OrderItem orderItem = new OrderItem(UUID.randomUUID(), 1);
+        List<OrderItem> orderItems = new LinkedList<>();
+        orderItems.add(orderItem);
+        assertThrows(IllegalArgumentException.class, () -> saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Credit Card", "mastercard", "other-number", "1234"));
+    }
+
+    @Test
+    void sell_digital_carriers() throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+        //given
+        reset(saleRepository);
+        User user = User.create(
+                new UserId(UUID.randomUUID()),
+                "max",
+                "max",
+                "mustermann",
+                List.of(),
+                List.of()
+        );
+
+        Product product = Product.create(
+            new ProductId(UUID.randomUUID()),
+                "some",
+                "2000",
+                List.of("Rock"),
+                "someLabel",
+                "30:00",
+                List.of(new ArtistId(UUID.randomUUID())),
+                List.of()
+        );
+        UUID customerIdExpected = UUID.randomUUID();
+        List<SoundCarrier> carriers = List.of(
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.DIGITAL, 20, 1, "A1", product.getProductId())
+        );
+        when(productRepository.productById(product.getProductId())).thenReturn(Optional.of(product));
+        when(userRepository.userById(user.getUserId())).thenReturn(Optional.of(user));
+
+        for (SoundCarrier s : carriers) {
+            when(soundCarrierRepository.soundCarrierById(s.getCarrierId())).thenReturn(Optional.of(s));
+        }
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(Session.newForUser(new UserId(UUID.randomUUID()))));
+
+        //when
+        SoundCarrierAmountDTO buyingDTO = SoundCarrierAmountDTO.builder()
+                .withAmount(1)
+                .withCarrierId(carriers.get(0).getCarrierId().getUUID()).build();
+
+        saleApplicationService.buy("placeholder", List.of(buyingDTO), "CASH", user.getUserId().getUUID());
+
+        //then
+        assertEquals(1, carriers.get(0).getAmountInStore());
+        verify(saleRepository).add(any());
+    }
+
+    @Test
+    void sell_carriers_with_too_high_amount() throws CarrierNotAvailableException, SessionExpired, NoPermissionForOperation {
+        //given
+        reset(saleRepository);
+        UUID customerIdExpected = UUID.randomUUID();
+        List<SoundCarrier> carriers = List.of(
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 20, 5, "A1", new ProductId(UUID.randomUUID())),
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 22, 5, "A1", new ProductId(UUID.randomUUID())),
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.VINYL, 22, 5, "A1", new ProductId(UUID.randomUUID())),
+                SoundCarrier.create(new SoundCarrierId(UUID.randomUUID()), SoundCarrierType.CD, 10, 5, "A1", new ProductId(UUID.randomUUID()))
+        );
+        for (SoundCarrier s : carriers) {
+            when(soundCarrierRepository.soundCarrierById(s.getCarrierId())).thenReturn(Optional.of(s));
+        }
+        when(sessionRepository.sessionById(any())).thenReturn(Optional.of(Session.newForUser(new UserId(UUID.randomUUID()))));
+
+        //when
+        SoundCarrierAmountDTO buyingDTO = SoundCarrierAmountDTO.builder()
+                .withAmount(6)
+                .withCarrierId(carriers.get(0).getCarrierId().getUUID()).build();
+
+        assertThrows(CarrierNotAvailableException.class, () -> saleApplicationService.buy("placeholder", List.of(buyingDTO), "CASH", customerIdExpected));
+
+        //then
+        assertEquals(5, carriers.get(0).getAmountInStore());
+        verify(saleRepository, never()).add(any());
     }
     //not testing for unchanged amountsInStore on failure because that mechanism relies on Transactional rollback
     // and that is not available when repositories are mocked
