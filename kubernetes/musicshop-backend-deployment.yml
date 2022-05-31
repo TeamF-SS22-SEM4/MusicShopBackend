@@ -18,9 +18,17 @@ spec:
           image: team-f-musicshop-backend
           env:
             - name: POSTGRES_USER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: postgres_username
+                  optional: false
             - name: POSTGRES_PASSWORD
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: postgres_password
+                  optional: false
             - name: LDAP_HOST
               valueFrom:
                 configMapKeyRef:
@@ -42,9 +50,17 @@ spec:
                   key: customer_service_rmi_hostname
                   name: monolith-configmap
             - name: ACTIVEMQ_USER
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: activemq_username
+                  optional: false
             - name: ACTIVEMQ_PASSWORD
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: activemq_password
+                  optional: false
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:

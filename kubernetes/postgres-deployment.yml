@@ -16,9 +16,17 @@ spec:
           image: postgres:latest
           env:
             - name: POSTGRES_USER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: postgres_username
+                  optional: false
             - name: POSTGRES_PASSWORD
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: postgres_password
+                  optional: false
             - name: POSTGRES_DB
               value: musicshopdb
           ports:

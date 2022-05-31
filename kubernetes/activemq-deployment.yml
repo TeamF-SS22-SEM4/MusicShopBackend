@@ -17,9 +17,17 @@ spec:
           image: webcenter/activemq:latest
           env:
             - name: ACTIVEMQ_ADMIN_LOGIN
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: activemq_username
+                  optional: false
             - name: ACTIVEMQ_ADMIN_PASSWORD
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: activemq_password
+                  optional: false
             - name: ACTIVEMQ_STATIC_TOPICS
               value: "Orders;Pop;Metal;Rock;Electronic;Grunge;Hip-Hop;Hard Rock"
           ports:
