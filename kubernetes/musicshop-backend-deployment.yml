@@ -22,21 +22,39 @@ spec:
             - name: POSTGRES_PASSWORD
               value: postgres
             - name: LDAP_HOST
-              value: user-ldap-server
+              valueFrom:
+                configMapKeyRef:
+                  key: ldap_host
+                  name: monolith-configmap
             - name: LDAP_PORT
-              value: "10389"
+              valueFrom:
+                configMapKeyRef:
+                  key: ldap_port
+                  name: monolith-configmap
             - name: CUSTOMER_SERVICE_RMI_PORT
-              value: "1099"
+              valueFrom:
+                configMapKeyRef:
+                  key: customer_service_rmi_port
+                  name: monolith-configmap
             - name: CUSTOMER_SERVICE_RMI_HOSTNAME
-              value: customer-db-service
+              valueFrom:
+                configMapKeyRef:
+                  key: customer_service_rmi_hostname
+                  name: monolith-configmap
             - name: ACTIVEMQ_USER
               value: admin
             - name: ACTIVEMQ_PASSWORD
               value: admin
             - name: REDIS_HOST
-              value: queue-service
+              valueFrom:
+                configMapKeyRef:
+                  key: redis_host
+                  name: monolith-configmap
             - name: REDIS_PORT
-              value: "6379"
+              valueFrom:
+                configMapKeyRef:
+                  key: redis_port
+                  name: monolith-configmap
           imagePullPolicy: Never
           ports:
             - name: wildfly-web

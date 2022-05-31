@@ -48,3 +48,6 @@ src/main/resources/.env
 
 # Postgres folder for docker-compose
 /postgres-data/
+
+*secret.yml
+!*secret.dist.yml
