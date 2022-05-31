@@ -71,7 +71,7 @@ spec:
                 configMapKeyRef:
                   key: redis_port
                   name: monolith-configmap
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - name: wildfly-web
               containerPort: 9990
