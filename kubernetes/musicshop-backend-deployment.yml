@@ -83,6 +83,7 @@ kind: Service
 metadata:
   name: musicshop-backend
 spec:
+  type: LoadBalancer
   selector:
     app: musicshop-backend
   ports:
