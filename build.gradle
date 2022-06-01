@@ -87,6 +87,8 @@ test {
 
 build.dependsOn jacocoTestReport
 
+war.dependsOn jacocoTestReport
+
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 

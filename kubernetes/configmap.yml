@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monolith-configmap
+data:
+  ldap_host: "user-ldap-server"
+  ldap_port: "10389"
+  customer_service_rmi_hostname: "customer-db-service"
+  customer_service_rmi_port: "1100"
+  redis_host: "queue-service"
+  redis_port: "6379"
