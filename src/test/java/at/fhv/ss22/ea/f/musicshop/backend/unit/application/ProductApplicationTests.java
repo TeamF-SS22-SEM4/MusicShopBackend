@@ -314,4 +314,55 @@ class ProductApplicationTests {
         //then
         assertEquals(expectedSize, productDTOs.size());
     }
+
+    @Test
+    void when_last_page_has_only_10_and_less_than_PAGE_SIZE_then_return_10() throws SessionExpired, NoPermissionForOperation {
+        //given
+        ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
+
+        List<Product> products = new ArrayList<>();
+
+        for(int i = 1; i <= 110; i++){
+            Product p = Product.create(
+                    new ProductId(UUID.randomUUID()),
+                    "Rosenrot"+i,
+                    "2000"+i,
+                    List.of("Rock", "Metal"+i),
+                    "Rammstein GBR"+i,
+                    "40:00"+i,
+                    List.of(rammsteinId),
+                    List.of(
+                            Song.create("Benzin"+i, "3:46"+i),
+                            Song.create("Mann gegen Mann"+i, "3:00"+i),
+                            Song.create("Rosenrot"+i, "3:00"+i),
+                            Song.create("Spring"+i, "3:00"+i),
+                            Song.create("Wo bist du"+i, "3:00"+i),
+                            Song.create("Stirb nicht vor mir!"+i, "3:00"+i)
+                    )
+            );
+            products.add(p);
+        }
+
+        List<ProductId> productIds = new ArrayList<>();
+
+        for(int i = 0; i < products.size(); i++){
+            productIds.add(products.get(i).getProductId());
+        }
+
+        Artist rammstein = Artist.create(
+                rammsteinId,
+                "rammstein",
+                "deutschland",
+                productIds
+        );
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
+        when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
+
+        int expectedSize = 10;
+
+        //when
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 6);
+        //then
+        assertEquals(expectedSize, productDTOs.size());
+    }
 }
