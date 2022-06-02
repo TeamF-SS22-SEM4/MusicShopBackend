@@ -135,4 +135,94 @@ class HibernateSaleRepoTests {
 
         EntityManagerUtil.rollback();
     }
+
+    @Test
+    void given_invalid_customerId_when_salesByCustomerId_then_empty_result() {
+        //given
+        CustomerId id = new CustomerId(UUID.randomUUID());
+
+        //when
+        List<Sale> saleList = saleRepository.salesByCustomerId(id);
+
+        //then
+        assertTrue(saleList.isEmpty());
+    }
+
+    @Test
+    void given_4sales_in_repository_when_salesByCustomerId_then_3correct_sales_is_returned() {
+        //given
+        long amountOfSalesExpected = 3;
+        CustomerId id = new CustomerId(UUID.randomUUID());
+        List<Sale> sales = List.of(
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000001",
+                        LocalDateTime.now(),
+                        "CASH" , id,
+                        List.of(),
+                        new UserId(UUID.randomUUID())
+                ),
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000002",
+                        LocalDateTime.now(),
+                        "CASH" , id,
+                        List.of(),
+                        new UserId(UUID.randomUUID())
+                ),
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000003",
+                        LocalDateTime.now(),
+                        "CASH" , id,
+                        List.of(),
+                        new UserId(UUID.randomUUID())
+                ),
+                Sale.create(
+                        new SaleId(UUID.randomUUID()),
+                        "R000004",
+                        LocalDateTime.now(),
+                        "CASH" , new CustomerId(UUID.randomUUID()),
+                        List.of(),
+                        new UserId(UUID.randomUUID())
+                )
+        );
+
+        EntityManagerUtil.beginTransaction();
+        sales.forEach(sale -> saleRepository.add(sale));
+
+        //when
+        List<Sale> saleList = saleRepository.salesByCustomerId(id);
+        long amountOfSalesActual = saleList.size();
+
+        //then
+        assertEquals(amountOfSalesExpected, amountOfSalesActual);
+
+        EntityManagerUtil.rollback();
+    }
+
+    @Test
+    void given_customerId_when_salesByCustomerId_then_return_matchingSale() {
+        // given
+        String invoiceNumberExpected = "42";
+        CustomerId customerId = new CustomerId(UUID.randomUUID());
+        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create( 1, 10, new SoundCarrierId(UUID.randomUUID())));
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", customerId,saleItemsExpected, null);
+        EntityManagerUtil.beginTransaction();
+        saleRepository.add(sale);
+
+        // when
+        List<Sale> saleOptActual = saleRepository.salesByCustomerId(customerId);
+
+        // then
+        assertTrue(saleOptActual.size() == 1);
+        Sale saleActual = saleOptActual.get(0);
+        assertEquals(sale.getSaleId(), saleActual.getSaleId());
+        assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
+        assertEquals(sale.getPaymentMethod(), saleActual.getPaymentMethod());
+        assertEquals(sale.getTimeOfSale(), saleActual.getTimeOfSale());
+        assertEquals(sale.getPerformingUser(), saleActual.getPerformingUser());
+
+        EntityManagerUtil.rollback();
+    }
 }

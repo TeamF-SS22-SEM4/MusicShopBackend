@@ -385,4 +385,48 @@ class SaleApplicationTests {
         assertEquals(saleItemRefundedAmountExpected2, saleItem2.getRefundedAmount());
         assertEquals(saleItemRefundedAmountExpected3, saleItem3.getRefundedAmount());
     }
+    
+    @Test
+    void given_customerId_when_saleByCustomerId_then_return_matching_sale() throws SessionExpired, NoPermissionForOperation {
+        // given
+        UUID productIdUUID = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
+        ProductId productIdExpected = new ProductId(productIdUUID);
+        String nameExpected = "SomeProduct";
+        String releaseYearExpected = "2020";
+        List<String> genresExpected = List.of("Rock", "Pop");
+        String labelExpected = "TeamF";
+        String durationExpected = "5:00";
+        List<ArtistId> artistIdsExpected = List.of(new ArtistId(UUID.randomUUID()), new ArtistId(UUID.randomUUID()));
+        List<Song> songsExpected = List.of(Song.create("Song 1", "3:00"), Song.create("Song 2", "2:00"));
+        Product product = Product.create(productIdExpected, nameExpected, releaseYearExpected, genresExpected, labelExpected,
+                durationExpected, artistIdsExpected, songsExpected);
+
+        UUID soundCarrierIdUUID = UUID.randomUUID();
+        SoundCarrierId soundCarrierIdExpected = new SoundCarrierId(soundCarrierIdUUID);
+        SoundCarrierType soundCarrierTypeExpected = SoundCarrierType.CD;
+        float priceExpected = 15;
+        int amountInStoreExpected = 30;
+        String locationExpected = "R001";
+        SoundCarrier soundCarrier = SoundCarrier.create(soundCarrierIdExpected, soundCarrierTypeExpected, priceExpected,
+                amountInStoreExpected, locationExpected, productIdExpected);
+
+        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(1, 10, soundCarrierIdExpected));
+        String invoiceNumberExpected = "42";
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.fromString(String.valueOf(customerId))),saleItemsExpected, null);
+
+        when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
+        when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
+        when(saleRepository.salesByCustomerId(new CustomerId(UUID.fromString(String.valueOf(customerId))))).thenReturn(List.of(sale));
+
+        // when
+        List<SaleDTO> saleListActual = saleApplicationService.salesByCustomerId("placeholder", customerId);
+        SaleDTO saleActual = saleListActual.get(0);
+
+
+        // then
+        assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
+        assertEquals(sale.getSaleItemList().size(), saleActual.getSaleItems().size());
+        assertEquals(sale.getTotalPrice(), saleActual.getTotalPrice());
+    }
 }
