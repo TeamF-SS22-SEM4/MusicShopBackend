@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: musicshop-backend
-          image: team-f-musicshop-backend
+          image: smighty/musicshop-backend:latest
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -71,7 +71,6 @@ spec:
                 configMapKeyRef:
                   key: redis_port
                   name: monolith-configmap
-          imagePullPolicy: IfNotPresent
           ports:
             - name: wildfly-web
               containerPort: 9990
