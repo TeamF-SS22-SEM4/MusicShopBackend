@@ -13,7 +13,10 @@ import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Schedule;
+import javax.ejb.Stateless;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;

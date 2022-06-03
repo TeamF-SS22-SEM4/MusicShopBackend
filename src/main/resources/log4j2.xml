@@ -9,6 +9,4 @@
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>
-
-<!--    TODO add http appender for monitoring tool-->
 </Configuration>

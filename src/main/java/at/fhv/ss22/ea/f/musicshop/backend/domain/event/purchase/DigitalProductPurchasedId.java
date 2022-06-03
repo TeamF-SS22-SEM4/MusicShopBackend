@@ -8,7 +8,6 @@ import org.hibernate.search.bridge.builtin.UUIDBridge;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.lang.annotation.Documented;
 import java.util.Objects;
 import java.util.UUID;
 

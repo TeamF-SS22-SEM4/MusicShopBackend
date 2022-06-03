@@ -1,14 +1,12 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.rest;
 
 import at.fhv.ss22.ea.f.communication.dto.LoginResultDTO;
-import at.fhv.ss22.ea.f.communication.exception.AuthenticationFailed;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Credentials;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;

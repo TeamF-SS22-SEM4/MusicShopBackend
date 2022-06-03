@@ -3,7 +3,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

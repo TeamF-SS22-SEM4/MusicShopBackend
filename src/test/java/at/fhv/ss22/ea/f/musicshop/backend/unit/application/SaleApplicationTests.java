@@ -9,14 +9,11 @@ import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Song;
@@ -27,6 +24,8 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -108,7 +107,11 @@ class SaleApplicationTests {
         OrderItem orderItem = new OrderItem(UUID.randomUUID(), 1);
         List<OrderItem> orderItems = new LinkedList<>();
         orderItems.add(orderItem);
-        saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Cash", null, null, null);
+        String saleNumber = saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Cash", null, null, null);
+
+        //then
+        assertNotNull(saleImpl);
+        assertTrue(saleNumber.startsWith("R0"));
     }
 
     @Test
@@ -137,7 +140,10 @@ class SaleApplicationTests {
         OrderItem orderItem = new OrderItem(UUID.randomUUID(), 1);
         List<OrderItem> orderItems = new LinkedList<>();
         orderItems.add(orderItem);
-        saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Credit Card", "mastercard", "some-number", "1234");
+        String saleNumber = saleImpl.buyAsCustomer(session.getSessionId().getValue(), orderItems, "Credit Card", "mastercard", "some-number", "1234");
+
+        assertNotNull(saleNumber);
+        assertTrue(saleNumber.startsWith("R0"));
     }
 
     @Test
