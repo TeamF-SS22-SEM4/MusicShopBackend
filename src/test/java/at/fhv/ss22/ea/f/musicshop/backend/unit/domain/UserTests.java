@@ -1,9 +1,9 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

@@ -7,11 +7,11 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicat
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.authentication.LdapClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -5,20 +5,20 @@ import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.OrderingApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.OrderingApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierType;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -31,8 +31,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
-import static org.mockito.Mockito.mock;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderingApplicationTests {

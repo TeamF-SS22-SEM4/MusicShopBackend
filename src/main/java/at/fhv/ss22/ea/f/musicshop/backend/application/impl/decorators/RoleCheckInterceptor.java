@@ -10,9 +10,7 @@ import javax.ejb.EJB;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 @Interceptor
@@ -41,8 +39,6 @@ public class RoleCheckInterceptor {
         if (!authenticationApplicationService.hasRole(new SessionId(sessionId), role)) {
             throw new NoPermissionForOperation();
         }
-
-        System.out.println(context.getMethod().getName());
 
         return context.proceed();
     }

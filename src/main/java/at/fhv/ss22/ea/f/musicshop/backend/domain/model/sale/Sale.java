@@ -3,7 +3,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.CustomerAlreadyConnectedException;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

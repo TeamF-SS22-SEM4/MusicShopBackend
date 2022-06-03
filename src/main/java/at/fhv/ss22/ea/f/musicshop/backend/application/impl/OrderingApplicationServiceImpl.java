@@ -8,16 +8,16 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRo
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.jms.JMSClient;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.Session;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SessionRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SoundCarrierRepository;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.UserRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.infrastructure.EntityManagerUtil;
 
 import javax.annotation.PostConstruct;

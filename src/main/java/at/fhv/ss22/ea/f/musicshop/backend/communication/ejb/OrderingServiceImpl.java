@@ -1,6 +1,5 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.ejb;
 
-import at.fhv.ss22.ea.f.communication.api.MessagingService;
 import at.fhv.ss22.ea.f.communication.api.OrderingService;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierOrderDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;

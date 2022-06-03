@@ -1,7 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.internal;
 
 import at.fhv.ss22.ea.f.communication.internal.CustomerInternalService;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.AuthenticationApplicationServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,10 +16,10 @@ import java.rmi.RemoteException;
 public class CustomerRMIClientImpl implements CustomerRMIClient {
     private static final Logger logger = LogManager.getLogger(CustomerRMIClientImpl.class);
     private CustomerInternalService customerService;
-    private static String PORT =  System.getenv("CUSTOMER_SERVICE_RMI_PORT");
-    private static String PROTOCOL = "rmi://";
-    private static String HOST = System.getenv("CUSTOMER_SERVICE_RMI_HOSTNAME");
-    private static String OBJECT_NAME = "CustomerInternalService";
+    private static final String PORT =  System.getenv("CUSTOMER_SERVICE_RMI_PORT");
+    private static final String PROTOCOL = "rmi://";
+    private static final String HOST = System.getenv("CUSTOMER_SERVICE_RMI_HOSTNAME");
+    private static final String OBJECT_NAME = "CustomerInternalService";
 
     public CustomerRMIClientImpl() {
         this.reconnect();
