@@ -58,8 +58,14 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
         if(pageNumber == 0){
             return allProducts.stream().map(this::overviewDtoFromProduct)
                     .collect(Collectors.toList());
-        } else if (start > (allProducts.size() - PAGE_SIZE)) {
-            return Collections.emptyList();
+        } else if (allProducts.size() - start < PAGE_SIZE) {
+            int productsLeft = allProducts.size() - start;
+            for(int i = start; i < (start + productsLeft); i++) {
+                pagedProducts.add(allProducts.get(i));
+            }
+
+            return pagedProducts.stream().map(this::overviewDtoFromProduct)
+                    .collect(Collectors.toList());
         } else {
             for(int i = start; i <= end; i++){
                 pagedProducts.add(allProducts.get(i));
