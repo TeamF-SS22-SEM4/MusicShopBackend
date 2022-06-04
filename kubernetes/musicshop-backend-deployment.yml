@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: musicshop-backend
-          image: smighty/musicshop-backend:latest
+          image: smighty/musicshop-backend:latest # local: team-f-musicshop-backend
           env:
             - name: POSTGRES_USER
               valueFrom:

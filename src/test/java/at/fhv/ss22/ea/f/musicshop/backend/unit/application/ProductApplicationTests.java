@@ -23,10 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,7 +75,11 @@ class ProductApplicationTests {
                 "deutschland",
                 List.of(rosenrot.getProductId())
         );
-        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(List.of(rosenrot));
+
+        List<Product> products = new ArrayList<>();
+        products.add(rosenrot);
+
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
         //when
@@ -228,6 +229,8 @@ class ProductApplicationTests {
             );
             products.add(p);
         }
+
+        products.sort(Comparator.comparing(Product::getName));
 
         List<ProductId> productIds = new ArrayList<>();
 
