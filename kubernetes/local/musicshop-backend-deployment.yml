@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: musicshop-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: musicshop-backend
+  template:
+    metadata:
+      name: musicshop-backend
+      labels:
+        app: musicshop-backend
+    spec:
+      containers:
+        - name: musicshop-backend
+          image: team-f-musicshop-backend
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: postgres_username
+                  optional: false
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: postgres_password
+                  optional: false
+            - name: LDAP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: ldap_host
+                  name: monolith-configmap
+            - name: LDAP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: ldap_port
+                  name: monolith-configmap
+            - name: CUSTOMER_SERVICE_RMI_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: customer_service_rmi_port
+                  name: monolith-configmap
+            - name: CUSTOMER_SERVICE_RMI_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: customer_service_rmi_hostname
+                  name: monolith-configmap
+            - name: ACTIVEMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: activemq_username
+                  optional: false
+            - name: ACTIVEMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: monolith-secret
+                  key: activemq_password
+                  optional: false
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: redis_host
+                  name: monolith-configmap
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: redis_port
+                  name: monolith-configmap
+          ports:
+            - name: wildfly-web
+              containerPort: 9990
+            - name: http
+              containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: musicshop-backend
+spec:
+  type: LoadBalancer
+  selector:
+    app: musicshop-backend
+  ports:
+    - name: wildfly-web
+      port: 9990
+      targetPort: wildfly-web
+    - name: http
+      port: 8080
+      targetPort: http

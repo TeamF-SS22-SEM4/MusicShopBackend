@@ -37,7 +37,6 @@ import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductApplicationTests {
-
     private ProductApplicationService productApplicationService;
 
     private ProductRepository mockedProductRepository = mock(ProductRepository.class);
