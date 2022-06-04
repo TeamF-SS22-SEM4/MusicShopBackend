@@ -26,5 +26,5 @@ public interface SaleApplicationService {
 
     void refund(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws SessionExpired, NoPermissionForOperation;
 
-    public List<SaleDTO> salesByCustomerId(String sessionId, UUID customerId) throws NoSuchElementException, SessionExpired;
+    public List<SaleDTO> salesByCustomerId(String sessionId, UUID customerId) throws NoSuchElementException, SessionExpired, NoPermissionForOperation;
 }

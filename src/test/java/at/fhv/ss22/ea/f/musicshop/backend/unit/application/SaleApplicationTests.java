@@ -385,7 +385,7 @@ class SaleApplicationTests {
         assertEquals(saleItemRefundedAmountExpected2, saleItem2.getRefundedAmount());
         assertEquals(saleItemRefundedAmountExpected3, saleItem3.getRefundedAmount());
     }
-    
+
     @Test
     void given_customerId_when_saleByCustomerId_then_return_matching_sale() throws SessionExpired, NoPermissionForOperation {
         // given
