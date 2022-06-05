@@ -24,19 +24,16 @@ class EventSenderTests {
     private EventSender eventSender;
     private EventRepository eventRepository = mock(EventRepository.class);
     private ProductRepository productRepository = mock(ProductRepository.class);
-    private JedisPool jedisPool = mock(JedisPool.class);
+    private Jedis jedis = mock(Jedis.class);
 
     @BeforeAll
     void setup() {
-        this.eventSender = new EventSenderImpl(eventRepository, productRepository, jedisPool);
+        this.eventSender = new EventSenderImpl(eventRepository, productRepository, jedis);
     }
 
     @Test
     void when_event_in_repository_then_json_published_to_queue() {
         //given
-        Jedis jedis = mock(Jedis.class);
-        when(jedisPool.getResource()).thenReturn(jedis);
-
         ProductId productId = new ProductId(UUID.randomUUID());
         Product product = Product.create(
                 productId,
@@ -63,15 +60,13 @@ class EventSenderTests {
         eventSender.sendDigitalPurchase();
 
         verify(eventRepository, times(1)).getNextOutgoings();
-        verify(jedis, times(1)).lpush(anyString(), contains(event.getUsername()));
+        verify(jedis, times(1)).publish(anyString(), contains(event.getUsername()));
     }
 
     @Test
     void when_no_event_in_repo_then_no_op() {
         //given
-        Jedis jedis = mock(Jedis.class);
-        reset(jedisPool, eventRepository);
-        when(jedisPool.getResource()).thenReturn(jedis);
+        reset(jedis, eventRepository);
 
         when(eventRepository.getNextOutgoings()).thenReturn(new LinkedList<>());
 

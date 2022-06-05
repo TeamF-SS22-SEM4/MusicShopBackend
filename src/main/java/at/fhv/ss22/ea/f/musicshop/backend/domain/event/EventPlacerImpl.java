@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 
+// TODO: Move to infrastructure
 @Local(EventPlacer.class)
 @Stateless
 public class EventPlacerImpl implements EventPlacer {

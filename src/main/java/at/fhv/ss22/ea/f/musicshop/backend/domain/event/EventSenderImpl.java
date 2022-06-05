@@ -4,14 +4,12 @@ import at.fhv.ss22.ea.f.communication.dto.DigitalProductPurchasedDTO;
 import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ArtistRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.EventRepository;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.ProductRepository;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+// TODO: Move to communication
 @Local(EventSender.class)
 @Stateless
 public class EventSenderImpl implements EventSender {
@@ -33,19 +32,18 @@ public class EventSenderImpl implements EventSender {
     @EJB
     private ProductRepository productRepository;
     @EJB
-    private ArtistRepository artistRepository;
-    @EJB
     private EventRepository eventRepository;
 
-    private JedisPool jedisPool;
+    private final Jedis jedisPublisher;
 
     public EventSenderImpl() {
-        this.jedisPool  = new JedisPool(REDIS_HOST, Integer.parseInt(REDIS_PORT));
+        this.jedisPublisher = new Jedis(REDIS_HOST, Integer.parseInt(REDIS_PORT));
     }
-    public EventSenderImpl(EventRepository eventRepository, ProductRepository productRepository, JedisPool jedisPool) {
+
+    public EventSenderImpl(EventRepository eventRepository, ProductRepository productRepository, Jedis jedisPublisher) {
         this.eventRepository = eventRepository;
         this.productRepository = productRepository;
-        this.jedisPool = jedisPool;
+        this.jedisPublisher = jedisPublisher;
     }
 
     @Override
@@ -72,10 +70,11 @@ public class EventSenderImpl implements EventSender {
             Gson gson = new Gson();
             String jsonEvent = gson.toJson(eventDTO);
 
-            try (Jedis jedis = jedisPool.getResource()) {
-                jedis.lpush(PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
+            try(jedisPublisher) {
+                jedisPublisher.publish(PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
                 logger.info("Successfully published to Redis {}: {}", PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
             }
+
             this.eventRepository.remove(event);
         }
     }
