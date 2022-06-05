@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Stateless
 @Logged
 public class ProductApplicationServiceImpl implements ProductApplicationService {
-
     @EJB private ProductRepository productRepository;
     @EJB private ArtistRepository artistRepository;
     @EJB private SoundCarrierRepository soundCarrierRepository;
@@ -46,6 +45,9 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     public List<ProductOverviewDTO> search(String queryString, int pageNumber) {
         //only used to get the length of the list
         List<Product> allProducts =  this.productRepository.fullTextSearch(queryString);
+
+        // Sort list before splitting it up in pages
+        allProducts.sort(Comparator.comparing(Product::getName));
 
         int start = (pageNumber - 1) * PAGE_SIZE;
         int end = (start + PAGE_SIZE) - 1;
@@ -114,6 +116,9 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                                         .withPricePerCarrier(carrier.getPrice())
                                         .withLocation(carrier.getLocation())
                                         .build())
+                                .collect(Collectors.toList())
+                                .stream()
+                                .sorted(Comparator.comparing(SoundCarrierDTO::getSoundCarrierName))
                                 .collect(Collectors.toList())
                 )
                 .withArtistName(product.getArtistIds().stream()

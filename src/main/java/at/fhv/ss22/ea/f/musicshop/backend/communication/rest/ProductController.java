@@ -44,6 +44,9 @@ public class ProductController {
     @Operation(operationId = "searchProducts")
     public Response search(@QueryParam("search") @DefaultValue("") String query, @QueryParam("pageNumber") @DefaultValue("0") int pageNumber) {
         List<ProductOverviewDTO> products = productApplicationService.search(query, pageNumber);
+
+        products.forEach(productOverviewDTO -> System.out.println(productOverviewDTO.getName()));
+
         return Response.ok().entity(products).build();
     }
 }
