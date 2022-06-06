@@ -176,19 +176,16 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
     @RequiresRole(UserRole.CUSTOMER)
     @Override
-    public List<SaleDTO> salesByCustomerId(@SessionKey String sessionId, UUID customerId) throws NoSuchElementException, SessionExpired, NoPermissionForOperation {
-        Optional<User> user = userRepository.userById(new UserId(customerId));
+    public List<SaleDTO> salesByCustomer(@SessionKey String sessionId) throws NoSuchElementException, SessionExpired {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
-
-        if (user.isEmpty()){
-            throw new NoSuchElementException();
-        }
+        User user = userRepository.userById(session.getUserId()).orElseThrow(NoSuchElementException::new);
 
         if (session.isExpired()) {
             throw new SessionExpired();
         }
 
-        List<Sale> sales = saleRepository.salesByCustomerId(new CustomerId(customerId));
+        List<Sale> sales = saleRepository.salesByCustomerId(new CustomerId(user.getUserId().getUUID()));
+
         List<SaleDTO> saleDTOs = new ArrayList<>();
         for(Sale s : sales) {
             saleDTOs.add(saleDtoFromSale(s));

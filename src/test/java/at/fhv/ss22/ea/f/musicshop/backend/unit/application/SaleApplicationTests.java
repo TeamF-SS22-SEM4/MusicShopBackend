@@ -425,13 +425,16 @@ class SaleApplicationTests {
                 Collections.emptyList()
         );
 
+        Session session = Session.newForUser(new UserId(customerId));
+
         when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
         when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
         when(saleRepository.salesByCustomerId(new CustomerId(customerId))).thenReturn(List.of(sale));
-        when(userRepository.userById(new UserId(customerId))).thenReturn(Optional.of(user));
+        when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
+        when(userRepository.userById(session.getUserId())).thenReturn(Optional.of(user));
 
         // when
-        List<SaleDTO> saleListActual = saleApplicationService.salesByCustomerId("placeholder", customerId);
+        List<SaleDTO> saleListActual = saleApplicationService.salesByCustomer(session.getSessionId().getValue());
         SaleDTO saleActual = saleListActual.get(0);
 
         // then

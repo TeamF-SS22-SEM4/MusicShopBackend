@@ -57,16 +57,15 @@ public class BuyingController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Ok, list of Purchases retrieved"),
-            @APIResponse(responseCode = "403", description = "Not Authenticated")
-    })
+    @APIResponse(responseCode = "200", description = "Ok, list of Purchases retrieved")
+    @APIResponse(responseCode = "401", description = "Not Authorized")
+    @APIResponse(responseCode = "403", description = "Not Authenticated")
+    @APIResponse(responseCode = "404",  description = "User not found")
     @APIResponseSchema(value = SaleDTO[].class, responseCode = "200")
-    @Path("/{userId}")
     @Operation(operationId = "getPurchaseHistory")
-    public Response getPurchaseHistory(@HeaderParam("session-id") String sessionId, @PathParam("userId") UUID userId) {
+    public Response getPurchaseHistory(@HeaderParam("session-id") String sessionId) {
         try {
-            List<SaleDTO> sales = saleApplicationService.salesByCustomerId(sessionId, userId);
+            List<SaleDTO> sales = saleApplicationService.salesByCustomer(sessionId);
             return Response.ok().entity(sales).build();
         } catch(Exception e) {
             return ExceptionHandler.handleException(e);
