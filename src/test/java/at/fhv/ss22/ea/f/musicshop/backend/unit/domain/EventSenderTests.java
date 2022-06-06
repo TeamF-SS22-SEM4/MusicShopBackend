@@ -63,7 +63,7 @@ class EventSenderTests {
         eventSender.sendDigitalPurchase();
 
         verify(eventRepository, times(1)).getNextOutgoings();
-        verify(jedis, times(1)).lpush(anyString(), contains(event.getUsername()));
+        verify(jedis, times(2)).lpush(anyString(), contains(event.getUsername()));
     }
 
     @Test
