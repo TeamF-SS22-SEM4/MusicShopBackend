@@ -188,6 +188,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
         List<SaleDTO> saleDTOs = new ArrayList<>();
         for(Sale s : sales) {
+            // TODO: Sort saleItems by productName and carrierType
             saleDTOs.add(saleDtoFromSale(s));
         }
 
