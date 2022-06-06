@@ -13,6 +13,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.User;
@@ -415,14 +416,23 @@ class SaleApplicationTests {
         String invoiceNumberExpected = "42";
         Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.fromString(String.valueOf(customerId))),saleItemsExpected, null);
 
+        User user = User.create(
+                new UserId(customerId),
+                "jdo007",
+                "John",
+                "Doe",
+                List.of(UserRole.CUSTOMER),
+                Collections.emptyList()
+        );
+
         when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
         when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
-        when(saleRepository.salesByCustomerId(new CustomerId(UUID.fromString(String.valueOf(customerId))))).thenReturn(List.of(sale));
+        when(saleRepository.salesByCustomerId(new CustomerId(customerId))).thenReturn(List.of(sale));
+        when(userRepository.userById(new UserId(customerId))).thenReturn(Optional.of(user));
 
         // when
         List<SaleDTO> saleListActual = saleApplicationService.salesByCustomerId("placeholder", customerId);
         SaleDTO saleActual = saleListActual.get(0);
-
 
         // then
         assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());

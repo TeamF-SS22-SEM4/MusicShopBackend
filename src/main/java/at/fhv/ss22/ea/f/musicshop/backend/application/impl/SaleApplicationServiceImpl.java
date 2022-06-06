@@ -174,23 +174,14 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         EntityManagerUtil.commit();
     }
 
+    @RequiresRole(UserRole.CUSTOMER)
     @Override
     public List<SaleDTO> salesByCustomerId(@SessionKey String sessionId, UUID customerId) throws NoSuchElementException, SessionExpired, NoPermissionForOperation {
         Optional<User> user = userRepository.userById(new UserId(customerId));
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
-        Optional<CustomerDTO> customer;
-        try {
-            customer = Optional.of(customerApplicationService.customerById(sessionId, customerId));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
 
         if (user.isEmpty()){
             throw new NoSuchElementException();
-        }
-
-        if(!customer.get().getCustomerId().equals(customerId)) {
-            throw new NoPermissionForOperation();
         }
 
         if (session.isExpired()) {
