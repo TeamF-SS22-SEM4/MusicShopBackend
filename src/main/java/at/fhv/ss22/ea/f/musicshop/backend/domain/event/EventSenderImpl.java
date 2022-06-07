@@ -13,7 +13,10 @@ import org.apache.logging.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Schedule;
+import javax.ejb.Stateless;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -23,7 +26,8 @@ import java.util.stream.Collectors;
 public class EventSenderImpl implements EventSender {
     private static final Logger logger = LogManager.getLogger(EventSenderImpl.class);
 
-    private static final String PURCHASE_EVENT_QUEUE_NAME = "purchasedQueue";
+    private static final String PLAYLIST_SERVICE_QUEUE_NAME = "playlistQueue";
+    private static final String DOWNLOAD_SERVICE_QUEUE_NAME = "downloadQueue";
     private static final String REDIS_HOST = System.getenv("REDIS_HOST");
     private static final String REDIS_PORT = System.getenv("REDIS_PORT");
 
@@ -70,8 +74,11 @@ public class EventSenderImpl implements EventSender {
             String jsonEvent = gson.toJson(eventDTO);
 
             try (Jedis jedis = jedisPool.getResource()) {
-                jedis.lpush(PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
-                logger.info("Successfully published to Redis {}: {}", PURCHASE_EVENT_QUEUE_NAME, jsonEvent);
+                jedis.lpush(PLAYLIST_SERVICE_QUEUE_NAME, jsonEvent);
+                logger.info("Successfully published to Redis {}: {}", PLAYLIST_SERVICE_QUEUE_NAME, jsonEvent);
+
+                jedis.lpush(DOWNLOAD_SERVICE_QUEUE_NAME, jsonEvent);
+                logger.info("Successfully published to Redis {}: {}", DOWNLOAD_SERVICE_QUEUE_NAME, jsonEvent);
             }
             this.eventRepository.remove(event);
         }

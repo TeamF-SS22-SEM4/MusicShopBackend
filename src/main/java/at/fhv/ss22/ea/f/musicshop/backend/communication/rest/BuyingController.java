@@ -7,7 +7,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
@@ -26,13 +25,11 @@ public class BuyingController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Ok, placed order"),
-            @APIResponse(responseCode = "403", description = "Not Authenticated"),
-            @APIResponse(responseCode = "401", description = "Unauthorized for operation"),
-            @APIResponse(responseCode = "404", description = "unknown carrier id"),
-            @APIResponse(responseCode = "400", description = "Payment information invalid")
-    })
+    @APIResponse(responseCode = "200", description = "Ok, placed order")
+    @APIResponse(responseCode = "403", description = "Not Authenticated")
+    @APIResponse(responseCode = "401", description = "Unauthorized for operation")
+    @APIResponse(responseCode = "404", description = "unknown carrier id")
+    @APIResponse(responseCode = "400", description = "Payment information invalid")
     @APIResponseSchema(value = String.class, responseCode = "200")
     @Operation(operationId = "placeOrder")
     public Response placeOrder(@HeaderParam("session-id") String sessionId, @RequestBody Purchase purchase) {
@@ -45,11 +42,9 @@ public class BuyingController {
                     purchase.getPaymentInformation().getCreditCardNumber(),
                     purchase.getPaymentInformation().getCvc()
             );
-            System.out.println("DEBUG " + saleNumber);
 
             return Response.ok().entity(saleNumber).build();
         } catch (Exception e) {
-            System.out.println("DEBUG in catch block");
             return ExceptionHandler.handleException(e);
         }
     }

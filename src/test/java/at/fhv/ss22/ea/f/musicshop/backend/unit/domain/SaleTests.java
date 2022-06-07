@@ -1,11 +1,11 @@
 package at.fhv.ss22.ea.f.musicshop.backend.unit.domain;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrierId;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

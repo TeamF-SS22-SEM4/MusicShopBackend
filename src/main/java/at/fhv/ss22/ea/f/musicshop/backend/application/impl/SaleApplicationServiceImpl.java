@@ -15,6 +15,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPu
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.Customer;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
@@ -84,14 +85,14 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         }
 
         List<SoundCarrierAmountDTO> soundCarriers = new ArrayList<>();
-        orderItems.forEach(orderItem -> {
+        orderItems.forEach(orderItem ->
             soundCarriers.add(
                     SoundCarrierAmountDTO.builder()
                             .withCarrierId(orderItem.getCarrierId())
                             .withAmount(orderItem.getAmount())
                             .build()
-            );
-        });
+            )
+        );
 
         return buy(sessionId, soundCarriers, paymentMethod, customerId);
     }
@@ -116,7 +117,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                             .map(id -> artistRepository.artistById(id))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
-                            .map(artist -> artist.getArtistName())
+                            .map(Artist::getArtistName)
                             .collect(Collectors.joining(", "));
 
                     // Create new event

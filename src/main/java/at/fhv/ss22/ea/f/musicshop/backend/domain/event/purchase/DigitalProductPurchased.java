@@ -2,7 +2,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.Generated;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.user.UserId;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

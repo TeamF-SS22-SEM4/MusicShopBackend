@@ -6,9 +6,6 @@ import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.ProductId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.soundcarrier.SoundCarrier;
@@ -26,7 +23,6 @@ import java.util.stream.Collectors;
 @Stateless
 @Logged
 public class ProductApplicationServiceImpl implements ProductApplicationService {
-
     @EJB private ProductRepository productRepository;
     @EJB private ArtistRepository artistRepository;
     @EJB private SoundCarrierRepository soundCarrierRepository;
@@ -50,6 +46,9 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
         //only used to get the length of the list
         List<Product> allProducts =  this.productRepository.fullTextSearch(queryString);
 
+        // Sort list before splitting it up in pages
+        allProducts.sort(Comparator.comparing(Product::getName));
+
         int start = (pageNumber - 1) * PAGE_SIZE;
         int end = (start + PAGE_SIZE) - 1;
 
@@ -58,8 +57,14 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
         if(pageNumber == 0){
             return allProducts.stream().map(this::overviewDtoFromProduct)
                     .collect(Collectors.toList());
-        } else if (start > (allProducts.size() - PAGE_SIZE)) {
-            return Collections.emptyList();
+        } else if (allProducts.size() - start < PAGE_SIZE) {
+            int productsLeft = allProducts.size() - start;
+            for(int i = start; i < (start + productsLeft); i++) {
+                pagedProducts.add(allProducts.get(i));
+            }
+
+            return pagedProducts.stream().map(this::overviewDtoFromProduct)
+                    .collect(Collectors.toList());
         } else {
             for(int i = start; i <= end; i++){
                 pagedProducts.add(allProducts.get(i));
@@ -111,6 +116,9 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
                                         .withPricePerCarrier(carrier.getPrice())
                                         .withLocation(carrier.getLocation())
                                         .build())
+                                .collect(Collectors.toList())
+                                .stream()
+                                .sorted(Comparator.comparing(SoundCarrierDTO::getSoundCarrierName))
                                 .collect(Collectors.toList())
                 )
                 .withArtistName(product.getArtistIds().stream()

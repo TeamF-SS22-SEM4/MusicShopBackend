@@ -3,8 +3,6 @@ package at.fhv.ss22.ea.f.musicshop.backend.communication.ejb;
 import at.fhv.ss22.ea.f.communication.api.ProductSearchService;
 import at.fhv.ss22.ea.f.communication.dto.ProductDetailsDTO;
 import at.fhv.ss22.ea.f.communication.dto.ProductOverviewDTO;
-import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
-import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 
 import javax.ejb.EJB;

@@ -4,10 +4,8 @@ import at.fhv.ss22.ea.f.communication.dto.CustomerDTO;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.Logged;
-import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.RequiresRole;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.internal.CustomerRMIClient;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;

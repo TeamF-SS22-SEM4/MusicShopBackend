@@ -13,7 +13,6 @@ import javax.ejb.Local;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Local

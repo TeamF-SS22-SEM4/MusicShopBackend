@@ -6,7 +6,6 @@ import at.fhv.ss22.ea.f.communication.dto.SongDTO;
 import at.fhv.ss22.ea.f.communication.dto.SoundCarrierDTO;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
-import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.ProductApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.ProductApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
@@ -24,10 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +34,6 @@ import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductApplicationTests {
-
     private ProductApplicationService productApplicationService;
 
     private ProductRepository mockedProductRepository = mock(ProductRepository.class);
@@ -79,7 +74,11 @@ class ProductApplicationTests {
                 "deutschland",
                 List.of(rosenrot.getProductId())
         );
-        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(List.of(rosenrot));
+
+        List<Product> products = new ArrayList<>();
+        products.add(rosenrot);
+
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
         when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
 
         //when
@@ -230,6 +229,8 @@ class ProductApplicationTests {
             products.add(p);
         }
 
+        products.sort(Comparator.comparing(Product::getName));
+
         List<ProductId> productIds = new ArrayList<>();
 
         for(int i = 0; i < products.size(); i++){
@@ -311,6 +312,57 @@ class ProductApplicationTests {
 
         //when
         List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 10);
+        //then
+        assertEquals(expectedSize, productDTOs.size());
+    }
+
+    @Test
+    void when_last_page_has_only_10_and_less_than_PAGE_SIZE_then_return_10() throws SessionExpired, NoPermissionForOperation {
+        //given
+        ArtistId rammsteinId = new ArtistId(UUID.randomUUID());
+
+        List<Product> products = new ArrayList<>();
+
+        for(int i = 1; i <= 110; i++){
+            Product p = Product.create(
+                    new ProductId(UUID.randomUUID()),
+                    "Rosenrot"+i,
+                    "2000"+i,
+                    List.of("Rock", "Metal"+i),
+                    "Rammstein GBR"+i,
+                    "40:00"+i,
+                    List.of(rammsteinId),
+                    List.of(
+                            Song.create("Benzin"+i, "3:46"+i),
+                            Song.create("Mann gegen Mann"+i, "3:00"+i),
+                            Song.create("Rosenrot"+i, "3:00"+i),
+                            Song.create("Spring"+i, "3:00"+i),
+                            Song.create("Wo bist du"+i, "3:00"+i),
+                            Song.create("Stirb nicht vor mir!"+i, "3:00"+i)
+                    )
+            );
+            products.add(p);
+        }
+
+        List<ProductId> productIds = new ArrayList<>();
+
+        for(int i = 0; i < products.size(); i++){
+            productIds.add(products.get(i).getProductId());
+        }
+
+        Artist rammstein = Artist.create(
+                rammsteinId,
+                "rammstein",
+                "deutschland",
+                productIds
+        );
+        when(mockedProductRepository.fullTextSearch(anyString())).thenReturn(products);
+        when(mockedArtistRepo.artistById(rammsteinId)).thenReturn(Optional.of(rammstein));
+
+        int expectedSize = 10;
+
+        //when
+        List<ProductOverviewDTO> productDTOs = productApplicationService.search("irrelevant to this test", 6);
         //then
         assertEquals(expectedSize, productDTOs.size());
     }

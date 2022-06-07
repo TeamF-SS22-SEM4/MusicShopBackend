@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CustomerTests {
+class CustomerTests {
     @Test
     void given_customerdetails_when_creating_customer_then_details_equals() {
         // given
