@@ -6,6 +6,7 @@ import at.fhv.ss22.ea.f.communication.dto.SoundCarrierAmountDTO;
 import at.fhv.ss22.ea.f.communication.exception.CarrierNotAvailableException;
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
 import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
+import at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators.SessionKey;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 
 import javax.ejb.Local;
@@ -23,4 +24,6 @@ public interface SaleApplicationService {
     SaleDTO saleByInvoiceNumber(String sessionId, String invoiceNumber) throws SessionExpired, NoPermissionForOperation, NoSuchElementException;
 
     void refund(String sessionId, String invoiceNumber, List<RefundedSaleItemDTO> refundedSaleItems) throws SessionExpired, NoPermissionForOperation;
+
+    public List<SaleDTO> salesByCustomer(String sessionId) throws NoSuchElementException, SessionExpired, NoPermissionForOperation;
 }

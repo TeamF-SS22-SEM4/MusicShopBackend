@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.infrastructure;
 
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.Sale;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.sale.SaleId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.repository.SaleRepository;
@@ -8,6 +9,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
 @Local(SaleRepository.class)
@@ -56,5 +58,16 @@ public class HibernateSaleRepository implements SaleRepository {
         );
 
         return query.getSingleResult();
+    }
+
+    @Override
+    public List<Sale> salesByCustomerId(CustomerId customerId) {
+        TypedQuery<Sale> query = em.createQuery(
+                "select s from Sale s where s.customerId = :customerId",
+                Sale.class
+        );
+
+        query.setParameter("customerId", customerId);
+        return query.getResultList();
     }
 }

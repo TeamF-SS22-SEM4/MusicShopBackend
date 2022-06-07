@@ -14,6 +14,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.Customer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -172,6 +173,27 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
         });
 
         EntityManagerUtil.commit();
+    }
+
+    @RequiresRole(UserRole.CUSTOMER)
+    @Override
+    public List<SaleDTO> salesByCustomer(@SessionKey String sessionId) throws NoSuchElementException, SessionExpired {
+        Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
+        User user = userRepository.userById(session.getUserId()).orElseThrow(NoSuchElementException::new);
+
+        if (session.isExpired()) {
+            throw new SessionExpired();
+        }
+
+        List<Sale> sales = saleRepository.salesByCustomerId(new CustomerId(user.getUserId().getUUID()));
+
+        List<SaleDTO> saleDTOs = new ArrayList<>();
+        for(Sale s : sales) {
+            // TODO: Sort saleItems by productName and carrierType
+            saleDTOs.add(saleDtoFromSale(s));
+        }
+
+        return saleDTOs;
     }
 
     private SaleDTO saleDtoFromSale(Sale sale) {

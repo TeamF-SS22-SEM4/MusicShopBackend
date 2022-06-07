@@ -1,5 +1,6 @@
 package at.fhv.ss22.ea.f.musicshop.backend.communication.rest;
 
+import at.fhv.ss22.ea.f.communication.dto.SaleDTO;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.SaleApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.Purchase;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -12,6 +13,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 
 @Path("/orders")
@@ -42,6 +45,24 @@ public class BuyingController {
 
             return Response.ok().entity(saleNumber).build();
         } catch (Exception e) {
+            return ExceptionHandler.handleException(e);
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @APIResponse(responseCode = "200", description = "Ok, list of Purchases retrieved")
+    @APIResponse(responseCode = "401", description = "Not Authorized")
+    @APIResponse(responseCode = "403", description = "Not Authenticated")
+    @APIResponse(responseCode = "404",  description = "User not found")
+    @APIResponseSchema(value = SaleDTO[].class, responseCode = "200")
+    @Operation(operationId = "getPurchaseHistory")
+    public Response getPurchaseHistory(@HeaderParam("session-id") String sessionId) {
+        try {
+            List<SaleDTO> sales = saleApplicationService.salesByCustomer(sessionId);
+            return Response.ok().entity(sales).build();
+        } catch(Exception e) {
             return ExceptionHandler.handleException(e);
         }
     }

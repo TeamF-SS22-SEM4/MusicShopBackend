@@ -12,6 +12,7 @@ import at.fhv.ss22.ea.f.musicshop.backend.application.api.CustomerApplicationSer
 import at.fhv.ss22.ea.f.musicshop.backend.application.impl.SaleApplicationServiceImpl;
 import at.fhv.ss22.ea.f.musicshop.backend.communication.rest.objects.OrderItem;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
+import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.ArtistId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.product.Product;
@@ -390,5 +391,61 @@ class SaleApplicationTests {
         assertEquals(saleItemRefundedAmountExpected1, saleItem1.getRefundedAmount());
         assertEquals(saleItemRefundedAmountExpected2, saleItem2.getRefundedAmount());
         assertEquals(saleItemRefundedAmountExpected3, saleItem3.getRefundedAmount());
+    }
+
+    @Test
+    void given_customerId_when_saleByCustomerId_then_return_matching_sale() throws SessionExpired, NoPermissionForOperation {
+        // given
+        UUID productIdUUID = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
+        ProductId productIdExpected = new ProductId(productIdUUID);
+        String nameExpected = "SomeProduct";
+        String releaseYearExpected = "2020";
+        List<String> genresExpected = List.of("Rock", "Pop");
+        String labelExpected = "TeamF";
+        String durationExpected = "5:00";
+        List<ArtistId> artistIdsExpected = List.of(new ArtistId(UUID.randomUUID()), new ArtistId(UUID.randomUUID()));
+        List<Song> songsExpected = List.of(Song.create("Song 1", "3:00"), Song.create("Song 2", "2:00"));
+        Product product = Product.create(productIdExpected, nameExpected, releaseYearExpected, genresExpected, labelExpected,
+                durationExpected, artistIdsExpected, songsExpected);
+
+        UUID soundCarrierIdUUID = UUID.randomUUID();
+        SoundCarrierId soundCarrierIdExpected = new SoundCarrierId(soundCarrierIdUUID);
+        SoundCarrierType soundCarrierTypeExpected = SoundCarrierType.CD;
+        float priceExpected = 15;
+        int amountInStoreExpected = 30;
+        String locationExpected = "R001";
+        SoundCarrier soundCarrier = SoundCarrier.create(soundCarrierIdExpected, soundCarrierTypeExpected, priceExpected,
+                amountInStoreExpected, locationExpected, productIdExpected);
+
+        List<SaleItem> saleItemsExpected =  List.of(SaleItem.create(1, 10, soundCarrierIdExpected));
+        String invoiceNumberExpected = "42";
+        Sale sale = Sale.create(new SaleId(UUID.randomUUID()), invoiceNumberExpected, LocalDateTime.now(), "cash", new CustomerId(UUID.fromString(String.valueOf(customerId))),saleItemsExpected, null);
+
+        User user = User.create(
+                new UserId(customerId),
+                "jdo007",
+                "John",
+                "Doe",
+                List.of(UserRole.CUSTOMER),
+                Collections.emptyList()
+        );
+
+        Session session = Session.newForUser(new UserId(customerId));
+
+        when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
+        when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
+        when(saleRepository.salesByCustomerId(new CustomerId(customerId))).thenReturn(List.of(sale));
+        when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
+        when(userRepository.userById(session.getUserId())).thenReturn(Optional.of(user));
+
+        // when
+        List<SaleDTO> saleListActual = saleApplicationService.salesByCustomer(session.getSessionId().getValue());
+        SaleDTO saleActual = saleListActual.get(0);
+
+        // then
+        assertEquals(sale.getInvoiceNumber(), saleActual.getInvoiceNumber());
+        assertEquals(sale.getSaleItemList().size(), saleActual.getSaleItems().size());
+        assertEquals(sale.getTotalPrice(), saleActual.getTotalPrice());
     }
 }
