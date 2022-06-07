@@ -41,6 +41,7 @@ kind: Service
 metadata:
   name: jms-provider
 spec:
+  type: LoadBalancer
   selector:
     app: jms-provider
   ports:
