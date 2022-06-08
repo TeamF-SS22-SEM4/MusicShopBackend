@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 public class Session {
     private static final int SESSION_ID_BYTE_LENGTH = 32;
-    private static final Duration STANDARD_VALID_DURATION = Duration.ofMinutes(15);
+    private static final Duration STANDARD_VALID_DURATION = Duration.ofMinutes(60);
 
     @EmbeddedId
     @FieldBridge(impl = SessionIdBridge.class)
