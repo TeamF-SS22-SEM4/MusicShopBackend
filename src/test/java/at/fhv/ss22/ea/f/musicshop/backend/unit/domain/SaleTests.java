@@ -23,7 +23,7 @@ class SaleTests {
         UUID saleIdUUID = UUID.randomUUID();
         SaleId saleIdExpected = new SaleId(saleIdUUID);
         String invoiceNumberExpected = "20220301001";
-        LocalDateTime timeOfSaleExpected = LocalDateTime.of(2022, Month.MARCH, 1, 13, 30);
+        LocalDateTime timeOfSaleExpected = LocalDateTime.now();
         float totalPriceExpected = 50;
         String paymentMethodExpected = "Credit Card";
         CustomerId customerIdExpected = new CustomerId(UUID.randomUUID());
