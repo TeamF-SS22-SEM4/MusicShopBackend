@@ -35,6 +35,7 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import java.rmi.RemoteException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -187,9 +188,11 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
 
         List<Sale> sales = saleRepository.salesByCustomerId(new CustomerId(user.getUserId().getUUID()));
 
+        // Sort sales by date before creating dtos, the newest should be first
+        sales.sort(Comparator.comparing(Sale::getTimeOfSale).reversed());
+
         List<SaleDTO> saleDTOs = new ArrayList<>();
         for(Sale s : sales) {
-            // TODO: Sort saleItems by productName and carrierType
             saleDTOs.add(saleDtoFromSale(s));
         }
 
@@ -221,11 +224,26 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
             saleItemDTOs.add(dto);
         }
 
+        // Sort SaleItems by productname and carriertype
+        saleItemDTOs.sort((saleItemDTO1, saleItemDTO2) -> {
+            String x1 = saleItemDTO1.getProductName();
+            String x2 = saleItemDTO2.getProductName();
+            int sComp = x1.compareTo(x2);
+
+            if (sComp != 0) {
+                return sComp;
+            }
+
+            x1 = saleItemDTO1.getSoundCarrierName();
+            x2 = saleItemDTO2.getSoundCarrierName();
+            return x1.compareTo(x2);
+        });
+
         return SaleDTO.builder()
                 .withInvoiceNumber(sale.getInvoiceNumber())
                 .withSaleItems(saleItemDTOs)
                 .withTotalPrice(sale.getTotalPrice())
-                .withDateOfSale(String.valueOf(sale.getTimeOfSale()))
+                .withDateOfSale(sale.getTimeOfSale().format(DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm")))
                 .build();
     }
 }

@@ -432,10 +432,13 @@ class SaleApplicationTests {
         );
 
         Session session = Session.newForUser(new UserId(customerId));
+        List<Sale> sales = new ArrayList<>();
+        sales.add(sale);
+
 
         when(soundCarrierRepository.soundCarrierById(soundCarrierIdExpected)).thenReturn(Optional.of(soundCarrier));
         when(productRepository.productById(productIdExpected)).thenReturn(Optional.of(product));
-        when(saleRepository.salesByCustomerId(new CustomerId(customerId))).thenReturn(List.of(sale));
+        when(saleRepository.salesByCustomerId(new CustomerId(customerId))).thenReturn(sales);
         when(sessionRepository.sessionById(session.getSessionId())).thenReturn(Optional.of(session));
         when(userRepository.userById(session.getUserId())).thenReturn(Optional.of(user));
 

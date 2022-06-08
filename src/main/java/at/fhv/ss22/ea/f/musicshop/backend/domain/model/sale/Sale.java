@@ -30,7 +30,7 @@ public class Sale {
         Sale sale = new Sale();
         sale.saleId = new SaleId(UUID.randomUUID());
         sale.invoiceNumber = invoiceNumber;
-        sale.timeOfSale = LocalDateTime.now();
+        sale.timeOfSale = LocalDateTime.now().plusHours(2);
         sale.paymentMethod = paymentMethod;
         sale.performingUser = userId;
         sale.saleItemList = saleItems;
