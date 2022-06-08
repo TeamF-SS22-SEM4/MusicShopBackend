@@ -225,6 +225,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                 .withInvoiceNumber(sale.getInvoiceNumber())
                 .withSaleItems(saleItemDTOs)
                 .withTotalPrice(sale.getTotalPrice())
+                .withDateOfSale(String.valueOf(sale.getTimeOfSale()))
                 .build();
     }
 }
