@@ -89,7 +89,7 @@ spec:
   ports:
     - name: wildfly-web
       port: 9990
-      targetPort: wildfly-web
+      targetPort: 9990
     - name: http
       port: 8080
-      targetPort: http
+      targetPort: 8080
