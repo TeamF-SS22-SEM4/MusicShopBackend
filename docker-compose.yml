@@ -36,6 +36,7 @@ services:
       - "8080:8080"
     networks:
       - musicshop_backend_network
+      - frontend_backend # Exists already on server
     depends_on:
       - jms-provider
     links:
@@ -48,3 +49,5 @@ networks:
   musicshop_backend_network:
     name: musicshop_backend_network
     driver: bridge
+  frontend_backend:
+    external: true

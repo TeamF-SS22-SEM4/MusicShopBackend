@@ -1,9 +1,54 @@
 version: "3.9"
 services:
-  backend:
+  postgres:
+    container_name: postgres-server
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=musicshopdb
+    ports:
+      - "5432:5432"
     networks:
-      - inter_server_connection
+      - musicshop_backend_network
+    env_file:
+      - .env
+  jms-provider:
+      container_name: jms-provider
+      image: webcenter/activemq:latest
+      environment:
+        - ACTIVEMQ_ADMIN_LOGIN=${ACTIVEMQ_USER}
+        - ACTIVEMQ_ADMIN_PASSWORD=${ACTIVEMQ_PASSWORD}
+        - ACTIVEMQ_STATIC_TOPICS=Orders;Pop;Metal;Rock;Electronic;Grunge;Hip-Hop;Hard Rock
+      ports:
+        - "61616:61616"
+        - "8161:8161"
+      networks:
+        - musicshop_backend_network
+      env_file:
+        - .env
+  backend:
+      container_name: musicshop-backend
+      build: .
+      ports:
+        - "9990:9990"
+        - "8080:8080"
+      networks:
+        - musicshop_backend_network
+        - inter_server_connection
+      depends_on:
+        - jms-provider
+      links:
+        - postgres
+        - jms-provider
+      env_file:
+        - .env
+
 
 networks:
+  musicshop_backend_network:
+    name: musicshop_backend_network
+    driver: bridge
   inter_server_connection:
     external: true
