@@ -2,6 +2,7 @@ package at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators;
 
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 
+import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,5 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface RequiresRole {
-    UserRole value() default UserRole.EMPLOYEE;
+    @Nonbinding
+    UserRole[] value() default UserRole.EMPLOYEE;
 }

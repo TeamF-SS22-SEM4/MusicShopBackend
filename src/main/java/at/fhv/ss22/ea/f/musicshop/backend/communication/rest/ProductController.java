@@ -23,8 +23,6 @@ public class ProductController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @APIResponse(responseCode = "403", description = "Not Authenticated")
-    @APIResponse(responseCode = "401", description = "Unauthorized for operation")
     @APIResponse(responseCode = "404", description = "Unknown product id")
     @APIResponseSchema(value = ProductDetailsDTO.class, responseCode = "200")
     @Operation(operationId = "getProduct")
@@ -33,6 +31,8 @@ public class ProductController {
             ProductDetailsDTO product = productApplicationService.productById(UUID.fromString(productId));
             return Response.ok().entity(product).build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getClass());
             return ExceptionHandler.handleException(e);
         }
     }
@@ -44,8 +44,6 @@ public class ProductController {
     @Operation(operationId = "searchProducts")
     public Response search(@QueryParam("search") @DefaultValue("") String query, @QueryParam("pageNumber") @DefaultValue("0") int pageNumber) {
         List<ProductOverviewDTO> products = productApplicationService.search(query, pageNumber);
-
-        products.forEach(productOverviewDTO -> System.out.println(productOverviewDTO.getName()));
 
         return Response.ok().entity(products).build();
     }

@@ -29,15 +29,18 @@ public class RoleCheckInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
         Method method = context.getMethod();
-        UserRole role = method.getAnnotation(RequiresRole.class).value();
+        UserRole[] roles = method.getAnnotation(RequiresRole.class).value();
 
         int sessionKeyIndex = getSessionKeyIndex(method);
         if (sessionKeyIndex == -1) {
             throw new IllegalStateException("Unable to find SessionKey Parameter");
         }
         String sessionId = (String) context.getParameters()[sessionKeyIndex];
-        if (!authenticationApplicationService.hasRole(new SessionId(sessionId), role)) {
-            throw new NoPermissionForOperation();
+
+        for (UserRole role : roles) {
+            if (!authenticationApplicationService.hasRole(new SessionId(sessionId), role)) {
+                throw new NoPermissionForOperation();
+            }
         }
 
         return context.proceed();
