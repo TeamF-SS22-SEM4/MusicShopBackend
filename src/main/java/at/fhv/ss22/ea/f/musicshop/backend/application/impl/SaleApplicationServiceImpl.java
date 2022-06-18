@@ -99,7 +99,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
     }
 
     @Override
-    //@RequiresRole(UserRole.EMPLOYEE) TODO: Add Customer Role
+    @RequiresRole({UserRole.EMPLOYEE, UserRole.CUSTOMER})
     public String buy(@SessionKey String sessionId, List<SoundCarrierAmountDTO> carrierAmounts, String paymentMethod, UUID customerId) throws CarrierNotAvailableException {
         EntityManagerUtil.beginTransaction();
         List<SaleItem> saleItems = new LinkedList<>();

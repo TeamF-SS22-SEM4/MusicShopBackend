@@ -37,7 +37,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
     }
 
     @Override
-    public ProductDetailsDTO productById(UUID productId) {
+    public ProductDetailsDTO productById(UUID productId) throws NoSuchElementException {
         return productRepository.productById(new ProductId(productId)).map(this::detailsDtoFromProduct).orElseThrow(NoSuchElementException::new);
     }
 
