@@ -1,6 +1,7 @@
 package at.fhv.ss22.ea.f.musicshop.backend.application.impl.decorators;
 
 import at.fhv.ss22.ea.f.communication.exception.NoPermissionForOperation;
+import at.fhv.ss22.ea.f.communication.exception.SessionExpired;
 import at.fhv.ss22.ea.f.musicshop.backend.application.api.AuthenticationApplicationService;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.session.SessionId;
@@ -12,6 +13,7 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @Interceptor
 @Priority(Interceptor.Priority.APPLICATION)
@@ -37,10 +39,15 @@ public class RoleCheckInterceptor {
         }
         String sessionId = (String) context.getParameters()[sessionKeyIndex];
 
-        for (UserRole role : roles) {
-            if (!authenticationApplicationService.hasRole(new SessionId(sessionId), role)) {
-                throw new NoPermissionForOperation();
+        if (Arrays.stream(roles).noneMatch(requiredRole -> {
+            try {
+                return authenticationApplicationService.hasRole(new SessionId(sessionId), requiredRole);
+            } catch (SessionExpired e) {
+                //TODO fix this mess by reconsidering if multiple roles are required
+                return false;
             }
+        })) {
+            throw new NoPermissionForOperation();
         }
 
         return context.proceed();

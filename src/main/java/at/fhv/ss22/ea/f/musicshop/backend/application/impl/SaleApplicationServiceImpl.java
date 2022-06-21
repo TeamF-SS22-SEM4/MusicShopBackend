@@ -14,7 +14,6 @@ import at.fhv.ss22.ea.f.musicshop.backend.domain.event.EventPlacer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchased;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.event.purchase.DigitalProductPurchasedId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.UserRole;
-import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.Customer;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.artist.Artist;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.customer.CustomerId;
 import at.fhv.ss22.ea.f.musicshop.backend.domain.model.exceptions.SoundCarrierUnavailableException;
@@ -75,7 +74,7 @@ public class SaleApplicationServiceImpl implements SaleApplicationService {
                                 String paymentMethod, String creditCardType, String creditCardNumber, String cvc) throws SessionExpired, NoPermissionForOperation, RemoteException, CarrierNotAvailableException, UnsupportedOperationException {
         Session session = sessionRepository.sessionById(new SessionId(sessionId)).orElseThrow(IllegalStateException::new);
         UUID customerId = session.getUserId().getUUID();
-        if(paymentMethod.equals("Credit Card")) {
+        if ("Credit Card".equals(paymentMethod)) {
             CustomerDTO customer = customerApplicationService.customerById(sessionId, customerId);
 
             if(!customer.getCreditCardType().equals(creditCardType) ||
